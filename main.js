@@ -10,7 +10,7 @@ function main() {
     // 如果要进行剧本的修改请务必将其改成false。
 
     this.floorIds = [ // 在这里按顺序放所有的楼层；其顺序直接影响到楼层传送器的顺序和上楼器/下楼器的顺序
-        "sample0", "sample1", "sample2"
+        "sample0", "sample1", "sample2", "sample3", "sample4",
     ];
     this.pngs = [ // 在此存放所有可能使用的图片，只能是png格式，可以不写后缀名
         // 图片可以被作为背景图（的一部分），也可以直接用自定义事件进行显示。

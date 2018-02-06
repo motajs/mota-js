@@ -134,7 +134,7 @@ events.prototype.lose = function(reason) {
     core.stopReplay();
     core.waitHeroToStop(function() {
         core.drawText([
-            "\t[结局1]你死了。\n如题。"
+            "\t[结局2]你死了。\n如题。"
         ], function () {
             core.events.gameOver(null, replaying);
         });
@@ -781,6 +781,42 @@ events.prototype.afterBattle = function(enemyId,x,y,callback) {
     if (core.isset(point) && point>0) {
         core.unshift(todo, core.events.addPoint(core.material.enemys[enemyId]));
     }
+    // 分裂
+    //changed
+    console.log('x,y:'+x+','+y)
+    if (core.enemys.hasSpecial(special, 48) && !core.hasFlag('visitedRainbow')) {
+        var blocks=core.status.maps[core.status.floorId].blocks;
+        var tempForFilter=[];
+        var enemyList=[{"x":4,"y":1,"id":201,"event":{"cls":"enemys","id":"greenSlime","trigger":"battle","noPass":true,"animate":2}},
+        {"x":1,"y":3,"id":202,"event":{"cls":"enemys","id":"redSlime","trigger":"battle","noPass":true,"animate":2}},
+        {"x":9,"y":3,"id":203,"event":{"cls":"enemys","id":"blackSlime","trigger":"battle","noPass":true,"animate":2}}];
+        for(var index in enemyList){
+            var value = enemyList[index];
+            if(value.event.id==enemyId)tempForFilter.push(value);
+        }
+        var enemy = tempForFilter[0];
+        for(var index in [[-2,0],[2,0],[0,-2],[0,2]]){
+            var direction = [[-2,0],[2,0],[0,-2],[0,2]][index];
+            tempForFilter = [];
+            for(var index in blocks){
+                var value = blocks[index];
+                if( (function(block){
+                    if (x+direction[0]<0 || x+direction[0]>12 || y+direction[1]<0 || y+direction[1]>12) return true;
+                    return(block.x==x+direction[0] && block.y==y+direction[1]);
+                })(value) )tempForFilter.push(value);
+            }
+            var len = Object.keys(Object.assign({},tempForFilter[0]));
+            if (len==0) {
+                enemy.x=x+direction[0];
+                enemy.y=y+direction[1];
+                blocks.push(JSON.parse(JSON.stringify(enemy)));
+            }
+        }
+        core.drawMap(core.status.floorId);
+        core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
+        core.updateFg()
+    }
+
 
     // 如果事件不为空，将其插入
     if (todo.length>0) {
