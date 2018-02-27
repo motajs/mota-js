@@ -262,7 +262,7 @@ items.prototype.canUseItem = function (itemId) {
         for (var i in core.status.thisMap.blocks) {
             var block = core.status.thisMap.blocks[i];
             if (core.isset(block.event) && !(core.isset(block.enable) && !block.enable) &&
-                (block.event.id == 'yellowWall' || block.event.id=='whiteWall' || block.event.id=='blueWall')) // 能破哪些墙
+                (block.event.id == 'yellowWall' || block.event.id=='whiteWall' || block.event.id=='blueWall' || block.event.id=='autotile')) // 能破哪些墙
             {
                 // 四个方向
                 if (core.flags.pickaxeFourDirections) {

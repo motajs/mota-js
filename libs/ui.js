@@ -448,8 +448,14 @@ ui.prototype.drawSettings = function () {
     ]);
 }
 
-////// 绘制快捷商店选择栏 //////
-ui.prototype.drawQuickShop = function () {
+/**
+ * 绘制“选择商店”窗口
+ * @param need
+ */
+ui.prototype.drawQuickShop = function (need) {
+    
+    if (core.isset(need) && !core.checkStatus('selectShop', need))
+        return;
 
     core.status.event.id = 'selectShop';
 
@@ -461,6 +467,9 @@ ui.prototype.drawQuickShop = function () {
     }
     choices.push("返回游戏");
     this.drawChoices(null, choices);
+    //changed
+    core.ui.closePanel();
+    core.drawTip("本塔不包含商店");
 }
 
 ////// 绘制战斗动画 //////
@@ -1388,10 +1397,22 @@ ui.prototype.drawAbout = function() {
 
     // 名称
     core.canvas.ui.textAlign = "left";
+    //changed
+    /*
     core.fillText('ui', "HTML5 魔塔样板", text_start, top+35, "#FFD700", "bold 22px Verdana");
     core.fillText('ui', "作者： 艾之葵", text_start, top + 80, "#FFFFFF", "bold 17px Verdana");
-    core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top+112);
+    core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top+112);*/
     // TODO: 写自己的“关于”页面
+    top+=32;
+    core.fillText('ui', "作者： zhaouv", text_start, top + 112, "#FFFFFF", "bold 17px Verdana");
+    core.fillText('ui', "制作工具： HTML5 魔塔样板", text_start, top + 144, "#FFFFFF", "bold 17px Verdana");
+    core.fillText('ui', "测试平台： Chrome/微信/iOS", text_start, top + 176, "#FFFFFF", "bold 17px Verdana");
+    core.fillText('ui', '特别鸣谢： 艾之葵', text_start, top+208);
+    var len = core.canvas.ui.measureText('特别鸣谢： ').width;
+    core.fillText('ui', 'iEcho', text_start+len, top+240);
+    //core.fillText('ui', '打Dota的喵', text_start+len, top+272);
+    top-=32;
+    core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top+304);
 }
 
 ////// 绘制帮助页面 //////

@@ -1299,7 +1299,7 @@ core.prototype.getClickLoc = function (x, y) {
 ////// 具体点击屏幕上(x,y)点时，执行的操作 //////
 core.prototype.onclick = function (x, y, stepPostfix) {
     if (core.isset(core.status.replay)&&core.status.replay.replaying) return;
-    // console.log("Click: (" + x + "," + y + ")");
+    console.log("Click: (" + x + "," + y + ")");
 
     stepPostfix=stepPostfix||[];
 
@@ -2293,6 +2293,9 @@ core.prototype.afterBattle = function(id, x, y, callback) {
         hint += "，金币+" + money;
     if (core.flags.enableExperience)
         hint += "，经验+" + experience;
+    //changed
+    if (core.material.enemys[id].name=='血瓶')
+        hint = "使用血瓶获得 "+String(-core.material.enemys[id].atk)+" 生命值";
     core.drawTip(hint);
 
     // 打完怪物，触发事件
@@ -3550,7 +3553,8 @@ core.prototype.updateFg = function () {
     var mapBlocks = core.status.thisMap.blocks;
     core.clearMap('fg', 0, 0, 416, 416);
     // 没有怪物手册
-    if (!core.hasItem('book')) return;
+    //changed
+    //if (!core.hasItem('book')) return;
     core.setFont('fg', "bold 11px Arial");
     var hero_hp = core.status.hero.hp;
     if (core.flags.displayEnemyDamage) {
@@ -3583,6 +3587,8 @@ core.prototype.updateFg = function () {
                 if (damage >= 999999999) damage = "???";
                 else if (damage > 100000) damage = (damage / 10000).toFixed(1) + "w";
 
+                //changed
+                if (damage < 0) damage=-damage;
                 core.setFillStyle('fg', '#000000');
                 core.canvas.fg.fillText(damage, 32 * x + 2, 32 * (y + 1) - 2);
                 core.canvas.fg.fillText(damage, 32 * x, 32 * (y + 1) - 2);
@@ -4775,6 +4781,7 @@ core.prototype.getStatus = function (statusName) {
 
 ////// 获得某个等级的名称 //////
 core.prototype.getLvName = function () {
+    return '';
     if (core.status.hero.lv>core.firstData.levelUp.length) return core.status.hero.lv;
     return core.firstData.levelUp[core.status.hero.lv-1].name || core.status.hero.lv;
 }
@@ -5195,6 +5202,12 @@ core.prototype.updateStatusBar = function () {
     }
 
     core.updateFg();
+
+    var notCheat=true;
+    notCheat=notCheat && (core.status.hero.atk == 1|| (core.status.hero.loc.x==11 && core.status.hero.loc.y==1));
+    notCheat=notCheat && core.status.hero.def == 0;
+    notCheat=notCheat && core.status.hero.hp <= 78;//76?
+    if(!notCheat)core.drawText('数据异常,请到群539113091反馈bug',core.showStartAnimate)
 }
 
 ////// 屏幕分辨率改变后重新自适应 //////
