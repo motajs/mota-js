@@ -17,13 +17,14 @@ function core() {
     this.timeout = {
         'getItemTipTimeout': null,
         'turnHeroTimeout': null,
+        'onDownTimeout': null,
     }
     this.interval = {
-        'heroMoveTriggerInterval': null,
         'heroMoveInterval': null,
         "tipAnimate": null,
         'openDoorAnimate': null,
         'animateInterval': null,
+        'onDownInterval': null,
     }
     this.animateFrame = {
         'background': null,
@@ -97,8 +98,10 @@ function core() {
             'destY': null,
             'autoStepRoutes': [],
             'moveStepBeforeStop': [],
+            'lastDirection': null,
             'cursorX': null,
             'cursorY': null,
+            "moveDirectly": false,
         },
 
         // 按下键的时间：为了判定双击
@@ -123,12 +126,15 @@ function core() {
             'data': null,
             'selection': null,
             'ui': null,
+            'interval': null,
         },
         'textAttribute': {
             'position': "center",
             "title": [255,215,0,1],
             "background": [0,0,0,0.85],
             "text": [255,255,255,1],
+            "bold": false,
+            "time": 0,
         },
         'curtainColor': null,
         'usingCenterFly':false,
@@ -150,6 +156,9 @@ core.prototype.init = function (coreData) {
         core[key] = coreData[key];
     }
     core.flags = core.clone(core.data.flags);
+    core.values = core.clone(core.data.values);
+    core.firstData = core.data.getFirstData();
+
     if (!core.flags.enableExperience)
         core.flags.enableLevelUp = false;
     if (!core.flags.canOpenBattleAnimate) {
@@ -157,9 +166,7 @@ core.prototype.init = function (coreData) {
         core.flags.battleAnimate = false;
         core.setLocalStorage('battleAnimate', false);
     }
-    core.values = core.clone(core.data.values);
-    core.firstData = core.data.getFirstData();
-
+    
     // core.initStatus.shops = core.firstData.shops;
     core.firstData.shops.forEach(function (t) {
         core.initStatus.shops[t.id] = t;
@@ -591,6 +598,7 @@ core.prototype.loadAnimates = function (callback) {
 
                 data.ratio = content.ratio;
                 data.images = [];
+                data.images_rev = [];
                 content.bitmaps.forEach(function (t2) {
                     if (!core.isset(t2) || t2=="") {
                         data.images.push(null);
@@ -615,7 +623,9 @@ core.prototype.loadAnimates = function (callback) {
                             'x': t3[1],
                             'y': t3[2],
                             'zoom': t3[3],
-                            'opacity': t3[4]
+                            'opacity': t3[4],
+                            'mirror': t3[5]||0,
+                            'angle': t3[6]||0,
                         })
                     })
                     data.frames.push(info);
@@ -689,7 +699,8 @@ core.prototype.loadMusic = function (callback) {
         else {
             var music = new Audio();
             music.preload = core.musicStatus.startDirectly?'auto':'none';
-            music.src = 'sounds/'+t;
+            if (main.bgmRemote) music.src = 'https://gitee.com/ckcz123/h5music/raw/master/'+core.firstData.name+'/'+t;
+            else music.src = 'sounds/'+t;
             music.loop = 'loop';
             core.material.bgms[t] = music;
         }
@@ -763,8 +774,13 @@ core.prototype.clearStatus = function() {
 core.prototype.resetStatus = function(hero, hard, floorId, route, maps) {
 
     // 停止各个Timeout和Interval
+    for (var i in core.timeout) {
+        clearTimeout(core.timeout[i]);
+        core.timeout[i] = null;
+    }
     for (var i in core.interval) {
         clearInterval(core.interval[i]);
+        core.interval[i] = null;
     }
 
     // 初始化status
@@ -794,7 +810,6 @@ core.prototype.startGame = function (hard, callback) {
     core.resetStatus(core.firstData.hero, hard, core.firstData.floorId, null, core.initStatus.maps);
 
     core.changeFloor(core.status.floorId, null, core.firstData.hero.loc, null, function() {
-        //core.setHeroMoveTriggerInterval();
         if (core.isset(callback)) callback();
     });
 
@@ -889,9 +904,11 @@ core.prototype.pressKey = function (keyCode) {
 ////// 根据按下键的code来执行一系列操作 //////
 core.prototype.keyDown = function(keyCode) {
     if (core.isset(core.status.replay)&&core.status.replay.replaying) return;
+    /*
     if (core.isset(core.status.automaticRoute)&&core.status.automaticRoute.autoHeroMove) {
         core.stopAutomaticRoute();
     }
+    */
     if (core.status.lockControl) {
         // Ctrl跳过对话
         if (keyCode==17) {
@@ -1102,7 +1119,8 @@ core.prototype.keyUp = function(keyCode) {
                 core.openBook(true);
             break;
         case 65: // A
-            core.doSL("autoSave", "load");
+            if (core.status.heroStop)
+                core.doSL("autoSave", "load");
             break;
         case 83: // S
             if (core.status.heroStop)
@@ -1129,27 +1147,36 @@ core.prototype.keyUp = function(keyCode) {
                 core.openQuickShop(true);
             break;
         case 32: // SPACE
-            if (!core.status.lockControl && core.status.heroStop)
+            if (core.status.heroStop)
                 core.getNextItem();
             break;
         case 72: // H
-            if (!core.status.lockControl && core.status.heroStop)
+            if (core.status.heroStop)
                 core.ui.drawHelp();
             break;
         case 82: // R
-            if (!core.status.lockControl && core.status.heroStop) {
+            if (core.status.heroStop) {
                 core.ui.drawConfirmBox("确定要回放录像吗？", function () {
                     core.ui.closePanel();
                     var hard=core.status.hard, route=core.clone(core.status.route);
                     core.resetStatus(core.firstData.hero, hard, core.firstData.floorId, null, core.initStatus.maps);
                     core.events.setInitData(hard);
                     core.changeFloor(core.status.floorId, null, core.firstData.hero.loc, null, function() {
-                        //core.setHeroMoveTriggerInterval();
                         core.startReplay(route);
                     });
                 }, function () {
                     core.ui.closePanel();
                 });
+            }
+            break;
+        case 33: case 34: // PAGEUP/PAGEDOWN
+            if (core.status.heroStop) {
+                if (core.flags.enableViewMaps) {
+                    core.ui.drawMaps(core.floorIds.indexOf(core.status.floorId));
+                }
+                else {
+                    core.drawTip("本塔不允许浏览地图！");
+                }
             }
             break;
         case 37: // UP
@@ -1193,8 +1220,13 @@ core.prototype.keyUp = function(keyCode) {
             break;
         
     }
-    
+
+    if (core.isset(core.status.automaticRoute)&&core.status.automaticRoute.autoHeroMove) {
+        core.stopAutomaticRoute();
+    }
+
     core.stopHero();
+
 }
 
 ////// 点击（触摸）事件按下时 //////
@@ -1202,6 +1234,18 @@ core.prototype.ondown = function (x ,y) {
     if (core.isset(core.status.replay)&&core.status.replay.replaying) return;
     if (!core.status.played || core.status.lockControl) {
         core.onclick(x, y, []);
+        if (core.timeout.onDownTimeout==null) {
+            core.timeout.onDownTimeout = setTimeout(function () {
+                if (core.interval.onDownInterval == null) {
+                    core.interval.onDownInterval = setInterval(function () {
+                        if (!core.events.longClick()) {
+                            clearInterval(core.interval.onDownInterval);
+                            core.interval.onDownInterval = null;
+                        }
+                    }, 40)
+                }
+            }, 500);
+        }
         return;
     }
 
@@ -1244,6 +1288,12 @@ core.prototype.onmove = function (x ,y) {
 ////// 当点击（触摸）事件放开时 //////
 core.prototype.onup = function () {
     if (core.isset(core.status.replay)&&core.status.replay.replaying) return;
+
+    clearTimeout(core.timeout.onDownTimeout);
+    core.timeout.onDownTimeout = null;
+    clearInterval(core.interval.onDownInterval);
+    core.interval.onDownInterval = null;
+
     // core.status.holdingPath=0;
     if(core.status.stepPostfix.length>0){
         var stepPostfix = [];
@@ -1256,12 +1306,17 @@ core.prototype.onup = function () {
         var posx=core.status.stepPostfix[0].x;
         var posy=core.status.stepPostfix[0].y;
         core.status.stepPostfix=[];
-        core.canvas.ui.clearRect(0, 0, 416,416);
-        core.canvas.ui.restore();
+        if (!core.status.lockControl) {
+            core.canvas.ui.clearRect(0, 0, 416,416);
+            core.canvas.ui.restore();
+        }
 
         // 长按
         if (!core.status.lockControl && stepPostfix.length==0 && core.status.downTime!=null && new Date()-core.status.downTime>=1000) {
-            core.events.longClick();
+            core.waitHeroToStop(function () {
+                // 绘制快捷键
+                core.ui.drawKeyBoard();
+            });
         }
         else {
             //posx,posy是寻路的目标点,stepPostfix是后续的移动
@@ -1500,6 +1555,7 @@ core.prototype.stopAutomaticRoute = function () {
     core.status.automaticRoute.autoStepRoutes = [];
     core.status.automaticRoute.destX=null;
     core.status.automaticRoute.destY=null;
+    core.status.automaticRoute.lastDirection = null;
     core.stopHero();
     if (core.status.automaticRoute.moveStepBeforeStop.length==0)
         core.canvas.ui.clearRect(0, 0, 416, 416);
@@ -1534,16 +1590,18 @@ core.prototype.setAutomaticRoute = function (destX, destY, stepPostfix) {
         var lastX = core.status.automaticRoute.destX, lastY=core.status.automaticRoute.destY;
         core.stopAutomaticRoute();
         if (lastX==destX && lastY==destY) {
-            core.lockControl();
+            core.status.automaticRoute.moveDirectly = true;
             setTimeout(function () {
-                core.unLockControl();
-                if (core.canMoveDirectly(destX, destY)) {
-                    core.clearMap('hero', 0, 0, 416, 416);
-                    core.setHeroLoc('x', destX);
-                    core.setHeroLoc('y', destY);
-                    core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
-                    core.status.route.push("move:"+destX+":"+destY);
+                if (core.status.automaticRoute.moveDirectly && core.status.heroMoving==0) {
+                    if (core.canMoveDirectly(destX, destY)) {
+                        core.clearMap('hero', 0, 0, 416, 416);
+                        core.setHeroLoc('x', destX);
+                        core.setHeroLoc('y', destY);
+                        core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
+                        core.status.route.push("move:"+destX+":"+destY);
+                    }
                 }
+                core.status.automaticRoute.moveDirectly = false;
             }, 100);
         }
         return;
@@ -1680,15 +1738,21 @@ core.prototype.automaticRoute = function (destX, destY) {
         f=f%169;
         var nowX = parseInt(f / 13), nowY = f % 13;
         var nowIsArrow = false, nowId, nowBlock = core.getBlock(nowX,nowY);
+        /*
         if (nowBlock!=null){
             nowId = nowBlock.block.event.id;
             nowIsArrow = nowId.slice(0, 5).toLowerCase() == 'arrow';
         }
+        */
         for (var direction in scan) {
+            /*
             if(nowIsArrow){
                 var nowArrow = nowId.slice(5).toLowerCase();
                 if (direction != nowArrow) continue;
             }
+            */
+            if (!core.canMoveHero(nowX, nowY, direction))
+                continue;
             
             var nx = nowX + scan[direction].x;
             var ny = nowY + scan[direction].y;
@@ -1704,12 +1768,14 @@ core.prototype.automaticRoute = function (destX, destY) {
             var nextId, nextBlock = core.getBlock(nx,ny);
             if (nextBlock!=null){
                 nextId = nextBlock.block.event.id;
+                /*
                 // 遇到单向箭头处理
                 var isArrow = nextId.slice(0, 5).toLowerCase() == 'arrow';
                 if(isArrow){
                     var nextArrow = nextId.slice(5).toLowerCase();
                     if ( (scan[direction].x + scan[nextArrow].x) == 0 && (scan[direction].y + scan[nextArrow].y) == 0 ) continue;
                 }
+                */
                 // 绕过亮灯（因为只有一次通行机会很宝贵）
                 if(nextId == "light") deepAdd=100;
                 // 绕过路障
@@ -1834,6 +1900,7 @@ core.prototype.setHeroMoveInterval = function (direction, x, y, callback) {
 ////// 实际每一步的行走过程 //////
 core.prototype.moveAction = function (callback) {
     if (core.interval.openDoorAnimate!=null) return; // 开门判断
+    if (core.status.heroMoving>0) return;
     var scan = {
         'up': {'x': 0, 'y': -1},
         'left': {'x': -1, 'y': 0},
@@ -1845,7 +1912,8 @@ core.prototype.moveAction = function (callback) {
     var y = core.getHeroLoc('y');
     var noPass = core.noPass(x + scan[direction].x, y + scan[direction].y), canMove = core.canMoveHero();
     if (noPass || !canMove) {
-        core.status.route.push(direction);
+        if (core.status.event.id!='ski')
+            core.status.route.push(direction);
         core.status.automaticRoute.moveStepBeforeStop = [];
         if (canMove) // 非箭头：触发
             core.trigger(x + scan[direction].x, y + scan[direction].y);
@@ -1881,6 +1949,7 @@ core.prototype.moveAction = function (callback) {
         core.setHeroMoveInterval(direction, x, y, function () {
             if (core.status.automaticRoute.autoHeroMove) {
                 core.status.automaticRoute.movedStep++;
+                core.status.automaticRoute.lastDirection = core.getHeroLoc('direction');
                 if (core.status.automaticRoute.destStep == core.status.automaticRoute.movedStep) {
                     if (core.status.automaticRoute.autoStep == core.status.automaticRoute.autoStepRoutes.length) {
                         core.clearContinueAutomaticRoute();
@@ -1897,7 +1966,8 @@ core.prototype.moveAction = function (callback) {
             else if (core.status.heroStop) {
                 core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
             }
-            core.status.route.push(direction);
+            if (core.status.event.id!='ski')
+                core.status.route.push(direction);
             core.trigger(core.getHeroLoc('x'), core.getHeroLoc('y'));
             core.checkBlock();
             if (core.isset(callback)) callback();
@@ -1917,9 +1987,20 @@ core.prototype.turnHero = function() {
 }
 
 ////// 勇士能否前往某方向 //////
-core.prototype.canMoveHero = function() {
-    var direction = core.getHeroLoc('direction');
-    var nowBlock = core.getBlock(core.getHeroLoc('x'),core.getHeroLoc('y'));
+core.prototype.canMoveHero = function(x,y,direction,floorId) {
+    if (!core.isset(x)) x=core.getHeroLoc('x');
+    if (!core.isset(y)) y=core.getHeroLoc('y');
+    if (!core.isset(direction)) direction=core.getHeroLoc('direction');
+    if (!core.isset(floorId)) floorId=core.status.floorId;
+
+    // 检查当前块的cannotMove
+    if (core.isset(core.floors[floorId].cannotMove)) {
+        var cannotMove = core.floors[floorId].cannotMove[x+","+y];
+        if (core.isset(cannotMove) && cannotMove instanceof Array && cannotMove.indexOf(direction)>=0)
+            return false;
+    }
+
+    var nowBlock = core.getBlock(x,y,floorId);
     if (nowBlock!=null){
         nowId = nowBlock.block.event.id;
         var nowIsArrow = nowId.slice(0, 5).toLowerCase() == 'arrow';
@@ -1936,7 +2017,7 @@ core.prototype.canMoveHero = function() {
         'down': {'x': 0, 'y': 1},
         'right': {'x': 1, 'y': 0}
     };
-    var nextBlock = core.getBlock(core.nextX(),core.nextY());
+    var nextBlock = core.getBlock(x+scan[direction].x,y+scan[direction].y,floorId);
     if (nextBlock!=null){
         nextId = nextBlock.block.event.id;
         // 遇到单向箭头处理
@@ -1961,6 +2042,9 @@ core.prototype.canMoveDirectly = function (destX,destY) {
     var fromX = core.getHeroLoc('x'), fromY = core.getHeroLoc('y');
     if (fromX==destX&&fromY==destY) return false;
 
+    if (core.getBlock(fromX,fromY)!=null||core.status.checkBlock.damage[13*fromX+fromY]>0)
+        return false;
+
     // BFS
     var visited=[], queue=[];
     visited[13*fromX+fromY]=true;
@@ -1983,21 +2067,24 @@ core.prototype.canMoveDirectly = function (destX,destY) {
 
 ////// 让勇士开始移动 //////
 core.prototype.moveHero = function (direction, callback) {
+    // 如果正在移动，直接return
+    if (core.status.heroMoving>0) return;
     if (core.isset(direction))
         core.setHeroLoc('direction', direction);
     if (!core.isset(callback)) { // 如果不存在回调函数，则使用heroMoveTrigger
         core.status.heroStop = false;
-        if (core.interval.heroMoveTriggerInterval==null) {
-            core.moveAction();
-            core.interval.heroMoveTriggerInterval = setInterval(function () {
-                if (!core.status.heroStop) {
-                    core.moveAction();
-                }
-                else {
-                    core.stopHero();
-                }
-            }, 50)
+        core.status.automaticRoute.moveDirectly = false;
+
+        var doAction = function () {
+            if (!core.status.heroStop) {
+                core.moveAction();
+                setTimeout(doAction, 50);
+            }
+            else {
+                core.stopHero();
+            }
         }
+        doAction();
     }
     else { // 否则，只向某个方向移动一步，然后调用callback
         core.moveAction(function () {
@@ -2093,6 +2180,7 @@ core.prototype.waitHeroToStop = function(callback) {
     if (core.isset(callback)) {
         core.status.replay.animate=true;
         core.lockControl();
+        core.status.automaticRoute.moveDirectly = false;
         setTimeout(function(){
             core.status.replay.animate=false;
             core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
@@ -2104,8 +2192,6 @@ core.prototype.waitHeroToStop = function(callback) {
 ////// 停止勇士的移动状态 //////
 core.prototype.stopHero = function () {
     core.status.heroStop = true;
-    clearInterval(core.interval.heroMoveTriggerInterval);
-    core.interval.heroMoveTriggerInterval=null;
 }
 
 ////// 绘制勇士 //////
@@ -2188,17 +2274,16 @@ core.prototype.openDoor = function (id, x, y, needKey, callback) {
     var speed=30;
     if (needKey) {
         var key = id.replace("Door", "Key");
-        if (!core.removeItem(key)) {
+        if (!core.hasItem(key)) {
             if (key != "specialKey")
                 core.drawTip("你没有" + core.material.items[key].name);
             else core.drawTip("无法开启此门");
             core.clearContinueAutomaticRoute();
             return;
         }
-    }
-
-    if (!core.isset(core.status.event.id)) // 自动存档
         core.autosave(true);
+        core.removeItem(key);
+    }
 
     // open
     core.playSound("door.ogg");
@@ -2314,7 +2399,7 @@ core.prototype.trigger = function (x, y) {
                 var trigger = mapBlocks[b].event.trigger;
 
                 // 转换楼层能否穿透
-                if (trigger=='changeFloor') {
+                if (trigger=='changeFloor' && !noPass) {
                     var canCross = core.flags.portalWithoutTrigger;
                     if (core.isset(mapBlocks[b].event.data) && core.isset(mapBlocks[b].event.data.portalWithoutTrigger))
                         canCross=mapBlocks[b].event.data.portalWithoutTrigger;
@@ -2332,6 +2417,7 @@ core.prototype.trigger = function (x, y) {
                         }
                     }
                 }
+                core.status.automaticRoute.moveDirectly = false;
                 core.material.events[trigger](mapBlocks[b], core, function (data) {
 
                 });
@@ -2908,39 +2994,54 @@ core.prototype.moveBlock = function(x,y,steps,time,immediateHide,callback) {
 }
 
 ////// 显示/隐藏某个块时的动画效果 //////
-core.prototype.animateBlock = function (x,y,type,time,callback) {
+core.prototype.animateBlock = function (loc,type,time,callback) {
     if (type!='hide') type='show';
-    core.status.replay.animate=true;
 
     //clearInterval(core.interval.tipAnimate);
     core.saveCanvas('animate');
     core.clearMap('animate', 0, 0, 416, 416);
 
-    var block = core.getBlock(x,y,core.status.floorId,false);
-    if (block==null) {// 不存在
+    if (typeof loc[0] == 'number' && typeof loc[1] == 'number')
+        loc = [loc];
+
+    var list = [];
+    loc.forEach(function (t) {
+        var block = core.getBlock(t[0],t[1],core.status.floorId,false);
+        if (block==null) return;
+        block=block.block;
+        list.push({
+            'x': t[0], 'y': t[1],
+            'blockIcon': core.material.icons[block.event.cls][block.event.id],
+            'blockImage': core.material.images[block.event.cls]
+        })
+    })
+
+    if (list.length==0) {
         if (core.isset(callback)) callback();
         return;
     }
-    // 清空UI
-    //core.clearMap('ui', 0, 0, 416, 416);
-    //core.setAlpha('ui', 1.0);
 
-    block=block.block;
-    blockIcon = core.material.icons[block.event.cls][block.event.id];
-    blockImage = core.material.images[block.event.cls];
+    core.status.replay.animate=true;
+    var draw = function () {
+        list.forEach(function (t) {
+            core.canvas.animate.drawImage(t.blockImage, 0, t.blockIcon * 32, 32, 32, t.x * 32, t.y * 32, 32, 32);
+        })
+    }
 
     var opacityVal = 0;
     if (type=='hide') opacityVal=1;
 
     core.setOpacity('animate', opacityVal);
-    core.canvas.animate.drawImage(blockImage, 0, blockIcon * 32, 32, 32, block.x * 32, block.y * 32, 32, 32);
+    draw();
 
     var animate = window.setInterval(function () {
         if (type=='show') opacityVal += 0.1;
         else opacityVal -= 0.1;
         core.setOpacity('animate', opacityVal);
-        core.clearMap('animate',block.x * 32, block.y * 32, 32, 32);
-        core.canvas.animate.drawImage(blockImage, 0, blockIcon * 32, 32, 32, block.x * 32, block.y * 32, 32, 32);
+        core.clearMap('animate',0,0,416,416);
+
+        // core.canvas.animate.drawImage(blockImage, 0, blockIcon * 32, 32, 32, block.x * 32, block.y * 32, 32, 32);
+        draw();
         if (opacityVal >=1 || opacityVal<=0) {
             clearInterval(animate);
             core.loadCanvas('animate');
@@ -2970,6 +3071,7 @@ core.prototype.showBlock = function(x, y, floodId) {
             // core.setGlobalAnimate(core.values.animateSpeed);
             core.syncGlobalAnimate();
         }
+        core.updateStatusBar();
     }
 }
 
@@ -3152,7 +3254,22 @@ core.prototype.drawAnimate = function (name, x, y, callback) {
             var realWidth = image.width * ratio * t.zoom / 100;
             var realHeight = image.height * ratio * t.zoom / 100;
             core.setAlpha('animate', t.opacity / 255);
-            core.canvas.animate.drawImage(image, centerX+t.x-realWidth/2, centerY+t.y-realHeight/2, realWidth, realHeight);
+
+            var cx = centerX+t.x, cy=centerY+t.y;
+
+            if (!t.mirror && !t.angle) {
+                core.canvas.animate.drawImage(image, cx-realWidth/2, cy-realHeight/2, realWidth, realHeight);
+            }
+            else {
+                core.saveCanvas('animate');
+                core.canvas.animate.translate(cx,cy);
+                if (t.angle)
+                    core.canvas.animate.rotate(-t.angle*Math.PI/180);
+                if (t.mirror)
+                    core.canvas.animate.scale(-1,1);
+                core.canvas.animate.drawImage(image, -realWidth/2, -realHeight/2, realWidth, realHeight);
+                core.loadCanvas('animate');
+            }
         })
     }
 
@@ -3456,13 +3573,13 @@ core.prototype.setWeather = function (type, level) {
 
     // 当前天气：则忽略
     if (type==core.animateFrame.weather.type &&
-        (!core.isset(level) || 16*level==core.animateFrame.weather.level)) {
+        (!core.isset(level) || 20*level==core.animateFrame.weather.level)) {
         return;
     }
 
     if (!core.isset(level)) level=5;
     if (level<1) level=1; if (level>10) level=10;
-    level *= 16;
+    level *= 20;
 
     core.clearMap('weather', 0, 0, 416, 416)
     core.animateFrame.weather.type = type;
@@ -3475,7 +3592,7 @@ core.prototype.setWeather = function (type, level) {
             core.animateFrame.weather.nodes.push({
                 'x': Math.random()*416,
                 'y': Math.random()*416,
-                'l': Math.random() * 1.2,
+                'l': Math.random() * 2.5,
                 'xs': -4 + Math.random() * 4 + 2,
                 'ys': Math.random() * 10 + 10
             })
@@ -3486,7 +3603,7 @@ core.prototype.setWeather = function (type, level) {
             core.animateFrame.weather.nodes.push({
                 'x': Math.random()*416,
                 'y': Math.random()*416,
-                'r': Math.random() * 4 + 1,
+                'r': Math.random() * 5 + 1,
                 'd': Math.random() * level,
             })
         }
@@ -3868,6 +3985,10 @@ core.prototype.splitLines = function(canvas, text, maxLength, font) {
             contents.push(text.substring(last, i));
             last=i+1;
         }
+        else if (text.charAt(i)=='\\' && text.charAt(i+1)=='n') {
+            contents.push(text.substring(last, i));
+            last=i+2;
+        }
         else {
             var toAdd = text.substring(last, i+1);
             var width = core.canvas[canvas].measureText(toAdd).width;
@@ -4215,6 +4336,13 @@ core.prototype.checkStatus = function (name, need, item) {
 core.prototype.openBook = function (need) {
     if (core.isset(core.status.replay)&&core.status.replay.replaying) return;
 
+    // 当前是book，且从“浏览地图”打开
+    if (core.status.event.id == 'book' && core.isset(core.status.event.selection)) {
+        core.status.boxAnimateObjs = [];
+        core.ui.drawMaps(core.status.event.selection);
+        return;
+    }
+
     // 从“浏览地图”页面打开
     if (core.status.event.id=='viewMaps') {
         need=false;
@@ -4308,11 +4436,11 @@ core.prototype.openSettings = function (need) {
 
 ////// 自动存档 //////
 core.prototype.autosave = function (removeLast) {
-    var x;
+    var x=null;
     if (removeLast)
         x=core.status.route.pop();
     core.saveData("autoSave");
-    if (removeLast)
+    if (removeLast && core.isset(x))
         core.status.route.push(x);
 }
 
@@ -4343,7 +4471,15 @@ core.prototype.doSL = function (id, type) {
             return;
         }
         if (data.version != core.firstData.version) {
-            core.drawTip("存档版本不匹配");
+            // core.drawTip("存档版本不匹配");
+            if (confirm("存档版本不匹配！\n你想回放此存档的录像吗？")) {
+                core.dom.startPanel.style.display = 'none';
+                core.resetStatus(core.firstData.hero, data.hard, core.firstData.floorId, null, core.initStatus.maps);
+                core.events.setInitData(data.hard);
+                core.changeFloor(core.status.floorId, null, core.firstData.hero.loc, null, function() {
+                    core.startReplay(core.decodeRoute(data.route));
+                });
+            }
             return;
         }
         core.ui.closePanel();
@@ -4494,10 +4630,10 @@ core.prototype.syncLoad = function () {
         }
     };
     xhr.ontimeout = function() {
-        core.drawText("出错啦！\n无法同步存档到服务器。\n错误原因：Timeout");
+        core.drawText("出错啦！\n无法从服务器同步存档。\n错误原因：Timeout");
     }
     xhr.onerror = function() {
-        core.drawText("出错啦！\n无法同步存档到服务器。\n错误原因：XHR Error");
+        core.drawText("出错啦！\n无法从服务器同步存档。\n错误原因：XHR Error");
     }
     xhr.send(formData);
 }
@@ -4657,14 +4793,15 @@ core.prototype.loadData = function (data, callback) {
 
     // load shop times
     for (var shop in core.status.shops) {
-        core.status.shops[shop].times = data.shops[shop].times;
-        core.status.shops[shop].visited = data.shops[shop].visited;
+        if (core.isset(data.shops[shop])) {
+            core.status.shops[shop].times = data.shops[shop].times;
+            core.status.shops[shop].visited = data.shops[shop].visited;
+        }
     }
 
     core.events.afterLoadData(data);
 
     core.changeFloor(data.floorId, null, data.hero.loc, 0, function() {
-        //core.setHeroMoveTriggerInterval();
         if (core.isset(callback)) callback();
     });
 }

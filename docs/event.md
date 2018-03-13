@@ -1,6 +1,6 @@
 # 事件
 
-?> 目前版本*v1.4*，上次更新时间：* {docsify-updated} *
+?> 目前版本**v1.4.1**，上次更新时间：* {docsify-updated} *
 
 本章内将对样板所支持的事件进行介绍。
 
@@ -150,14 +150,14 @@
 
 ### text：显示一段文字（剧情）
 
-使用`{"type": "text"}`可以显示一段文字。后面`"data"`可以指定文字内容。
+使用`{"type": "text"}`可以显示一段文字。后面`"text"`可以指定文字内容。
 
 ``` js
 "events": { // 该楼的所有可能事件列表
     // 如果大括号里只有"data"项(没有"action"或"enable")，则可以省略到只剩下中括号
     "x,y": [ // 实际执行的事件列表
-        {"type": "text", "data": "在界面上的一段文字"}, // 显示文字事件
-        {"type": "text", "data": "这是第二段文字"}, // 显示第二个文字事件
+        {"type": "text", "text": "在界面上的一段文字"}, // 显示文字事件
+        {"type": "text", "text": "这是第二段文字"}, // 显示第二个文字事件
         // ...
         // 按顺序写事件，直到结束
     ]
@@ -171,7 +171,7 @@
     // 如果大括号里只有"data"项(没有"action"或"enable")，则可以省略到只剩下中括号
     "x,y": [ // 实际执行的事件列表
         "在界面上的一段文字",// 直接简写，和下面写法完全等价
-        {"type": "text", "data": "这是第二段文字"}, // 显示第二个文字事件
+        {"type": "text", "text": "这是第二段文字"}, // 显示第二个文字事件
         // ...
         // 按顺序写事件，直到结束
     ]
@@ -261,24 +261,49 @@
 
 ![调试](./img/eventdebug.png)
 
+### autoText：自动剧情文本
+
+使用`{"type": "autoText"}`可以使用剧情文本。
+
+``` js
+"x,y": [ // 实际执行的事件列表
+    {"type": "autoText", "text": "一段自动显示的剧情文字", "time": 5000}
+]
+```
+
+text为文本正文内容，和上面的写法完全一致。
+
+time为可选项，代表该自动文本的时间。可以不指定，不指定默认为3000毫秒。
+
+用户无法跳过自动剧情文本，只能等待time时间结束后自动过。
+
+回放录像时将忽略自动剧情文本的显示。
+
+!> 由于用户无法跳过自动剧情文本，因此对于大段剧情文本请自行添加“是否跳过剧情”的提示，否则可能会非常不友好。
+
 ### setText：设置剧情文本的属性
 
 使用`{"type": "setText"}`可以设置剧情文本的各项属性。
 
 ``` js
 "x,y": [ // 实际执行的事件列表
-    {"type": "setText", "position": "up", "title": [255,0,0], "text": [255,255,0], "background": [0,0,255,0.3]},
-    "这段话将显示在上方，标题为红色，正文为黄色，背景为透明度0.3的蓝色"
+    {"type": "setText", "title": [255,0,0], "text": [255,255,0], "background": [0,0,255,0.3]},
+    {"type": "setText", "position": "up", "bold": true, "time": 70},
+    "这段话将显示在上方，标题为红色，正文为黄色粗体，背景为透明度0.3的蓝色，70毫秒速度打字机效果"
 ]
 ```
 
-position为可选项，表示设置文字显示位置。只能为up（上），center（中）和down（下）三者。
+title为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示标题（名字）颜色。 默认值：`[255,215,0,1]`
 
-title为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示标题（名字）颜色。
+text为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示正文颜色。 默认值：`[255,255,255,1]`
 
-text为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示正文颜色。
+background为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示背景色。 默认值：`[0,0,0,0.85]`
 
-background为可选项，如果设置则为一个RGB三元组或RGBA四元组，表示背景色。
+position为可选项，表示设置文字显示位置。只能为up（上），center（中）和down（下）三者。 默认值： `center`
+
+bold为可选项，如果设置则为true或false，表示正文是否使用粗体。 默认值：`false`
+
+time为可选项，表示文字添加的速度。若此项设置为0将直接全部显示，若大于0则会设置为相邻字符依次显示的时间间隔。 默认值：`0`
 
 ### tip：显示一段提示文字
 
@@ -332,13 +357,14 @@ value是一个表达式，将通过这个表达式计算出的结果赋值给nam
 
 ``` js
 "x,y": [ // 实际执行的事件列表
-  {"type": "show", "loc": [3,6], "floorId": "MT1", "time": 500 } // 启用MT1层[3,6]位置事件，动画500ms
-  {"type": "show", "loc": [3,6], "time": 500 } // 如果启用目标是当前层，则可以省略floorId项
-  {"type": "show", "loc": [3,6]} // 如果不指定动画时间，则立刻显示，否则动画效果逐渐显示，time为动画时间
+  {"type": "show", "loc": [3,6], "floorId": "MT1", "time": 500}, // 启用MT1层[3,6]位置事件，动画500ms
+  {"type": "show", "loc": [3,6], "time": 500}, // 如果启用目标是当前层，则可以省略floorId项
+  {"type": "show", "loc": [3,6]}, // 如果不指定动画时间，则立刻显示，否则动画效果逐渐显示，time为动画时间
+  {"type": "show", "loc": [[3,6],[2,9],[1,2]], "time": 500} // 我们也可以同时动画显示多个点。
 ]
 ```
 
-show事件需要用loc指定目标点的坐标；剩下有两个参数floorId和time。
+show事件需要用loc指定目标点的坐标，可以简单的写[x,y]代表一个点，也可以写个二维数组[[x1,y1],[x2,y2],...]来同时显示多个点。
 
 floorId为目标点的楼层，如果不是该楼层的事件（比如4楼小偷开2楼的门）则是必须的，如果是当前楼层可以忽略不写。
 
@@ -352,6 +378,8 @@ time为动画效果时间，如果指定了某个大于0的数，则会以动画
 
 其参数和show也完全相同，loc指定事件的位置，floorId为楼层（同层可忽略），time指定的话事件会以动画效果从有到无慢慢消失。
 
+loc同样可以简单的写[x,y]表示单个点，或二维数组[[x1,y1],[x2,y2],...]表示多个点。
+
 但是和show事件有所区别的是：loc选项也可以忽略；如果忽略loc则使当前事件禁用。（即使禁用当前事件，也不会立刻结束当前正在进行的，而是仍然会依次将列表中剩下的事件执行完）
 
 请注意，一次性事件必须要加 `{"type":"hide"}`，尤其是例如走到某个点，触发对话或机关门（陷阱）这种，否则每次都会重复触发。
@@ -360,11 +388,13 @@ NPC对话事件结束后如果需要NPC消失也需要调用 `{"type": "hide"}`�
 
 ``` js
 "x,y": [ // 实际执行的事件列表
-    {"type": "hide", "loc": [3,6], "floorId": "MT1", "time": 500 } // 禁用MT1层[3,6]位置事件，动画500ms
-    {"type": "hide", "loc": [3,6], "time": 500 } // 如果启用目标是当前层，则可以省略floorId项
-    {"type": "hide", "loc": [3,6] } // 如果不指定动画时间，则立刻消失，否则动画效果逐渐消失，time为动画时间
-    {"type": "hide", "time": 500 } // 如果不指定loc选项则默认为当前点， 例如这个就是500ms消失当前对话的NPC
-    {"type": "hide" } // 无动画将当前事件禁用，常常适用于某个空地点（触发陷阱事件、触发机关门这种）
+    {"type": "hide", "loc": [3,6], "floorId": "MT1", "time": 500}, // 禁用MT1层[3,6]位置事件，动画500ms
+    {"type": "hide", "loc": [3,6], "time": 500}, // 如果启用目标是当前层，则可以省略floorId项
+    {"type": "hide", "loc": [3,6]}, // 如果不指定动画时间，则立刻消失，否则动画效果逐渐消失，time为动画时间
+    {"type": "hide", "loc": [[3,6],[2,9],[1,2]], "time": 500}, // 也可以同时指定多个点消失
+    {"type": "hide", "time": 500}, // 如果不指定loc选项则默认为当前点， 例如这个就是500ms消失当前对话的NPC
+    {"type": "hide"}, // 无动画将当前事件禁用，常常适用于某个空地点（触发陷阱事件、触发机关门这种）
+    
 ]
 ```
 
@@ -419,13 +449,40 @@ revisit常常使用在一些商人之类的地方，当用户购买物品后不�
 ]
 ```
 
+### setBlock：设置某个图块
+
+我们可以采用 `{"type": "setBlock"}` 来改变某个地图块。
+
+``` js
+"x,y": [ // 实际执行的事件列表
+    {"type": "setBlock", "floorId": "MT1", "loc": [3,3], "number": 233}, // 将MT1层的(3,3)点变成数字233
+    {"type": "setBlock", "loc": [2,1], "number": 121}, // 省略floorId则默认为本层
+    {"type": "setBlock", "number": 57}, // loc也可省略，默认为当前点
+]
+```
+
+floorId为可选的，表示要更改的目标楼层。如果忽略此项，则默认为当前楼层。
+
+loc为可选的，表示要更改地图块的坐标。如果忽略此项，则默认为当前事件点。
+
+number为**要更改到的数字**，有关“数字”的定义详见参见[素材的机制](personalization#素材的机制)。
+
+图块更改后：
+
+ - 其启用/禁用状态不会发生任何改变。原来是启用还是启用，原来是禁用还是禁用。
+ - 可通行状态遵循覆盖原则，即**首先取该图块的默认noPass属性，如果剧本的events中定义该点的noPass则覆盖**。
+ - 触发器(trigger)亦采用覆盖原则，即**首先取该图块的默认触发器（例如怪物是battle，道具是getItem，门是openDoor），如果剧本的events中定义了该点的trigger则覆盖**。
+
+图块更改往往与[同一个点的多事件处理](#同一个点的多事件处理)相关。
+
 ### update: 立刻更新状态栏和地图显伤
 
-当我们在上面调用show事件，显示一个怪物后，该怪物将不会有显伤显示。如果你需要刷新状态栏和地图显伤，只需要简单地调用 `{"type": "update"}` 即可。
+如果你需要刷新状态栏和地图显伤，只需要简单地调用 `{"type": "update"}` 即可。
 
 ### sleep: 等待多少毫秒
 
 等价于RMXP中的"等待x帧"，不过是以毫秒来计算。
+
 基本写法：`{"type": "sleep", "time": xxx}` ，其中xxx为指定的毫秒数。
 
 ``` js
@@ -722,6 +779,25 @@ move完毕后移动的NPC/怪物一定会消失，只不过可以通过immediate
 
 该事件会显示失败页面，并重新开始游戏。
 
+### input：接受用户输入
+
+使用`{"type": "input"}`可以接受用户的输入。
+
+``` js
+"x,y": [ // 实际执行的事件列表
+    {"type": "input", "text": "请输入一个数"}, // 显示一个弹窗让用户输入内容
+    "你刚刚输入的数是${flag:input}" // 输入结果将被赋值为flag:input
+]
+```
+
+text为提示文字，可以在这里给输入提示文字。这里同样可以使用${ }来计算表达式的值。
+
+当执行input事件时，将显示一个弹窗，并提示用户输入一个内容。
+
+!> 该事件只能接受非负整数输入，所有非法的输入将全部变成`0`。例如用户在输入框内输入“你好”或者-3，都将实际得到0。
+
+输入得到的结果将被赋值给flag:input，可以供后续if来进行判断。
+
 ### if: 条件判断
 
 使用`{"type": "if"}`可以对条件进行判断，根据判断结果将会选择不同的分支执行。
@@ -900,6 +976,84 @@ core.updateStatusBar() //立刻更新状态栏和地图显伤。（上面各种g
 core.insertAction(list) //往当前事件列表中插入一系列事件。使用这个函数插入的事件将在这段自定义JS脚本执行完毕后立刻执行。
 // ……
 ```
+
+## 同一个点的多事件处理
+
+我们可以发现，就目前而且，每个点的事件是和该点进行绑定，并以该点坐标作为唯一索引来查询。
+
+而有时候，我们往往需要在同一个点存在多个不同的事件。这涉及到同一个点的多事件处理。
+
+我们可以依靠两来实现。**`setBlock`事件**和**if+flag的条件判断**。
+
+下面以几个具体例子来进行详细说明。
+
+### 打怪掉宝（怪物->道具）
+
+我们注意到怪物和道具都是系统默认事件，因此无需写events，而是直接在afterBattle中setBlock即可。
+
+``` js
+"afterBattle": {
+    "x,y": [
+        {"type": "setBlock", "number": 21} // 变成黄钥匙。注意是当前点因此可省略floorId和loc
+    ]
+}
+```
+
+### 打怪变成可对话的NPC（怪物->NPC）
+
+由于NPC是自定义事件，因此我们需要写events。注意到events中不覆盖trigger，则还是怪物时，存在系统trigger因此会战斗；变成NPC后没有系统trigger因此会触发自定义事件。
+
+请注意打死怪物时默认会禁用该点，因此替换后需要手动进行show来启用。
+
+``` js
+"events": {
+    "x,y": [
+        "可对话的NPC"
+    ]
+},
+"afterBattle": {
+    "x,y": [
+        {"type": "setBlock", "number": 121}, // 变成老人
+        {"type": "show", "loc": [x,y]} // 启用该点
+    ]
+}
+```
+
+### 获得圣水后变成墙
+
+这个例子要求获得圣水时不前进（也就是不能走到圣水地方），然后把圣水位置变成墙。
+
+因此需要我们需要覆盖系统trigger（getItem），并覆盖noPass。
+
+通过if来判断有没有获得圣水，没有则触发圣水（生命x2）然后变成墙，否则不执行。
+
+``` js
+"events": {
+    "x,y": {
+        "trigger": "action", // 覆盖系统trigger，默认的getItem不会执行
+        "noPass": true, // 覆盖可通行状态，不允许走到该点
+        "data": [
+            {"type": "if", "condition": "flag:hasSuperPotion", // 条件判断：是否喝过圣水
+                "true": [], // 喝过了，不执行
+                "false": [
+                    {"type":"setValue", "name":"status:hp", "value":"status:hp*2"}, // 生命翻倍
+                    {"type":"setBlock", "number": 1}, // 将该点变成墙
+                    {"type":"setValue", "name":"flag:hasSuperPotion", "value": "true"} // 标记已经喝过了
+                ]
+            }
+        ]
+    ]
+}
+```
+
+
+总之，记住如下两点：
+
+ - 可以使用setBlock来更改一个图块。
+   - 可通行状态遵循覆盖原则，即**首先取该图块的默认noPass属性，如果剧本的events中定义该点的noPass则覆盖**。
+   - 触发器(trigger)亦采用覆盖原则，即**首先取该图块的默认触发器（例如怪物是battle，道具是getItem，门是openDoor），如果剧本的events中定义了该点的trigger则覆盖**。
+ - 可以通过if语句和flag来控制自定义事件具体走向哪个分支。
+   - 如果弄不清楚系统trigger和自定义事件等的区别，也可以全部覆盖为自定义事件，然后通过type:battle，type:openDoor等来具体进行控制。
 
 ## 加点事件
 
@@ -1092,6 +1246,51 @@ events.prototype.afterUseBomb = function () {
 }
 ```
 
+## 滑冰和推箱子事件
+
+最新的样板还支持滑冰和推箱子事件。
+
+滑冰事件的数字是167，trigger为ski。
+
+当角色走上冰面时，将触发ski事件，并会一直向前滑行，直到撞上不可通行的块会触发事件（比如撞上怪物会触发battle，撞上门会触发openDoor等等），或者离开冰面为止。
+
+!> 由于H5魔塔只有事件一层，因此滑冰的冰面上将无法摆放任何东西（如道具）。
+
+!> 撞上怪物将触发battle进行战斗，此战斗的触发和直接撞上怪物相同（战斗前自动存档，打不过则无法战斗）；如需不自动存档的强制战斗请使用自定义事件覆盖。开门同理。
+
+关于推箱子，存在三种状态：花（168），箱子（169）和已经推到花的箱子（170）。
+
+!> 推箱子的前方不允许存在任何事件（花除外），包括已经禁用的自定义事件。
+
+推完箱子后将触发events.js中的afterPushBox事件，你可以在这里进行开门判断。
+
+``` js
+////// 推箱子后的事件 //////
+events.prototype.afterPushBox = function () {
+
+    var noBoxLeft = function () {
+        // 地图上是否还存在未推到的箱子，如果不存在则返回true，存在则返回false
+        for (var i=0;i<core.status.thisMap.blocks.length;i++) {
+            var block=core.status.thisMap.blocks[i];
+            if (core.isset(block.event) && block.event.id=='box') return false;
+        }
+        return true;
+    }
+
+    if (noBoxLeft()) {
+        // 可以通过if语句来进行开门操作
+        /*
+        if (core.status.floorId=='xxx') { // 在某个楼层
+            core.insertAction([ // 插入一条事件
+                {"type": "openDoor", "loc": [x,y]} // 开门
+            ])
+        }
+        */
+    }
+}
+```
+
+
 ## 战前剧情
 
 有时候光战后事件`afterBattle`是不够的，我们可能还需要战前剧情，例如Boss战之前和Boss进行一段对话。
@@ -1150,7 +1349,7 @@ events.prototype.afterUseBomb = function () {
   - 如果`effect`为字符串，则和上面的全局商店的写法完全相同。可由分号分开，每一项为X+=Y的形式，X为你要修改的勇士属性/道具个数，Y为一个表达式。
   - 如果`effect`为函数，则也允许写一个`function`，来代表本次升级将会执行的操作。
 
-## 开始，难度分歧，获胜与失败
+## 开始，难度分歧，获胜与失败，多结局
 
 游戏开始时将调用`events.js`中的`startGame`函数。
 
@@ -1188,13 +1387,16 @@ events.prototype.setInitData = function (hard) {
 ``` js
 ////// 游戏获胜事件 //////
 events.prototype.win = function(reason) {
+    core.ui.closePanel();
+    var replaying = core.status.replay.replaying;
+    core.stopReplay();
     core.waitHeroToStop(function() {
         core.removeGlobalAnimate(0,0,true);
         core.clearMap('all'); // 清空全地图
         core.drawText([
-            "\t[结局2]恭喜通关！你的分数是${status:hp}。"
+            "\t[恭喜通关]你的分数是${status:hp}。"
         ], function () {
-            core.restart();
+            core.events.gameOver('', replaying);
         })
     });
 }
@@ -1207,17 +1409,40 @@ events.prototype.win = function(reason) {
 ``` js
 ////// 游戏失败事件 //////
 events.prototype.lose = function(reason) {
+    core.ui.closePanel();
+    var replaying = core.status.replay.replaying;
+    core.stopReplay();
     core.waitHeroToStop(function() {
         core.drawText([
             "\t[结局1]你死了。\n如题。"
         ], function () {
-            core.restart();
+            core.events.gameOver(null, replaying);
         });
     })
 }
 ```
 
 其参数reason为失败原因。你可以在这里修改失败界面时显示的文字。
+
+如果要设置多种不同的结局，只需要在win的传参中把`core.events.gameOver('', replaying);`的空字符串改成具体的结局名。
+
+例如：
+
+``` js
+events.prototype.win = function(reason) { // 传入参数"reason"为结局名
+// ... 上略
+        ], function () {
+            core.events.gameOver(reason, replaying); // 使用reason作为结局名
+        })
+    });
+}
+
+// 然后在事件可以调用
+{"type": "win", "reason": "TRUE END"}, // TE结局
+{"type": "win", "reason": "NORMAL END"} // NE结局
+```
+
+上面这个例子中，我们直接把reason作为结局名的参数传入gameOver函数，这样的话就可以直接在{"type": "win"}中加上"reason"代表具体的结局。
 
 ==========================================================================================
 

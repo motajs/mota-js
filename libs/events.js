@@ -45,6 +45,16 @@ events.prototype.init = function () {
             if (core.isset(callback))
                 callback();
         },
+        "ski": function (data, core, callback) {
+            core.events.ski();
+            if (core.isset(callback))
+                callback();
+        },
+        "pushBox": function (data, core, callback) {
+            core.events.pushBox(data);
+            if (core.isset(callback))
+                callback();
+        },
         'action': function (data, core, callback) {
             core.events.doEvents(data.event.data, data.x, data.y);
             if (core.isset(callback)) callback();
@@ -109,6 +119,7 @@ events.prototype.setInitData = function (hard) {
     if (hard=='Hard') { // 困难难度
         core.setFlag('hard', 3); // 可以用flag:hard来获得当前难度
     }
+    this.afterLoadData();
 }
 
 ////// 游戏获胜事件 //////
@@ -122,7 +133,7 @@ events.prototype.win = function(reason) {
         core.drawText([
             "\t[恭喜通关]你的分数是${status:hp}。"
         ], function () {
-            core.events.gameOver('', replaying);
+            core.events.gameOver(reason||'', replaying);
         })
     });
 }
@@ -255,6 +266,8 @@ events.prototype.doEvents = function (list, x, y, callback) {
 events.prototype.doAction = function() {
     // 清空boxAnimate和UI层
     core.status.boxAnimateObjs = [];
+    clearInterval(core.status.event.interval);
+
     core.clearMap('ui', 0, 0, 416, 416);
     core.setAlpha('ui', 1.0);
 
@@ -290,7 +303,17 @@ events.prototype.doAction = function() {
             if (core.status.replay.replaying)
                 core.events.doAction();
             else
-                core.ui.drawTextBox(data.data);
+                core.ui.drawTextBox(data.text);
+            break;
+        case "autoText":
+            if (core.status.replay.replaying)
+                core.events.doAction();
+            else {
+                core.ui.drawTextBox(data.text);
+                setTimeout(function () {
+                    core.events.doAction();
+                }, data.time || 3000);
+            }
             break;
         case "setText": // 设置文本状态
             if (data.position=='up'||data.position=='down'||data.position=='center') {
@@ -302,6 +325,12 @@ events.prototype.doAction = function() {
                     core.status.textAttribute[t]=data[t];
                 }
             })
+            if (core.isset(data.bold)) {
+                core.status.textAttribute.bold=data.bold;
+            }
+            if (core.isset(data.time)) {
+                core.status.textAttribute.time=data.time;
+            }
             core.events.doAction();
             break;
         case "tip":
@@ -309,31 +338,67 @@ events.prototype.doAction = function() {
             core.events.doAction();
             break;
         case "show": // 显示
+            if (typeof data.loc[0] == 'number' && typeof data.loc[1] == 'number')
+                data.loc = [data.loc];
             if (core.isset(data.time) && data.time>0 && (!core.isset(data.floorId) || data.floorId==core.status.floorId)) {
-                core.animateBlock(data.loc[0],data.loc[1],'show', data.time, function () {
-                    core.showBlock(data.loc[0],data.loc[1],data.floorId);
+                core.animateBlock(data.loc,'show', data.time, function () {
+                    data.loc.forEach(function (t) {
+                        core.showBlock(t[0],t[1],data.floorId)
+                    })
                     core.events.doAction();
                 });
             }
             else {
-                core.showBlock(data.loc[0],data.loc[1],data.floorId)
+                data.loc.forEach(function (t) {
+                    core.showBlock(t[0],t[1],data.floorId)
+                })
                 this.doAction();
             }
             break;
         case "hide": // 消失
-            var toX=x, toY=y, toId=core.status.floorId;
-            if (core.isset(data.loc)) {
-                toX=data.loc[0]; toY=data.loc[1];
-            }
-            if (core.isset(data.floorId)) toId=data.floorId;
-            core.removeBlock(toX,toY,toId)
-            if (core.isset(data.time) && data.time>0 && toId==core.status.floorId) {
-                core.animateBlock(toX,toY,'hide',data.time, function () {
+            if (!core.isset(data.loc))
+                data.loc = [x,y];
+            if (typeof data.loc[0] == 'number' && typeof data.loc[1] == 'number')
+                data.loc = [data.loc];
+            data.loc.forEach(function (t) {
+                core.removeBlock(t[0],t[1],data.floorId);
+            })
+            if (core.isset(data.time) && data.time>0 && (!core.isset(data.floorId) || data.floorId==core.status.floorId)) {
+                core.animateBlock(data.loc,'hide',data.time, function () {
                     core.events.doAction();
                 });
             }
             else this.doAction();
             break;
+        case "setBlock": // 设置某图块
+            {
+                if (core.isset(data.loc)) {
+                    x=data.loc[0];
+                    y=data.loc[1];
+                }
+                var floorId = data.floorId||core.status.floorId;
+                var originBlock=core.getBlock(x,y,floorId,false);
+                var block = core.maps.getBlock(x,y,data.number);
+                core.maps.addInfo(block);
+                core.maps.addEvent(block,x,y,core.floors[floorId].events[x+","+y]);
+                core.maps.addChangeFloor(block,x,y,core.floors[floorId].changeFloor[x+","+y]);
+                if (core.isset(block.event)) {
+                    if (originBlock==null) {
+                        core.status.maps[floorId].blocks.push(block);
+                    }
+                    else {
+                        originBlock.block.id = data.number;
+                        originBlock.block.event = block.event;
+                    }
+                    if (floorId==core.status.floorId) {
+                        core.drawMap(floorId);
+                        core.drawHero(core.getHeroLoc('direction'), core.getHeroLoc('x'), core.getHeroLoc('y'), 'stop');
+                        core.updateStatusBar();
+                    }
+                }
+                this.doAction();
+                break;
+            }
         case "animate": // 显示动画
             if (core.isset(data.loc)) {
                 if (data.loc == 'hero') {
@@ -490,6 +555,30 @@ events.prototype.doAction = function() {
             }
             else {
                 core.updateStatusBar();
+                this.doAction();
+            }
+            break;
+        case "input":
+            {
+                var value;
+                if (core.status.replay.replaying) {
+                    var action = core.status.replay.toReplay.shift();
+                    if (action.indexOf("input:")==0 ) {
+                        value=parseInt(action.substring(6));
+                    }
+                    else {
+                        core.stopReplay();
+                        core.drawTip("录像文件出错");
+                        return;
+                    }
+
+                }
+                else {
+                    value = prompt(core.replaceText(data.text));
+                }
+                value = Math.abs(parseInt(value)||0);
+                core.status.route.push("input:"+value);
+                core.setFlag("input", value);
                 this.doAction();
             }
             break;
@@ -784,7 +873,7 @@ events.prototype.afterBattle = function(enemyId,x,y,callback) {
 
     // 如果事件不为空，将其插入
     if (todo.length>0) {
-        this.insertAction(todo);
+        this.insertAction(todo,x,y);
     }
 
     // 如果已有事件正在处理中
@@ -810,7 +899,7 @@ events.prototype.afterOpenDoor = function(doorId,x,y,callback) {
     }
 
     if (todo.length>0) {
-        this.insertAction(todo);
+        this.insertAction(todo,x,y);
     }
 
     if (core.status.event.id == null) {
@@ -875,6 +964,104 @@ events.prototype.afterChangeLight = function(x,y) {
 
 }
 
+////// 滑冰 //////
+events.prototype.ski = function (direction) {
+    if (!core.isset(direction))
+        direction = core.status.automaticRoute.lastDirection || core.getHeroLoc('direction');
+    if (core.status.event.id!='ski') {
+        core.waitHeroToStop(function () {
+            core.status.event.id='ski';
+            core.events.ski(direction);
+        });
+    }
+    else {
+        core.moveHero(direction, function () {
+            if (core.status.event.id=='ski') {
+                core.status.event.id=null;
+                core.unLockControl();
+                core.replay();
+            }
+        })
+    }
+}
+
+////// 推箱子 //////
+events.prototype.pushBox = function (data) {
+    if (data.event.id!='box' && data.event.id!='boxed') return;
+
+    // 判断还能否前进，看看是否存在事件
+    var scan = {
+        'up': {'x': 0, 'y': -1},
+        'left': {'x': -1, 'y': 0},
+        'down': {'x': 0, 'y': 1},
+        'right': {'x': 1, 'y': 0}
+    };
+
+    var direction = core.getHeroLoc('direction'), nx=data.x+scan[direction].x, ny=data.y+scan[direction].y;
+
+    if (nx<0||nx>12||ny<0||ny>12) return;
+
+    var block = core.getBlock(nx, ny, null, false);
+    if (block!=null && !(core.isset(block.block.event) && block.block.event.id=='flower'))
+        return;
+
+    var blockIcon;
+    if (block==null) {
+        core.status.thisMap.blocks.push(core.maps.getBlock(nx, ny, 169));
+        blockIcon=core.material.icons.terrains.box;
+    }
+    else {
+        block.block.id=170;
+        block.block.event=core.maps.getBlock(null,null,170).event;
+        blockIcon=core.material.icons.terrains.boxed;
+    }
+    core.canvas.event.clearRect(nx * 32, ny * 32, 32, 32);
+    core.canvas.event.drawImage(core.material.images.terrains, 0, blockIcon * 32, 32, 32, nx * 32, ny * 32, 32, 32);
+
+    if (data.event.id=='box') {
+        core.removeBlock(data.x, data.y);
+    }
+    else {
+        data.id=168;
+        data.event=core.maps.getBlock(null,null,168).event;
+        core.canvas.event.clearRect(data.x * 32, data.y * 32, 32, 32);
+        core.canvas.event.drawImage(core.material.images.terrains, 0, core.material.icons.terrains.flower * 32, 32, 32, data.x * 32, data.y * 32, 32, 32);
+    }
+
+    core.updateStatusBar();
+    core.lockControl();
+    core.eventMoveHero([direction], null, function () {
+        core.unLockControl();
+        core.events.afterPushBox();
+        core.replay();
+    })
+
+}
+
+////// 推箱子后的事件 //////
+events.prototype.afterPushBox = function () {
+
+    var noBoxLeft = function () {
+        // 地图上是否还存在未推到的箱子，如果不存在则返回true，存在则返回false
+        for (var i=0;i<core.status.thisMap.blocks.length;i++) {
+            var block=core.status.thisMap.blocks[i];
+            if (core.isset(block.event) && block.event.id=='box') return false;
+        }
+        return true;
+    }
+
+    if (noBoxLeft()) {
+        // 可以通过if语句来进行开门操作
+        /*
+        if (core.status.floorId=='xxx') { // 在某个楼层
+            core.insertAction([ // 插入一条事件
+                {"type": "openDoor", "loc": [x,y]} // 开门
+            ])
+        }
+        */
+    }
+}
+
 ////// 使用炸弹/圣锤后的事件 //////
 events.prototype.afterUseBomb = function () {
 
@@ -908,10 +1095,16 @@ events.prototype.afterLoadData = function(data) {
 
 ////// 长按 //////
 events.prototype.longClick = function () {
-    core.waitHeroToStop(function () {
-        // 绘制快捷键
-        core.ui.drawKeyBoard();
-    });
+    if (!core.isPlaying()) return false;
+    if (core.status.event.id=='text') {
+        core.drawText();
+        return true;
+    }
+    if (core.status.event.id=='action' && core.status.event.data.type=='text') {
+        this.doAction();
+        return true;
+    }
+    return false;
 }
 
 ////// 按下Ctrl键时（快捷跳过对话） //////
@@ -1140,8 +1333,8 @@ events.prototype.clickViewMaps = function (x,y) {
 
 ////// 查看地图界面时，按下某个键的操作 //////
 events.prototype.keyDownViewMaps = function (keycode) {
-    if (keycode==37 || keycode==38) core.ui.drawMaps(core.status.event.data+1);
-    else if (keycode==39 || keycode==40) core.ui.drawMaps(core.status.event.data-1);
+    if (keycode==37 || keycode==38 || keycode==33) core.ui.drawMaps(core.status.event.data+1);
+    else if (keycode==39 || keycode==40 || keycode==34) core.ui.drawMaps(core.status.event.data-1);
     return;
 }
 
@@ -1202,6 +1395,7 @@ events.prototype.clickShop = function(x,y) {
                 core.status.route.push("shop:"+core.status.event.data.id+":"+core.status.event.data.actions.join(""));
             }
 
+            core.status.event.data.actions = [];
             core.status.boxAnimateObjs = [];
             if (core.status.event.data.fromList)
                 core.ui.drawQuickShop();
@@ -1230,6 +1424,8 @@ events.prototype.keyUpShop = function (keycode) {
         if (core.status.event.data.actions.length>0) {
             core.status.route.push("shop:"+core.status.event.data.id+":"+core.status.event.data.actions.join(""));
         }
+
+        core.status.event.data.actions = [];
 
         core.status.boxAnimateObjs = [];
 
@@ -1302,6 +1498,18 @@ events.prototype.clickToolbox = function(x,y) {
         core.ui.closePanel();
         return;
     }
+    if (x>=10 && x<=12 && y<=1) {
+        if (!core.isset(core.status.event.data)) return;
+        if (!core.flags.enableDeleteItem) {
+            core.drawTip("不支持删除道具！");
+            return;
+        }
+        core.removeItem(core.status.event.data);
+        core.status.event.data = null;
+        core.ui.drawToolbox();
+        return;
+    }
+
     var index=0;
     if (y==4||y==5||y==9||y==10) index=parseInt(x/2);
     else index=6+parseInt(x/2);
@@ -1406,6 +1614,19 @@ events.prototype.keyUpToolbox = function (keycode) {
         this.clickToolboxIndex(core.status.event.selection);
         return;
     }
+
+    if (keycode==46) { // delete
+        if (!core.isset(core.status.event.data)) return;
+        if (!core.flags.enableDeleteItem) {
+            core.drawTip("不支持删除道具！");
+            return;
+        }
+        core.removeItem(core.status.event.data);
+        core.status.event.data = null;
+        core.ui.drawToolbox();
+        return;
+    }
+
 }
 
 ////// 存读档界面时的点击操作 //////

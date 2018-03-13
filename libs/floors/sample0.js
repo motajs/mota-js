@@ -34,7 +34,6 @@ main.floors.sample0 = {
         "本层主要对道具、门、怪物等进行介绍，有关事件的各种信息在下一层会有更为详细的说明。",
     ],
     "events": { // 该楼的所有可能事件列表
-
         "10,9": [ // 守着道具的老人
             "\t[老人,man]这些是本样板支持的所有的道具。\n\n道具分为三类：items, constants, tools。\nitems 为即捡即用类道具，例如宝石、血瓶、剑盾等。\nconstants 为永久道具，例如怪物手册、楼层传送器、幸运金币等。\ntools 为消耗类道具，例如破墙镐、炸弹、中心对称飞行器等。\n\n后两类道具在工具栏中可以看到并使用。",
             "\t[老人,man]\b[up]有关道具效果，定义在items.js中。\n目前大多数道具已有默认行为，如有自定义的需求则需在items.js中修改代码。",
@@ -77,6 +76,7 @@ main.floors.sample0 = {
         },
     },
     "changeFloor": { // 楼层转换事件；该事件不能和上面的events有冲突（同位置点），否则会被覆盖
+        "7,9": {"floorId": "sample1", "stair": "downFloor"},
         "6,0": {"floorId": "sample1", "stair": "downFloor"}, // 目标点：sample1层的下楼梯位置
         "0,11": {"floorId": "sample0", "loc": [0,12]}, // 目标点：sample0层的x=0,y=12位置
         "0,12": {"floorId": "sample0", "stair": "upFloor"}, // 注意，目标层有多个楼梯的话，写stair可能会导致到达位置不确定。这时候推荐写loc指明目标点位置。
@@ -88,7 +88,7 @@ main.floors.sample0 = {
         "6,12": {"floorId": "sample0", "loc": [10,10], "direction": "left", "time": 1000},
     },
     "afterBattle": { // 战斗后可能触发的事件列表
-        "2,6": ["\t[ghostSkeleton]不可能，你怎么可能打败我！\n（一个打败怪物触发的事件）"]
+        "2,6": ["\t[ghostSkeleton]不可能，你怎么可能打败我！\n（一个打败怪物触发的事件）"],
     },
     "afterGetItem": { // 获得道具后可能触发的事件列表
         "11,8": ["由于状态栏放不下，绿钥匙和铁门钥匙均视为tools，放入工具栏中。\n碰到绿门和铁门仍然会自动使用开门。"],
@@ -109,7 +109,12 @@ main.floors.sample0 = {
     },
     "afterOpenDoor": { // 开完门后可能触发的事件列表
         "11,12": ["你开了一个绿门，触发了一个afterOpenDoor事件"]
-    }
+    },
+    "cannotMove": { // 每个图块不可通行的方向
+        // 可以在这里定义每个点不能前往哪个方向，例如悬崖边不能跳下去
+        // "x,y": ["up", "left"], // (x,y)点不能往上和左走
+
+    },
 
 }
 

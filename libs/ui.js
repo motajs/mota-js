@@ -15,6 +15,7 @@ main.instance.ui = new ui();
 ////// 结束一切事件和绘制，关闭UI窗口，返回游戏进程 //////
 ui.prototype.closePanel = function () {
     core.status.boxAnimateObjs = [];
+    clearInterval(core.status.event.interval);
     core.clearMap('ui', 0, 0, 416, 416);
     core.setAlpha('ui', 1.0);
     core.unLockControl();
@@ -22,10 +23,13 @@ ui.prototype.closePanel = function () {
     core.status.event.id = null;
     core.status.event.selection = null;
     core.status.event.ui = null;
+    core.status.event.interval = null;
 }
 
 ////// 绘制一个对话框 //////
 ui.prototype.drawTextBox = function(content) {
+
+    clearInterval(core.status.event.interval);
 
     // 获得name, image, icon
     var id=null, name=null, image=null, icon=null;
@@ -97,20 +101,15 @@ ui.prototype.drawTextBox = function(content) {
                     }
                 }
             }
-            /*
-            if (ss.length==3) {
-                px=parseInt(ss[1]);
-                py=parseInt(ss[2]);
-            }
-            */
-
         }
     }
 
     content = core.replaceText(content);
 
     var background = core.canvas.ui.createPattern(core.material.ground, "repeat");
+    core.status.boxAnimateObjs = [];
     core.clearMap('ui', 0, 0, 416, 416);
+
     // var contents = content.split('\n');
     // var contents = core.splitLines('ui', content, );
     var left=10, right=416-2*left;
@@ -118,7 +117,9 @@ ui.prototype.drawTextBox = function(content) {
     if (id=='hero' || core.isset(icon)) content_left=left+63;
 
     var validWidth = right-(content_left-left)-13;
-    var contents = core.splitLines("ui", content, validWidth, '16px Verdana');
+    var font = '16px Verdana';
+    if (textAttribute.bold) font = "bold "+font;
+    var contents = core.splitLines("ui", content, validWidth, font);
 
     var height = 20 + 21*(contents.length+1) + (id=='hero'?core.material.icons.hero.height-10:core.isset(name)?32-10:0);
 
@@ -127,7 +128,7 @@ ui.prototype.drawTextBox = function(content) {
 
     var top;
     if (position=='center') {
-        top = (416 - height) / 2;
+        top = parseInt((416 - height) / 2);
     }
     else if (position=='up') {
         if (px==null || py==null) {
@@ -188,7 +189,6 @@ ui.prototype.drawTextBox = function(content) {
         core.drawLine('ui', 32*px+32-xoffset, top, 32*px+16, top-yoffset+2);
     }
 
-    core.status.boxAnimateObjs = [];
 
     // 名称
     core.canvas.ui.textAlign = "left";
@@ -211,7 +211,7 @@ ui.prototype.drawTextBox = function(content) {
             core.canvas.ui.drawImage(core.material.images.hero, heroIcon.stop * 32, heroIcon.loc * heroHeight, 32, heroHeight, left+15, top+40, 32, heroHeight);
         }
         else {
-            core.fillText('ui', name, content_left, top + 30, '#FFD700', 'bold 22px Verdana');
+            core.fillText('ui', name, content_left, top + 30, null, 'bold 22px Verdana');
             if (core.isset(icon)) {
                 core.strokeRect('ui', left + 15 - 1, top + 40 - 1, 34, 34, null, 2);
                 core.status.boxAnimateObjs = [];
@@ -224,15 +224,37 @@ ui.prototype.drawTextBox = function(content) {
         }
     }
 
-    core.setAlpha('ui', textAttribute.text[3]);
-    core.setFillStyle('ui', core.arrayToRGB(textAttribute.text));
 
-    for (var i=0;i<contents.length;i++) {
-        core.fillText('ui', contents[i], content_left, content_top, null, '16px Verdana');
-        content_top+=21;
+    var drawContent = function (content) {
+
+        core.clearMap("ui", content_left, content_top - 18, validWidth,  top + height - content_top + 10);
+        core.setAlpha('ui', textAttribute.background[3]);
+        core.setFillStyle('ui', core.arrayToRGB(textAttribute.background));
+        core.fillRect("ui",  content_left, content_top - 18, validWidth,  top + height - content_top + 10);
+
+        core.setAlpha('ui', textAttribute.text[3]);
+        core.setFillStyle('ui', core.arrayToRGB(textAttribute.text));
+        var contents = core.splitLines("ui", content, validWidth, font);
+
+        for (var i=0;i<contents.length;i++) {
+            core.fillText('ui', contents[i], content_left, content_top + 21*i, null, font);
+        }
+
     }
 
-    // core.fillText('ui', '<点击任意位置继续>', 270, top+height-13, '#CCCCCC', '13px Verdana');
+    if (textAttribute.time<=0 || core.status.event.id!='action') {
+        drawContent(content);
+    }
+    else {
+        var index=0;
+        core.status.event.interval = setInterval(function () {
+            drawContent(content.substring(0, ++index));
+            if (index==content.length) {
+                clearInterval(core.status.event.interval);
+            }
+        }, textAttribute.time);
+    }
+
 }
 
 ////// 绘制一个选项界面 //////
@@ -397,7 +419,7 @@ ui.prototype.drawConfirmBox = function (text, yesCallback, noCallback) {
         max_length = Math.max(max_length, core.canvas.ui.measureText(contents[i]).width);
     }
 
-    var left = Math.min(208 - 40 - max_length / 2, 100);
+    var left = Math.min(208 - 40 - parseInt(max_length / 2), 100);
     var top = 140 - (lines-1)*30;
     var right = 416 - 2 * left, bottom = 416 - 140 - top;
 
@@ -415,10 +437,10 @@ ui.prototype.drawConfirmBox = function (text, yesCallback, noCallback) {
 
     var len=core.canvas.ui.measureText("确定").width;
     if (core.status.event.selection==0) {
-        core.strokeRect('ui', 208-38-len/2-5, top+bottom-35-20, len+10, 28, "#FFD700", 2);
+        core.strokeRect('ui', 208-38-parseInt(len/2)-5, top+bottom-35-20, len+10, 28, "#FFD700", 2);
     }
     if (core.status.event.selection==1) {
-        core.strokeRect('ui', 208+38-len/2-5, top+bottom-35-20, len+10, 28, "#FFD700", 2);
+        core.strokeRect('ui', 208+38-parseInt(len/2)-5, top+bottom-35-20, len+10, 28, "#FFD700", 2);
     }
 
 }
@@ -480,7 +502,7 @@ ui.prototype.drawBattleAnimate = function(monsterId, callback) {
     var initDamage = 0; // 战前伤害
 
     // 吸血
-    if (this.hasSpecial(mon_special, 11)) {
+    if (core.enemys.hasSpecial(mon_special, 11)) {
         var vampireDamage = hero_hp * monster.value;
 
         // 如果有神圣盾免疫吸血等可以在这里写
@@ -773,7 +795,7 @@ ui.prototype.drawWaiting = function(text) {
     var text_length = core.canvas.ui.measureText(text).width;
 
     var right = Math.max(text_length+50, 220);
-    var left = 208-right/2, top = 208 - 32 - 16, bottom = 416 - 2 * top;
+    var left = 208-parseInt(right/2), top = 208 - 32 - 16, bottom = 416 - 2 * top;
 
     core.fillRect('ui', left, top, right, bottom, background);
     core.strokeRect('ui', left - 1, top - 1, right + 1, bottom + 1, '#FFFFFF', 2);
@@ -819,7 +841,7 @@ ui.prototype.drawPagination = function (page, totalPage) {
     var length = core.canvas.ui.measureText(page + " / " + page).width;
 
     core.canvas.ui.textAlign = 'left';
-    core.fillText('ui', page + " / " + totalPage, (416 - length) / 2, 403);
+    core.fillText('ui', page + " / " + totalPage, parseInt((416 - length) / 2), 403);
 
     core.canvas.ui.textAlign = 'center';
     if (page > 1)
@@ -1206,6 +1228,7 @@ ui.prototype.drawToolbox = function(index) {
 
     // 退出
     core.canvas.ui.textAlign = 'center';
+    core.fillText('ui', '删除道具', 370, 32,'#DDDDDD', 'bold 15px Verdana');
     core.fillText('ui', '返回游戏', 370, 403,'#DDDDDD', 'bold 15px Verdana');
 }
 
@@ -1227,7 +1250,7 @@ ui.prototype.drawSLPanel = function(index) {
     core.setAlpha('ui', 1);
     core.canvas.ui.textAlign = 'center';
 
-    var u=416/6, size=117;
+    var u=416/6, size=118;
 
     var name=core.status.event.id=='save'?"存档":"读档";
     for (var i=0;i<6;i++) {
@@ -1389,9 +1412,10 @@ ui.prototype.drawAbout = function() {
     // 名称
     core.canvas.ui.textAlign = "left";
     core.fillText('ui', "HTML5 魔塔样板", text_start, top+35, "#FFD700", "bold 22px Verdana");
-    core.fillText('ui', "作者： 艾之葵", text_start, top + 80, "#FFFFFF", "bold 17px Verdana");
-    core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top+112);
-    // TODO: 写自己的“关于”页面
+    core.fillText('ui', "版本： "+core.firstData.version, text_start, top + 80, "#FFFFFF", "bold 17px Verdana");
+    core.fillText('ui', "作者： 艾之葵", text_start, top + 112);
+    core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top+112+32);
+    // TODO: 写自己的“关于”页面，每次增加32像素即可
 }
 
 ////// 绘制帮助页面 //////
@@ -1406,6 +1430,7 @@ ui.prototype.drawHelp = function () {
         "[K] 打开/关闭快捷商店选择列表\n" +
         "[T] 打开/关闭工具栏\n" +
         "[ESC] 打开/关闭系统菜单\n" +
+        "[E] 显示光标\n" +
         "[H] 打开帮助页面\n"+
         "[R] 回放\n"+
         "[SPACE] 轻按（仅在轻按开关打开时有效）\n" +
@@ -1418,6 +1443,6 @@ ui.prototype.drawHelp = function () {
         "点任意块并拖动： 指定寻路路线\n"+
         "单击勇士： 转向\n"+
         "双击勇士： 轻按（仅在轻按开关打开时有效）\n"+
-        "长按任意位置：打开虚拟键盘"
+        "长按任意位置：跳过剧情对话或打开虚拟键盘\n"
     ]);
 }
