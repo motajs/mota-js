@@ -1970,7 +1970,7 @@ maps.prototype.getBlockInfo = function (block) {
     else if (id == 'airwall') {
         if (!core.material.images.airwall) return null;
         image = core.material.images.airwall;
-        name = "空气墙";
+        name = "Air Wall";
     }
     else if (cls == 'tileset') {
         var offset = core.icons.getTilesetOffset(id);
@@ -2490,7 +2490,7 @@ maps.prototype.resetMap = function (floorId) {
         if (t == core.status.floorId) needRefresh = true;
     });
     if (needRefresh) this.redrawMap();
-    core.drawTip("地图重置成功");
+    core.drawTip("Map reset successful");
 }
 
 // -------- 移动/跳跃图块，图块的淡入淡出 -------- //

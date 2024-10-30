@@ -1,16 +1,16 @@
 var events_c12a15a8_c380_4b28_8144_256cba95f760 = 
 {
 	"commonEvent": {
-		"加点事件": [
+		"Add point event": [
 			{
 				"type": "comment",
-				"text": "通过传参，flag:arg1 表示当前应该的加点数值"
+				"text": "By passing parameters,flag:arg1 Indicates the current added value"
 			},
 			{
 				"type": "choices",
 				"choices": [
 					{
-						"text": "攻击+${1*flag:arg1}",
+						"text": "attack+${1*flag:arg1}",
 						"action": [
 							{
 								"type": "setValue",
@@ -21,7 +21,7 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 						]
 					},
 					{
-						"text": "防御+${2*flag:arg1}",
+						"text": "defense+${2*flag:arg1}",
 						"action": [
 							{
 								"type": "setValue",
@@ -32,7 +32,7 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 						]
 					},
 					{
-						"text": "生命+${200*flag:arg1}",
+						"text": "life+${200*flag:arg1}",
 						"action": [
 							{
 								"type": "setValue",
@@ -45,18 +45,18 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 				]
 			}
 		],
-		"回收钥匙商店": [
+		"Key Recovery Shop": [
 			{
 				"type": "comment",
-				"text": "此事件在全局商店中被引用了(全局商店keyShop)"
+				"text": "This event is referenced in the global store(Global StorekeyShop)"
 			},
 			{
 				"type": "comment",
-				"text": "解除引用前勿删除此事件"
+				"text": "Do not delete this event before dereferencing it"
 			},
 			{
 				"type": "comment",
-				"text": "玩家在快捷列表（V键）中可以使用本公共事件"
+				"text": "Players in the Quick List (VThis public event can be used in"
 			},
 			{
 				"type": "while",
@@ -64,10 +64,10 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 				"data": [
 					{
 						"type": "choices",
-						"text": "\t[商人,trader]你有多余的钥匙想要出售吗？",
+						"text": "\t[merchant,trader]Do you have extra keys you want to sell?",
 						"choices": [
 							{
-								"text": "黄钥匙（10金币）",
+								"text": "Yellow Key (10gold)",
 								"color": [
 									255,
 									255,
@@ -93,13 +93,13 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 											}
 										],
 										"false": [
-											"\t[商人,trader]你没有黄钥匙！"
+											"\t[merchant,trader]You dont have the yellow key!"
 										]
 									}
 								]
 							},
 							{
-								"text": "蓝钥匙（50金币）",
+								"text": "Blue Key (50gold)",
 								"color": [
 									0,
 									0,
@@ -125,13 +125,13 @@ var events_c12a15a8_c380_4b28_8144_256cba95f760 =
 											}
 										],
 										"false": [
-											"\t[商人,trader]你没有蓝钥匙！"
+											"\t[merchant,trader]You dont have the blue key!"
 										]
 									}
 								]
 							},
 							{
-								"text": "离开",
+								"text": "leave",
 								"action": [
 									{
 										"type": "exit"

@@ -1,6 +1,6 @@
 
 /**
- * 初始化 start
+ * initialization start
  */
 
 "use strict";
@@ -314,7 +314,7 @@ core.prototype._init_flags = function () {
 
     core.dom.versionLabel.innerText = core.firstData.version;
     core.dom.logoLabel.innerText = core.firstData.title;
-    document.title = core.firstData.title + " - HTML5魔塔";
+    document.title = core.firstData.title + " - HTML5Magic Tower";
     document.getElementById("startLogo").innerText = core.firstData.title;
     (core.firstData.shops || []).forEach(function (t) { core.initStatus.shops[t.id] = t; });
 
@@ -397,7 +397,7 @@ core.prototype._init_sys_flags = function () {
 
 core.prototype._init_platform = function () {
     core.platform.isOnline = location.protocol.indexOf("http") == 0;
-    if (!core.platform.isOnline) alert("请勿直接打开html文件！使用启动服务或者APP进行离线游戏。");
+    if (!core.platform.isOnline) alert("Do not open directlyhtmlFile! Use start service orAPPPlay offline games.");
     window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
     core.musicStatus.bgmStatus = core.getLocalStorage('bgmStatus', true);
     core.musicStatus.soundStatus = core.getLocalStorage('soundStatus', true);
@@ -409,7 +409,7 @@ core.prototype._init_platform = function () {
         core.musicStatus.gainNode.gain.value = core.musicStatus.userVolume;
         core.musicStatus.gainNode.connect(core.musicStatus.audioContext.destination);
     } catch (e) {
-        console.log("该浏览器不支持AudioContext");
+        console.log("This browser does not supportAudioContext");
         core.musicStatus.audioContext = null;
     }
     ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"].forEach(function (t) {
@@ -468,11 +468,11 @@ core.prototype._afterLoadResources = function (callback) {
     (main.splitImages || []).forEach(function (one) {
         var name = core.getMappedName(one.name);
         if (!core.material.images.images[name]) {
-            console.warn('找不到图片：' + name + '，无法裁剪');
+            console.warn('Image not found:' + name + ', cannot be cropped');
             return;
         }
         if (!name.endsWith('.png')) {
-            console.warn('无法裁剪非png格式图片：' + name);
+            console.warn('Unable to cut nonpngFormat image:' + name);
             return;
         }
         var arr = core.splitImage(core.material.images.images[name], one.width, one.height);
@@ -497,7 +497,7 @@ core.prototype._init_plugins = function () {
             }
             catch (e) {
                 console.error(e);
-                console.error("无法初始化插件" + name);
+                console.error("Unable to initialize plugin" + name);
             }
         }
     }
@@ -524,7 +524,7 @@ core.prototype._forwardFunc = function (name, funcname) {
     }
 
     if (core[funcname]) {
-        console.error("ERROR: 无法转发 " + name + " 中的函数 " + funcname + " 到 core 中！同名函数已存在。");
+        console.error("ERROR: Unable to forward " + name + " Functions in " + funcname + " arrive core In! A function with the same name already exists.");
         return;
     }
     var parameterInfo = /^\s*function\s*[\w_$]*\(([\w_,$\s]*)\)\s*\{/.exec(core[name][funcname].toString());

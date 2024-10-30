@@ -1,7 +1,7 @@
 main.floors.MT0=
 {
     "floorId": "MT0",
-    "title": "主塔 0 层",
+    "title": "Main Tower 0 layer",
     "name": "0",
     "canFlyTo": true,
     "canFlyFrom": true,

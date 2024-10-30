@@ -1,8 +1,8 @@
 
 /*
-control.js：游戏主要逻辑控制
-主要负责status相关内容，以及各种变量获取/存储
-寻路算法和人物行走也在此文件内
+control.js: The main logic control of the game
+Mainly responsible forstatusRelated content, and various variable acquisition/storage
+Pathfinding algorithms and character walking are also in this file
  */
 
 "use strict";
@@ -87,7 +87,7 @@ control.prototype._setRequestAnimationFrame = function () {
                 }
                 catch (e) {
                     console.error(e);
-                    console.error("ERROR in requestAnimationFrame[" + b.name + "]：已自动注销该项。");
+                    console.error("ERROR in requestAnimationFrame[" + b.name + "]: The item has been automatically deregistered.");
                     core.unregisterAnimationFrame(b.name);
                 }
             }
@@ -214,7 +214,7 @@ control.prototype._animationFrame_weather = function (timestamp) {
         core.doFunc(core.control.weathers[type].frameFunc, core.control, timestamp, core.animateFrame.weather.level);
     } catch (e) {
         console.error(e);
-        console.error("ERROR in weather[" + type + "]：已自动注销该项。");
+        console.error("ERROR in weather[" + type + "]: The item has been automatically deregistered.");
         core.unregisterWeather(type);
     }
 }
@@ -1125,8 +1125,8 @@ control.prototype.checkBlock = function () {
     var damage = core.status.checkBlock.damage[loc];
     if (damage) {
         core.status.hero.hp -= damage;
-        var text = (Object.keys(core.status.checkBlock.type[loc] || {}).join("，")) || "伤害";
-        core.drawTip("受到" + text + damage + "点");
+        var text = (Object.keys(core.status.checkBlock.type[loc] || {}).join(",")) || "harm";
+        core.drawTip("Received" + text + damage + "point");
         core.drawHeroAnimate("zone");
         this._checkBlock_disableQuickShop();
         core.status.hero.statistics.extraDamage += damage;
@@ -1321,13 +1321,13 @@ control.prototype._drawDamage_draw = function (ctx, onMap) {
 ////// 选择录像文件 //////
 control.prototype.chooseReplayFile = function () {
     core.readFile(function (obj) {
-        if (obj.name != core.firstData.name) return alert("存档和游戏不一致！");
-        if (!obj.route) return alert("无效的录像！");
+        if (obj.name != core.firstData.name) return alert("The save file and the game are inconsistent!");
+        if (!obj.route) return alert("Invalid video!");
         var _replay = function () {
             core.startGame(core.flags.startUsingCanvas ? '' : obj.hard || '', obj.seed, core.decodeRoute(obj.route));
         }
         if (obj.version && obj.version != core.firstData.version) {
-            core.myconfirm("游戏版本不一致！\n你仍然想播放录像吗？", _replay);
+            core.myconfirm("The game version is inconsistent!\nDo you still want to play the recording?", _replay);
             return;
         }
         _replay();
@@ -1349,7 +1349,7 @@ control.prototype.startReplay = function (list) {
     core.setOpacity('replay', 0.6);
     this._replay_drawProgress();
     core.updateStatusBar(false, true);
-    core.drawTip("开始播放");
+    core.drawTip("Start Playing");
     this.replay();
 }
 
@@ -1364,19 +1364,19 @@ control.prototype.pauseReplay = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     core.status.replay.pausing = true;
     core.updateStatusBar(false, true);
-    core.drawTip("暂停播放");
+    core.drawTip("Pause playback");
 }
 
 ////// 恢复播放 //////
 control.prototype.resumeReplay = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     core.status.replay.pausing = false;
     core.updateStatusBar(false, true);
-    core.drawTip("恢复播放");
+    core.drawTip("Resume playback");
     core.replay();
 }
 
@@ -1384,12 +1384,12 @@ control.prototype.resumeReplay = function () {
 control.prototype.stepReplay = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     core.replay(true);
 }
@@ -1404,7 +1404,7 @@ control.prototype.speedUpReplay = function () {
             break;
         }
     }
-    core.drawTip("x" + core.status.replay.speed + "倍");
+    core.drawTip("x" + core.status.replay.speed + "times");
 }
 
 ////// 减速播放 //////
@@ -1417,14 +1417,14 @@ control.prototype.speedDownReplay = function () {
             break;
         }
     }
-    core.drawTip("x" + core.status.replay.speed + "倍");
+    core.drawTip("x" + core.status.replay.speed + "times");
 }
 
 ////// 设置播放速度 //////
 control.prototype.setReplaySpeed = function (speed) {
     if (!core.isPlaying() || !core.isReplaying()) return;
     core.status.replay.speed = speed;
-    core.drawTip("x" + core.status.replay.speed + "倍");
+    core.drawTip("x" + core.status.replay.speed + "times");
 }
 
 ////// 停止播放 //////
@@ -1441,23 +1441,23 @@ control.prototype.stopReplay = function (force) {
     core.status.replay.save = [];
     core.deleteCanvas('replay');
     core.updateStatusBar(false, true);
-    core.drawTip("停止播放并恢复游戏");
+    core.drawTip("Stop playback and resume game");
 }
 
 ////// 回退 //////
 control.prototype.rewindReplay = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     if (core.status.replay.save.length == 0) {
-        core.playSound('操作失败');
-        return core.drawTip("无法再回到上一个节点");
+        core.playSound('Operation failed');
+        return core.drawTip("Cant go back to the previous node");
     }
     var save = core.status.replay.save, data = save.pop();
     core.loadData(data.data, function () {
@@ -1476,7 +1476,7 @@ control.prototype.rewindReplay = function () {
         core.setOpacity('replay', 0.6);
         core.control._replay_drawProgress();
         core.updateStatusBar(false, true);
-        core.drawTip("成功回退到上一个节点");
+        core.drawTip("Successfully rolled back to the previous node");
     });
 }
 
@@ -1484,16 +1484,16 @@ control.prototype.rewindReplay = function () {
 control.prototype._replay_SL = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     if (core.hasFlag('__forbidSave__')) {
-        core.playSound('操作失败');
-        return core.drawTip('当前禁止存档');
+        core.playSound('Operation failed');
+        return core.drawTip('Saving is currently disabled');
     }
     this._replay_hideProgress();
 
@@ -1509,16 +1509,16 @@ control.prototype._replay_SL = function () {
 control.prototype._replay_book = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || (core.status.event.id && core.status.event.id != 'viewMaps')) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     if (!core.hasItem('book')) {
-        core.playSound('操作失败');
-        return core.drawTip('你没有' + core.material.items['book'].name, 'book');
+        core.playSound('Operation failed');
+        return core.drawTip('You dont' + core.material.items['book'].name, 'book');
     }
     this._replay_hideProgress();
 
@@ -1535,12 +1535,12 @@ control.prototype._replay_book = function () {
 control.prototype._replay_viewMap = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     this._replay_hideProgress();
 
@@ -1552,12 +1552,12 @@ control.prototype._replay_viewMap = function () {
 control.prototype._replay_toolbox = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     this._replay_hideProgress();
 
@@ -1569,12 +1569,12 @@ control.prototype._replay_toolbox = function () {
 control.prototype._replay_equipbox = function () {
     if (!core.isPlaying() || !core.isReplaying()) return;
     if (!core.status.replay.pausing) {
-        core.playSound('操作失败');
-        return core.drawTip("请先暂停录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Please pause the video first");
     }
     if (core.isMoving() || core.status.replay.animate || core.status.event.id) {
-        core.playSound('操作失败');
-        return core.drawTip("请等待当前事件的处理结束");
+        core.playSound('Operation failed');
+        return core.drawTip("Please wait for the current event to be processed.");
     }
     this._replay_hideProgress();
 
@@ -1624,7 +1624,7 @@ control.prototype._doReplayAction = function (action) {
             if (core.doFunc(this.replayActions[i].func, this, action)) return true;
         } catch (e) {
             console.error(e);
-            console.error("ERROR in replayActions[" + this.replayActions[i].name + "]：已自动注销该项。");
+            console.error("ERROR in replayActions[" + this.replayActions[i].name + "]: The item has been automatically deregistered.");
             core.unregisterReplayAction(this.replayActions[i].name);
         }
     }
@@ -1635,10 +1635,10 @@ control.prototype._replay_finished = function () {
     core.status.replay.replaying = false;
     core.status.replay.failed = false;
     core.status.event.selection = 0;
-    var str = "录像播放完毕，你想退出播放吗？";
+    var str = "The video has finished playing. Do you want to exit?";
     if (core.status.route.length != core.status.replay.totalList.length
         || core.subarray(core.status.route, core.status.replay.totalList) == null) {
-        str = "录像播放完毕，但记录不一致。\n请检查录像播放时的二次记录问题。\n你想退出播放吗？";
+        str = "The video was played, but the record was inconsistent.\nPlease check the secondary recording problem during video playback.\nDo you want to exit playback?";
     }
     core.ui.drawConfirmBox(str, function () {
         core.ui.closePanel();
@@ -1672,10 +1672,10 @@ control.prototype._replay_error = function (action, callback) {
     var len = core.status.replay.toReplay.length;
     var prevList = core.status.replay.totalList.slice(-len - 11, -len - 1);
     var nextList = core.status.replay.toReplay.slice(0, 10);
-    console.log("录像文件出错，当前操作：" + action);
-    console.log("之前的10个操作是：\n" + prevList.toString());
-    console.log("接下来10个操作是：\n" + nextList.toString());
-    core.ui.drawConfirmBox("录像文件出错，你想回到上个节点吗？", function () {
+    console.log("The video file is wrong. Current operation:" + action);
+    console.log("Previous10The operations are:\n" + prevList.toString());
+    console.log("Next Steps10The operations are:\n" + nextList.toString());
+    core.ui.drawConfirmBox("There is an error in the video file. Do you want to go back to the previous node?", function () {
         core.status.replay.failed = false;
         core.ui.closePanel();
         if (core.status.replay.save.length > 0) {
@@ -1684,9 +1684,9 @@ control.prototype._replay_error = function (action, callback) {
             core.rewindReplay();
         }
         else {
-            core.playSound('操作失败');
+            core.playSound('Operation failed');
             core.stopReplay(true);
-            core.drawTip("无法回到上一个节点");
+            core.drawTip("Unable to return to the previous node");
             if (callback) callback();
         }
     }, function () {
@@ -1705,7 +1705,7 @@ control.prototype._replay_drawProgress = function () {
     if (!core.dymCanvas.replay) return;
     if (core.dymCanvas.replay.canvas.style.display == 'none') core.dymCanvas.replay.canvas.style.display = 'block';
     var total = core.status.replay.totalList.length, left = total - core.status.replay.toReplay.length;
-    var content = '播放进度：' + left + ' / ' + total + '（' + (left / total * 100).toFixed(2) + '%）';
+    var content = 'Playback progress:' + left + ' / ' + total + '（' + (left / total * 100).toFixed(2) + '%）';
     var width = 26 + core.calWidth('replay', content, "16px Arial");
     core.clearMap('replay');
     core.fillRect('replay', 0, 0, width, 40, '#000000');
@@ -1927,7 +1927,7 @@ control.prototype._replayAction_click = function (action) {
 
 control.prototype._replayAction_ignoreInput = function (action) {
     if (action.indexOf('input:') == 0 || action.indexOf('input2:') == 0 || action.indexOf('choices:') == 0 || action.indexOf('random:') == 0) {
-        console.warn('警告！录像播放中出现了未知的 ' + action + '！');
+        console.warn('Warning! Unknown source appears in video playback ' + action + '!');
         core.replay();
         return true;
     }
@@ -2001,8 +2001,8 @@ control.prototype.doSL = function (id, type) {
 
 control.prototype._doSL_save = function (id) {
     if (id == 'autoSave') {
-        core.playSound('操作失败');
-        return core.drawTip('不能覆盖自动存档！');
+        core.playSound('Operation failed');
+        return core.drawTip('Cannot overwrite autosave!');
     }
     // 在事件中的存档
     if (core.status.event.interval != null)
@@ -2017,11 +2017,11 @@ control.prototype._doSL_save = function (id) {
         // 恢复事件
         if (!core.events.recoverEvents(core.status.event.interval))
             core.ui.closePanel();
-        core.playSound('存档');
-        core.drawTip('存档成功！');
+        core.playSound('Archive');
+        core.drawTip('Archived successfully!');
     }, function (err) {
         console.error(err);
-        alert("存档失败，错误信息：\n" + err);
+        alert("Archive failed, error message:\n" + err);
     });
     core.removeFlag("__events__");
     return;
@@ -2054,7 +2054,7 @@ control.prototype._doSL_load = function (id, callback) {
             callback(id, data);
         }, function (err) {
             console.error(err);
-            alert("无效的存档");
+            alert("Invalid save file");
         })
     }
     return;
@@ -2070,22 +2070,22 @@ control.prototype._doSL_reload = function (id, callback) {
 }
 
 control.prototype._doSL_load_afterGet = function (id, data) {
-    if (!data) return alert("无效的存档");
+    if (!data) return alert("Invalid save file");
     var _replay = function () {
         core.startGame(data.hard, data.hero.flags.__seed__, core.decodeRoute(data.route));
     };
     if (data.version != core.firstData.version) {
-        core.myconfirm("存档版本不匹配！\n你想回放此存档的录像吗？\n可以随时停止录像播放以继续游戏。", _replay);
+        core.myconfirm("Archive version mismatch!\nDo you want to replay this archived recording?\nYou can stop the video playback at any time to continue the game.", _replay);
         return;
     }
     if (data.hero.flags.__events__ && data.guid != core.getGuid()) {
-        core.myconfirm("此存档可能存在风险，你想要播放录像么？", _replay);
+        core.myconfirm("This save may be risky, do you want to play the recording?", _replay);
         return;
     }
     core.ui.closePanel();
     core.loadData(data, function () {
         core.removeFlag('__fromLoad__');
-        core.drawTip("读档成功");
+        core.drawTip("Read file successfully");
         if (id != "autoSave") {
             core.saves.saveIndex = id;
             core.setLocalStorage('saveIndex', core.saves.saveIndex);
@@ -2095,51 +2095,51 @@ control.prototype._doSL_load_afterGet = function (id, data) {
 
 control.prototype._doSL_replayLoad_afterGet = function (id, data) {
     if (!data) {
-        core.playSound('操作失败');
-        return core.drawTip("无效的存档");
+        core.playSound('Operation failed');
+        return core.drawTip("Invalid save file");
     }
     if (data.version != core.firstData.version) {
-        core.playSound('操作失败');
-        return core.drawTip("存档版本不匹配");
+        core.playSound('Operation failed');
+        return core.drawTip("Archive version mismatch");
     }
     if (data.hero.flags.__events__ && data.guid != core.getGuid()) {
-        core.playSound('操作失败');
-        return core.drawTip("此存档可能存在风险，无法读档");
+        core.playSound('Operation failed');
+        return core.drawTip("This archive may be risky and cannot be read");
     }
     var route = core.subarray(core.status.route, core.decodeRoute(data.route));
     if (route == null) {
-        core.playSound('操作失败');
-        return core.drawTip("无法从此存档回放录像");
+        core.playSound('Operation failed');
+        return core.drawTip("Cannot replay recordings from this archive");
     }
     core.loadData(data, function () {
         core.removeFlag('__fromLoad__');
         core.startReplay(route);
-        core.drawTip("回退到存档节点");
+        core.drawTip("Falling back to the archive node");
     });
 }
 
 control.prototype._doSL_replayRemain_afterGet = function (id, data) {
     if (!data) {
-        core.playSound('操作失败');
-        return core.drawTip("无效的存档");
+        core.playSound('Operation failed');
+        return core.drawTip("Invalid save file");
     }
     var route = core.decodeRoute(data.route);
     if (core.status.tempRoute) {
         var remainRoute = core.subarray(route, core.status.tempRoute);
         if (remainRoute == null)
-            return alert("无法接续播放录像！\n该存档必须是前一个选择的存档的后续内容。");
+            return alert("Unable to continue playing the video!\nThe archive must be a successor to the previously selected archive.");
         delete core.status.tempRoute;
         core.ui.closePanel();
         core.startReplay(remainRoute);
-        core.drawTip("接续播放录像");
+        core.drawTip("Continue playing video");
         return;
     }
     else if (data.floorId != core.status.floorId || data.hero.loc.x != core.getHeroLoc('x') || data.hero.loc.y != core.getHeroLoc('y'))
-        return alert("楼层或坐标不一致！");
+        return alert("The floor or coordinates are inconsistent!");
 
     core.status.tempRoute = route;
     core.ui.closePanel();
-    core.drawText("\t[步骤2]请选择第二个存档。\n\r[yellow]该存档必须是前一个存档的后续。\r\n将尝试播放到此存档。", function () {
+    core.drawText("\t[step2]Please select a second save file.\n\r[yellow]This archive must be a continuation of the previous archive.\r\nWill attempt to play to this archive.", function () {
         core.status.event.id = 'replayRemain';
         core.lockControl();
         var saveIndex = core.saves.saveIndex;
@@ -2150,17 +2150,17 @@ control.prototype._doSL_replayRemain_afterGet = function (id, data) {
 
 control.prototype._doSL_replaySince_afterGet = function (id, data) {
     if (data.floorId != core.status.floorId || data.hero.loc.x != core.getHeroLoc('x') || data.hero.loc.y != core.getHeroLoc('y'))
-        return alert("楼层或坐标不一致！");
-    if (!data.__toReplay__) return alert('该存档没有剩余录像！');
+        return alert("The floor or coordinates are inconsistent!");
+    if (!data.__toReplay__) return alert('There are no remaining videos in this archive!');
     core.ui.closePanel();
     core.startReplay(core.decodeRoute(data.__toReplay__));
-    core.drawTip("播放存档剩余录像");
+    core.drawTip("Play remaining archived videos");
     return;
 }
 
 ////// 同步存档到服务器 //////
 control.prototype.syncSave = function (type) {
-    core.ui.drawWaiting("正在同步，请稍候...");
+    core.ui.drawWaiting("Synchronizing, please wait...");
     var callback = function (saves) {
         core.control._syncSave_http(type, saves);
     }
@@ -2169,7 +2169,7 @@ control.prototype.syncSave = function (type) {
 }
 
 control.prototype._syncSave_http = function (type, saves) {
-    if (!saves) return core.drawText("没有要同步的存档");
+    if (!saves) return core.drawText("No save files to sync");
     var formData = new FormData();
     formData.append('type', 'save');
     formData.append('name', core.firstData.name);
@@ -2179,27 +2179,27 @@ control.prototype._syncSave_http = function (type, saves) {
     core.http("POST", "/games/sync.php", formData, function (data) {
         var response = JSON.parse(data);
         if (response.code < 0) {
-            core.drawText("出错啦！\n无法同步存档到服务器。\n错误原因：" + response.msg);
+            core.drawText("Something went wrong!\nUnable to sync save to server.\nCause:" + response.msg);
         }
         else {
-            core.drawText((type == 'all' ? "所有存档" : "存档" + core.saves.saveIndex) + "同步成功！\n\n您的存档编号+密码： \r[yellow]"
+            core.drawText((type == 'all' ? "All Archives" : "Archive" + core.saves.saveIndex) + "Sync successful!\n\nYour archive number+password: \r[yellow]"
                 + response.code + response.msg
-                + "\r\n\n请牢记以上信息（如截图等），在从服务器\n同步存档时使用。\n\r[yellow]另外请注意，存档同步只会保存一个月的时间。\r")
+                + "\r\n\nPlease keep the above information (such as screenshots, etc.) in mind when\nUsed when synchronizing archives.\n\r[yellow]Also, please note that archive syncs are only saved for one month.\r")
         }
     }, function (e) {
-        core.drawText("出错啦！\n无法同步存档到服务器。\n错误原因：" + e);
+        core.drawText("Something went wrong!\nUnable to sync save to server.\nCause:" + e);
     })
 }
 
 ////// 从服务器加载存档 //////
 control.prototype.syncLoad = function () {
-    core.myprompt("请输入存档编号+密码", null, function (idpassword) {
+    core.myprompt("Please enter the archive number+password", null, function (idpassword) {
         if (!idpassword) return core.ui._drawSyncSave();
         if (!/^\d{6}\w{4}$/.test(idpassword) && !/^\d{4}\w{3}$/.test(idpassword)) {
-            core.drawText("不合法的存档编号+密码！");
+            core.drawText("Invalid archive number+password!");
             return;
         }
-        core.ui.drawWaiting("正在同步，请稍候...");
+        core.ui.drawWaiting("Synchronizing, please wait...");
         if (idpassword.length == 7) {
             core.control._syncLoad_http(idpassword.substring(0, 4), idpassword.substring(4));
         } else {
@@ -2230,21 +2230,21 @@ control.prototype._syncLoad_http = function (id, password) {
             if (msg) {
                 core.control._syncLoad_write(msg);
             } else {
-                core.drawText("出错啦！\n存档解析失败！");
+                core.drawText("Something went wrong!\nArchive parsing failed!");
             }
         }
         else {
-            core.drawText("出错啦！\n无法从服务器同步存档。\n错误原因：" + response.msg);
+            core.drawText("Something went wrong!\nUnable to sync save from server.\nCause:" + response.msg);
         }
     }, function (e) {
-        core.drawText("出错啦！\n无法从服务器同步存档。\n错误原因：" + e);
+        core.drawText("Something went wrong!\nUnable to sync save from server.\nCause:" + e);
     });
 }
 
 control.prototype._syncLoad_write = function (data) {
     if (data instanceof Array) {
         core.status.event.selection = 1;
-        core.ui.drawConfirmBox("所有本地存档都将被覆盖，确认？", function () {
+        core.ui.drawConfirmBox("All local saves will be overwritten, confirm?", function () {
             for (var i = 1; i <= 5 * (main.savePages || 30); i++) {
                 if (i <= data.length)
                     core.setLocalForage("save" + i, data[i - 1]);
@@ -2252,7 +2252,7 @@ control.prototype._syncLoad_write = function (data) {
                     core.removeLocalForage("save" + i);
             }
             core.ui.closePanel();
-            core.drawText("同步成功！\n你的本地所有存档均已被覆盖。");
+            core.drawText("Sync successful!\nAll your local saves have been overwritten.");
         }, function () {
             core.status.event.selection = 0;
             core.ui._drawSyncSave();
@@ -2261,7 +2261,7 @@ control.prototype._syncLoad_write = function (data) {
     else {
         // 只覆盖单存档
         core.setLocalForage("save" + core.saves.saveIndex, data, function () {
-            core.drawText("同步成功！\n单存档已覆盖至存档" + core.saves.saveIndex);
+            core.drawText("Sync successful!\nSingle archive has been overwritten to archive" + core.saves.saveIndex);
         });
     }
 }
@@ -2377,8 +2377,8 @@ control.prototype.removeSave = function (index, callback) {
         core.control._updateFavoriteSaves();
         if (callback) callback();
     }, function () {
-        core.playSound('操作失败');
-        core.drawTip("无法删除存档！");
+        core.playSound('Operation failed');
+        core.drawTip("Unable to delete save file!");
         if (callback) callback();
     });
 }
@@ -2462,8 +2462,8 @@ control.prototype.getStatusLabel = function (name) {
         return this.controldata.getStatusLabel(name) || name;
     }
     return {
-        name: "名称", lv: "等级", hpmax: "生命上限", hp: "生命", manamax: "魔力上限", mana: "魔力",
-        atk: "攻击", def: "防御", mdef: "护盾", money: "金币", exp: "经验", point: "加点", steps: "步数"
+        name: "name", lv: "grade", hpmax: "Maximum health", hp: "life", manamax: "Mana Limit", mana: "magic",
+        atk: "attack", def: "defense", mdef: "Shield", money: "gold", exp: "experience", point: "Add points", steps: "Steps"
     }[name] || name;
 }
 
@@ -2604,7 +2604,7 @@ control.prototype.unlockControl = function () {
 ////// 开启debug模式 //////
 control.prototype.debug = function () {
     core.setFlag('debug', true);
-    core.drawText("\t[调试模式开启]此模式下按住Ctrl键（或Ctrl+Shift键）可以穿墙并忽略一切事件。\n此模式下将无法上传成绩。");
+    core.drawText("\t[Debug mode on]In this mode, press and holdCtrlkey (orCtrl+Shiftkey) to pass through walls and ignore all events.\nYou will not be able to upload grades in this mode.");
 }
 
 control.prototype._bindRoutePush = function () {
@@ -2676,7 +2676,7 @@ control.prototype.setWeather = function (type, level) {
         core.doFunc(this.weathers[type].initFunc, this, level);
     } catch (e) {
         console.error(e);
-        console.error("ERROR in weather[" + type + "]：已自动注销该项。");
+        console.error("ERROR in weather[" + type + "]: The item has been automatically deregistered.");
         core.unregisterWeather(type);
     }
 }
@@ -2852,7 +2852,7 @@ control.prototype.playBgm = function (bgm, startTime) {
         this._playBgm_play(bgm, startTime);
     }
     catch (e) {
-        console.log("无法播放BGM " + bgm);
+        console.log("Unable to playBGM " + bgm);
         console.error(e);
         core.musicStatus.playingBgm = null;
     }
@@ -2907,7 +2907,7 @@ control.prototype.pauseBgm = function () {
         }
     }
     catch (e) {
-        console.log("无法暂停BGM");
+        console.log("Unable to pauseBGM");
         console.error(e);
     }
     this.setMusicBtn();
@@ -2926,7 +2926,7 @@ control.prototype.resumeBgm = function (resumeTime) {
         }
     }
     catch (e) {
-        console.log("无法恢复BGM");
+        console.log("Unable to recoverBGM");
         console.error(e);
     }
     this.setMusicBtn();
@@ -2981,7 +2981,7 @@ control.prototype.playSound = function (sound, pitch, callback) {
         }
     }
     catch (e) {
-        console.log("无法播放SE " + sound);
+        console.log("Unable to playSE " + sound);
         console.error(e);
     }
 }
@@ -3258,7 +3258,7 @@ control.prototype._doResize = function (obj) {
             if (core.doFunc(this.resizes[i].func, this, obj)) return true;
         } catch (e) {
             console.error(e);
-            console.error("ERROR in resizes[" + this.resizes[i].name + "]：已自动注销该项。");
+            console.error("ERROR in resizes[" + this.resizes[i].name + "]: The item has been automatically deregistered.");
             this.unregisterResize(this.resizes[i].name);
         }
     }
@@ -3304,8 +3304,8 @@ control.prototype.resize = function () {
     var statusCanvas = core.flags.statusCanvas, statusCanvasRows = core.values.statusCanvasRowsOnMobile || 3;
     var col = statusCanvas ? statusCanvasRows : Math.ceil(count / 3);
     if (col > 5) {
-        if (statusCanvas) alert("自绘状态栏的在竖屏下的行数应不超过5！");
-        else alert("当前状态栏数目(" + count + ")大于15，请调整到不超过15以避免手机端出现显示问题。");
+        if (statusCanvas) alert("The number of lines of the self-drawn status bar in the vertical screen should not exceed5!");
+        else alert("Current status bar number(" + count + ")Greater than15, please adjust to no more than15To avoid display problems on mobile phones.");
     }
     var globalAttribute = core.status.globalAttribute || core.initStatus.globalAttribute;
 

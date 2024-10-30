@@ -1,7 +1,7 @@
 main.floors.sample2=
 {
     "floorId": "sample2",
-    "title": "样板 2 层",
+    "title": "model 2 layer",
     "name": "2",
     "canFlyTo": true,
     "canFlyFrom": true,
@@ -59,7 +59,7 @@ main.floors.sample2=
                 "shadow": 0
             },
             "data": [
-                "\t[小妖精,bearRight]欢迎使用事件编辑器(双击方块可直接预览)"
+                "\t[Leprechaun,bearRight]Welcome to the Event Editor(Double-click the block to preview it directly)"
             ]
         }
     },

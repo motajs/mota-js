@@ -1,6 +1,6 @@
 
 /*
-extensions.js：负责拓展插件
+extensions.js：Responsible for expanding plug-ins
  */
 
 "use strict";

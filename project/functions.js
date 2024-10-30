@@ -75,7 +75,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				}
 				reason = core.replaceText(reason);
 				core.drawText([
-					"\t[" + (reason || "恭喜通关") + "]你的分数是${status:hp}。"
+					"\t[" + (reason || "Congratulations on passing the level") + "]Your score is${status:hp}."
 				], function () {
 					core.events.gameOver(reason || '', replaying, norank);
 				})
@@ -88,7 +88,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			core.stopReplay();
 			core.waitHeroToStop(function () {
 				core.drawText([
-					"\t[" + (reason || "结局1") + "]你死了。\n如题。"
+					"\t[" + (reason || "ending1") + "]You are dead.\nJust as the title says."
 				], function () {
 					core.events.gameOver(null, replaying);
 				});
@@ -189,8 +189,8 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 
 			// 检查能否飞行
 			if (!core.status.maps[fromId].canFlyFrom || !core.status.maps[toId].canFlyTo || !core.hasVisitedFloor(toId)) {
-				core.playSound('操作失败');
-				core.drawTip("无法飞往" + core.status.maps[toId].title + "！", 'fly');
+				core.playSound('Operation failed');
+				core.drawTip("Unable to fly to" + core.status.maps[toId].title + "!", 'fly');
 				return false;
 			}
 
@@ -238,7 +238,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				if (guards.length > 0) {
 					// 记录flag，当前要参与支援的怪物
 					core.setFlag("__guards__" + x + "_" + y, guards);
-					var actions = [{ "type": "playSound", "name": "跳跃" }];
+					var actions = [{ "type": "playSound", "name": "jump" }];
 					// 增加支援的特效动画（图块跳跃）
 					guards.forEach(function (g) {
 						core.push(actions, { "type": "jump", "from": [g[0], g[1]], "to": [x, y], "time": 300, "keep": false, "async": true });
@@ -291,7 +291,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			if (damage == null || damage >= core.status.hero.hp) {
 				core.status.hero.hp = 0;
 				core.updateStatusBar(false, true);
-				core.events.lose('战斗失败');
+				core.events.lose('Failure of the battle');
 				return;
 			}
 
@@ -324,11 +324,11 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			core.status.hero.exp += exp;
 			core.status.hero.statistics.exp += exp;
 
-			var hint = "打败 " + core.getEnemyValue(enemy, "name", x, y);
+			var hint = "defeat " + core.getEnemyValue(enemy, "name", x, y);
 			if (core.flags.statusBarItems.indexOf('enableMoney') >= 0)
-				hint += ',' + core.getStatusLabel('money') + '+' + money; // hint += "，金币+" + money;
+				hint += ',' + core.getStatusLabel('money') + '+' + money; // hint += ",gold+" + money;
 			if (core.flags.statusBarItems.indexOf('enableExp') >= 0)
-				hint += ',' + core.getStatusLabel('exp') + '+' + exp; // hint += "，经验+" + exp;
+				hint += ',' + core.getStatusLabel('exp') + '+' + exp; // hint += ",experience+" + exp;
 			core.drawTip(hint, enemy.id);
 
 			// 中毒
@@ -371,7 +371,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				}
 				// 关闭技能
 				core.setFlag('skill', 0);
-				core.setFlag('skillName', '无');
+				core.setFlag('skillName', 'none');
 			}
 
 
@@ -383,7 +383,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				return curr + core.material.enemys[g[2]].point;
 			}, core.getEnemyValue(enemy, "point", x, y)) || 0;
 			if (core.flags.enableAddPoint && point > 0) {
-				core.push(todo, [{ "type": "insert", "name": "加点事件", "args": [point] }]);
+				core.push(todo, [{ "type": "insert", "name": "Add point event", "args": [point] }]);
 			}
 
 			// 战后事件
@@ -452,11 +452,11 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			// itemId：获得的道具ID；x和y是该道具所在的坐标
 			// isGentleClick：是否是轻按触发的
 			if (itemId.endsWith('Potion') && core.material.items[itemId].cls == 'items')
-				core.playSound('回血');
+				core.playSound('Regeneration');
 			else if (itemId.endsWith('Gem') && core.material.items[itemId].cls == 'items')
-				core.playSound('宝石')
+				core.playSound('gem')
 			else
-				core.playSound('获得道具');
+				core.playSound('Get props');
 
 			var todo = [];
 			// 检查该点的获得道具后事件。
@@ -491,33 +491,33 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			// 第五项为该特殊属性的标记；目前 1 代表是地图类技能（需要进行遍历全图）
 			// 名字和描述可以直接写字符串，也可以写个function将怪物传进去
 			return [
-				[1, "先攻", "怪物首先攻击", "#ffcc33"],
-				[2, "魔攻", "怪物无视角色的防御", "#bbb0ff"],
-				[3, "坚固", "怪物防御不小于角色攻击-1", "#c0b088"],
-				[4, "2连击", "怪物每回合攻击2次", "#ffee77"],
-				[5, "3连击", "怪物每回合攻击3次", "#ffee77"],
-				[6, function (enemy) { return (enemy.n || '') + "连击"; }, function (enemy) { return "怪物每回合攻击" + (enemy.n || 4) + "次"; }, "#ffee77"],
-				[7, "破甲", function (enemy) { return "战斗前，怪物附加角色防御的" + Math.floor(100 * (enemy.breakArmor || core.values.breakArmor || 0)) + "%作为伤害"; }, "#88c0ff"],
-				[8, "反击", function (enemy) { return "战斗时，怪物每回合附加角色攻击的" + Math.floor(100 * (enemy.counterAttack || core.values.counterAttack || 0)) + "%作为伤害，无视角色防御"; }, "#ffaa44"],
-				[9, "净化", function (enemy) { return "战斗前，怪物附加角色护盾的" + (enemy.purify || core.values.purify) + "倍作为伤害"; }, "#80eed6"],
-				[10, "模仿", "怪物的攻防和角色攻防相等", "#b0c0dd"],
-				[11, "吸血", function (enemy) { return "战斗前，怪物首先吸取角色的" + Math.floor(100 * enemy.vampire || 0) + "%生命（约" + Math.floor((enemy.vampire || 0) * core.getStatus('hp')) + "点）作为伤害" + (enemy.add ? "，并把伤害数值加到自身生命上" : ""); }, "#dd4448"],
-				[12, "中毒", "战斗后，角色陷入中毒状态，每一步损失生命" + core.values.poisonDamage + "点", "#99ee88"],
-				[13, "衰弱", "战斗后，角色陷入衰弱状态，攻防暂时下降" + (core.values.weakValue >= 1 ? core.values.weakValue + "点" : parseInt(core.values.weakValue * 100) + "%"), "#f0bbcc"],
-				[14, "诅咒", "战斗后，角色陷入诅咒状态，战斗无法获得金币和经验", "#bbeef0"],
-				[15, "领域", function (enemy) { return "经过怪物周围" + (enemy.zoneSquare ? "九宫格" : "十字") + "范围内" + (enemy.range || 1) + "格时自动减生命" + (enemy.zone || 0) + "点"; }, "#c677dd"],
-				[16, "夹击", "经过两只相同的怪物中间，角色生命值变成一半", "#bb99ee"],
-				[17, "仇恨", "战斗前，怪物附加之前积累的仇恨值作为伤害；战斗后，释放一半的仇恨值。（每杀死一个怪物获得" + (core.values.hatred || 0) + "点仇恨值）", "#b0b666"],
-				[18, "阻击", function (enemy) { return "经过怪物周围" + (enemy.zoneSquare ? "九宫格" : "十字") + "时自动减生命" + (enemy.repulse || 0) + "点，同时怪物后退一格"; }, "#8888e6"],
-				[19, "自爆", "战斗后角色的生命值变成1", "#ff6666"],
-				[20, "无敌", "角色无法打败怪物，除非拥有十字架", "#aaaaaa"],
-				[21, "退化", function (enemy) { return "战斗后角色永久下降" + (enemy.atkValue || 0) + "点攻击和" + (enemy.defValue || 0) + "点防御"; }],
-				[22, "固伤", function (enemy) { return "战斗前，怪物对角色造成" + (enemy.damage || 0) + "点固定伤害，未开启负伤时无视角色护盾。"; }, "#ff9977"],
-				[23, "重生", "怪物被击败后，角色转换楼层则怪物将再次出现", "#a0e0ff"],
-				[24, "激光", function (enemy) { return "经过怪物同行或同列时自动减生命" + (enemy.laser || 0) + "点"; }, "#dda0dd"],
-				[25, "光环", function (enemy) { return (enemy.range != null ? ((enemy.haloSquare ? "该怪物九宫格" : "该怪物十字") + enemy.haloRange + "格范围内") : "同楼层所有") + "怪物生命提升" + (enemy.hpBuff || 0) + "%，攻击提升" + (enemy.atkBuff || 0) + "%，防御提升" + (enemy.defBuff || 0) + "%，" + (enemy.haloAdd ? "可叠加" : "不可叠加"); }, "#e6e099", 1],
-				[26, "支援", "当周围一圈的怪物受到攻击时将上前支援，并组成小队战斗。", "#77c0b6", 1],
-				[27, "捕捉", function (enemy) { return "当走到怪物周围" + (enemy.zoneSquare ? "九宫格" : "十字") + "时会强制进行战斗。"; }, "#c0ddbb"]
+				[1, "First Strike", "Monster attacks first", "#ffcc33"],
+				[2, "Magic Attack", "Monsters ignore characters defense", "#bbb0ff"],
+				[3, "Sturdy", "Monsters defense is not less than characters attack-1", "#c0b088"],
+				[4, "2batter", "Monster attacks per turn2Second-rate", "#ffee77"],
+				[5, "3batter", "Monster attacks per turn3Second-rate", "#ffee77"],
+				[6, function (enemy) { return (enemy.n || '') + "batter"; }, function (enemy) { return "Monster attacks per turn" + (enemy.n || 4) + "Second-rate"; }, "#ffee77"],
+				[7, "Armor Break", function (enemy) { return "Before the battle, the monster adds the characters defense" + Math.floor(100 * (enemy.breakArmor || core.values.breakArmor || 0)) + "%As damage"; }, "#88c0ff"],
+				[8, "Fighting Back", function (enemy) { return "During combat, the monster will add a characters attack each round." + Math.floor(100 * (enemy.counterAttack || core.values.counterAttack || 0)) + "%As damage, ignores characters defense"; }, "#ffaa44"],
+				[9, "Purification", function (enemy) { return "Before the battle, the monster adds the character shield" + (enemy.purify || core.values.purify) + "Times as damage"; }, "#80eed6"],
+				[10, "imitate", "The monsters attack and defense are equal to the characters.", "#b0c0dd"],
+				[11, "Bloodsucking", function (enemy) { return "Before the battle, the monster first absorbs the characters" + Math.floor(100 * enemy.vampire || 0) + "%Life (approx." + Math.floor((enemy.vampire || 0) * core.getStatus('hp')) + "points) as damage" + (enemy.add ? ", and add the damage value to your own health" : ""); }, "#dd4448"],
+				[12, "Poisoning", "After the battle, the character falls into a poisoned state, losing life with each step" + core.values.poisonDamage + "point", "#99ee88"],
+				[13, "weak", "After the battle, the character falls into a weakened state, and the attack and defense temporarily decrease." + (core.values.weakValue >= 1 ? core.values.weakValue + "point" : parseInt(core.values.weakValue * 100) + "%"), "#f0bbcc"],
+				[14, "curse", "After the battle, the character falls into a cursed state and cannot gain gold and experience from the battle", "#bbeef0"],
+				[15, "field", function (enemy) { return "Passing by the monster" + (enemy.zoneSquare ? "Nine-grid" : "Cross") + "In range" + (enemy.range || 1) + "Automatically reduce life when the grid" + (enemy.zone || 0) + "point"; }, "#c677dd"],
+				[16, "Pincer attack", "When passing between two identical monsters, the characters health is halved.", "#bb99ee"],
+				[17, "Hatred", "Before the battle, the monster adds the previously accumulated hatred value as damage; after the battle, half of the hatred value is released." + (core.values.hatred || 0) + "Points of hatred)", "#b0b666"],
+				[18, "check", function (enemy) { return "Passing by the monster" + (enemy.zoneSquare ? "Nine-grid" : "Cross") + "Automatically reduce life" + (enemy.repulse || 0) + "Click, and the monster moves back one square"; }, "#8888e6"],
+				[19, "Self-destruction", "After the battle, the characters health becomes1", "#ff6666"],
+				[20, "Invincibility", "The character cannot defeat the monster unless he has the cross", "#aaaaaa"],
+				[21, "Degeneration", function (enemy) { return "After the battle, the character is permanently downgraded" + (enemy.atkValue || 0) + "Point Attack and" + (enemy.defValue || 0) + "Point Defense"; }],
+				[22, "Fixed Injury", function (enemy) { return "Before the battle, the monster inflicts" + (enemy.damage || 0) + "Fixed damage. The characters shield is ignored when the wound is not enabled."; }, "#ff9977"],
+				[23, "Rebirth", "After the monster is defeated, the monster will reappear if the character changes floors.", "#a0e0ff"],
+				[24, "laser", function (enemy) { return "Automatically reduce health when passing by a monster in the same row or column" + (enemy.laser || 0) + "point"; }, "#dda0dd"],
+				[25, "Halo", function (enemy) { return (enemy.range != null ? ((enemy.haloSquare ? "The monster nine squares" : "The Monster Cross") + enemy.haloRange + "Within the range") : "All on the same floor") + "Monster life boost" + (enemy.hpBuff || 0) + "%, attack boost" + (enemy.atkBuff || 0) + "%, Defense Upgrade" + (enemy.defBuff || 0) + "%," + (enemy.haloAdd ? "Can be stacked" : "Not stackable"); }, "#e6e099", 1],
+				[26, "support", "When the surrounding monsters are attacked, they will come forward to support and form a team to fight.", "#77c0b6", 1],
+				[27, "Capture", function (enemy) { return "When you walk around the monster" + (enemy.zoneSquare ? "Nine-grid" : "Cross") + "Forces combat."; }, "#c0ddbb"]
 			];
 		},
 		"getEnemyInfo": function (enemy, hero, x, y, floorId) {
@@ -1003,7 +1003,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						// 记录点击坐标。这里的1代表此时是竖屏！
 						core.status.route.push("click:1:" + px + ":" + py);
 						// 可以插入公共事件 / 普通事件 / 执行一段脚本（如打开自绘UI或增减flag）
-						core.insertCommonEvent("道具商店");
+						core.insertCommonEvent("Prop Shop");
 						// core.insertAction(["一段事件"]);
 						// core.openItemShop("shop1");
 					}
@@ -1013,7 +1013,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						// 记录点击坐标。这里的0代表此时是横屏！
 						core.status.route.push("click:0:" + px + ":" + py);
 						// 可以插入公共事件 / 普通事件 / 执行一段脚本（如打开自绘UI或增减flag）
-						core.insertCommonEvent("道具商店");
+						core.insertCommonEvent("Prop Shop");
 						// core.insertAction(["一段事件"]);
 						// core.openItemShop("shop1");
 					}
@@ -1094,19 +1094,19 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			// 自行定义的（比如获得道具效果）中用到的“攻击+3”等需要自己去对应地方修改
 
 			return {
-				name: "名称",
-				lv: "等级",
-				hpmax: "生命上限",
-				hp: "生命",
-				manamax: "魔力上限",
-				mana: "魔力",
-				atk: "攻击",
-				def: "防御",
-				mdef: "护盾",
-				money: "金币",
-				exp: "经验",
-				point: "加点",
-				steps: "步数",
+				name: "name",
+				lv: "grade",
+				hpmax: "Maximum health",
+				hp: "life",
+				manamax: "Mana Limit",
+				mana: "magic",
+				atk: "attack",
+				def: "defense",
+				mdef: "Shield",
+				money: "gold",
+				exp: "experience",
+				point: "Add points",
+				steps: "Steps",
 			}[name] || name;
 		},
 		"triggerDebuff": function (action, type) {
@@ -1163,7 +1163,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 					// 移除咒效果
 					core.setFlag("curse", false);
 				}
-				if (success) core.playSound('回血');
+				if (success) core.playSound('Regeneration');
 			}
 		},
 		"updateStatusBar": function () {
@@ -1205,7 +1205,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			}
 			// 设置技能栏
 			// 可以用flag:skill表示当前开启的技能类型，flag:skillName显示技能名；详见文档-个性化-技能塔的支持
-			core.setStatusBarInnerHTML('skill', core.getFlag('skillName', '无'));
+			core.setStatusBarInnerHTML('skill', core.getFlag('skillName', 'none'));
 
 			// 可以在这里添加自己额外的状态栏信息，比如想攻击显示 +0.5 可以这么写：
 			// if (core.hasFlag('halfAtk')) core.setStatusBarInnerHTML('atk', core.statusBar.atk.innerText + "+0.5");
@@ -1223,13 +1223,13 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				core.setStatusBarInnerHTML(key, core.setTwoDigits(core.itemCount(key)));
 			});
 			// 毒衰咒
-			core.setStatusBarInnerHTML('poison', core.hasFlag('poison') ? "毒" : "");
-			core.setStatusBarInnerHTML('weak', core.hasFlag('weak') ? "衰" : "");
-			core.setStatusBarInnerHTML('curse', core.hasFlag('curse') ? "咒" : "");
+			core.setStatusBarInnerHTML('poison', core.hasFlag('poison') ? "poison" : "");
+			core.setStatusBarInnerHTML('weak', core.hasFlag('weak') ? "decline" : "");
+			core.setStatusBarInnerHTML('curse', core.hasFlag('curse') ? "curse" : "");
 			// 破炸飞
-			core.setStatusBarInnerHTML('pickaxe', "破" + core.itemCount('pickaxe'));
-			core.setStatusBarInnerHTML('bomb', "炸" + core.itemCount('bomb'));
-			core.setStatusBarInnerHTML('fly', "飞" + core.itemCount('centerFly'));
+			core.setStatusBarInnerHTML('pickaxe', "break" + core.itemCount('pickaxe'));
+			core.setStatusBarInnerHTML('bomb', "fry" + core.itemCount('bomb'));
+			core.setStatusBarInnerHTML('fly', "fly" + core.itemCount('centerFly'));
 
 			// 难度
 			if (core.statusBar.hard.innerText != core.status.hard) {
@@ -1282,7 +1282,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 				// 如需调用当前楼层的ratio可使用  core.status.maps[floorId].ratio
 				if (id == 'lavaNet' && !core.hasItem('amulet')) {
 					damage[loc] = (damage[loc] || 0) + core.values.lavaDamage;
-					type[loc][(block.event.name || "血网") + "伤害"] = true;
+					type[loc][(block.event.name || "Bloodnet") + "harm"] = true;
 				}
 
 				// 领域
@@ -1305,7 +1305,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 							if (!zoneSquare && Math.abs(dx) + Math.abs(dy) > range) continue;
 							damage[currloc] = (damage[currloc] || 0) + (enemy.zone || 0);
 							type[currloc] = type[currloc] || {};
-							type[currloc]["领域伤害"] = true;
+							type[currloc]["Field Damage"] = true;
 						}
 					}
 				}
@@ -1321,7 +1321,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
 						damage[currloc] = (damage[currloc] || 0) + (enemy.repulse || 0);
 						type[currloc] = type[currloc] || {};
-						type[currloc]["阻击伤害"] = true;
+						type[currloc]["Block damage"] = true;
 
 						var rdir = core.turnDirection(":back", dir);
 						// 检查下一个点是否存在事件（从而判定是否移动）
@@ -1345,7 +1345,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						if (nx != x) {
 							damage[currloc] = (damage[currloc] || 0) + (enemy.laser || 0);
 							type[currloc] = type[currloc] || {};
-							type[currloc]["激光伤害"] = true;
+							type[currloc]["Laser damage"] = true;
 						}
 					}
 					for (var ny = 0; ny < height; ny++) {
@@ -1353,7 +1353,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						if (ny != y) {
 							damage[currloc] = (damage[currloc] || 0) + (enemy.laser || 0);
 							type[currloc] = type[currloc] || {};
-							type[currloc]["激光伤害"] = true;
+							type[currloc]["Laser damage"] = true;
 						}
 					}
 				}
@@ -1437,7 +1437,7 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 						if (value > 0) {
 							damage[loc] = (damage[loc] || 0) + value;
 							type[loc] = type[loc] || {};
-							type[loc]["夹击伤害"] = true;
+							type[loc]["Flanking damage"] = true;
 						}
 					}
 				}
@@ -1699,12 +1699,12 @@ var functions_d6ad677b_427a_4623_b50f_a445a3b0ef8a =
 			// 名称
 			core.setTextAlign('ui', 'left');
 			var globalAttribute = core.status.globalAttribute || core.initStatus.globalAttribute;
-			core.fillText('ui', "HTML5 魔塔样板", text_start, top + 35, globalAttribute.selectColor, "bold 22px " + globalAttribute.font);
-			core.fillText('ui', "版本： " + main.__VERSION__, text_start, top + 80, "#FFFFFF", "bold 17px " + globalAttribute.font);
-			core.fillText('ui', "作者： 艾之葵", text_start, top + 112);
-			core.fillText('ui', 'HTML5魔塔交流群：539113091', text_start, top + 112 + 32);
+			core.fillText('ui', "HTML5 Magic Tower Model", text_start, top + 35, globalAttribute.selectColor, "bold 22px " + globalAttribute.font);
+			core.fillText('ui', "Version: " + main.__VERSION__, text_start, top + 80, "#FFFFFF", "bold 17px " + globalAttribute.font);
+			core.fillText('ui', "author: Ai Zhikui", text_start, top + 112);
+			core.fillText('ui', 'HTML5Magic Tower Exchange Group:539113091', text_start, top + 112 + 32);
 			// TODO: 写自己的“关于”页面，每次增加32像素即可
-			core.playSound('打开界面');
+			core.playSound('Open the interface');
 		}
 	}
 }

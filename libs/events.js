@@ -131,13 +131,13 @@ events.prototype.gameOver = function (ending, fromReplay, norank) {
     core.ui.closePanel();
 
     if (main.isCompetition && ending != null) {
-        if (ending == "") ending = "恭喜通关";
-        ending += "[比赛]";
+        if (ending == "") ending = "Congratulations on passing the level";
+        ending += "[Contest]";
     }
 
     var reason = null;
-    if (fromReplay) reason = "录像回放完毕！";
-    else if (core.hasFlag("debug")) reason = "\t[系统提示]调试模式下无法上传成绩";
+    if (fromReplay) reason = "Video playback completed!";
+    else if (core.hasFlag("debug")) reason = "\t[System prompts]Unable to upload grades in debug mode";
 
     if (reason != null)
         core.drawText(reason, core.restart);
@@ -152,14 +152,14 @@ events.prototype._gameOver_confirmUpload = function (ending, norank) {
         this._gameOver_confirmDownload(ending);
         return;
     }
-    core.ui.drawConfirmBox("你想记录你的ID和成绩吗？", function () {
+    core.ui.drawConfirmBox("Do you want to record yourIDAnd grades?", function () {
         if (main.isCompetition) {
             core.events._gameOver_doUpload("", ending, norank);
         }
         else {
             var id = core.getCookie('id') || "";
-            var hint = "请输入你的ID：\n（登录状态下输入数字用户编号可成为蓝名成绩并计入用户通关数）";
-            if (id) hint = "请输入你的ID：\n（输入数字用户编号" + id + "可成为蓝名成绩并计入用户通关数）";
+            var hint = "Please enter yourID:\n(When logged in, enter the digital user ID to become a blue name score and count towards the users clearance number)";
+            if (id) hint = "Please enter yourID:\n(Enter numeric user ID" + id + "Can become a blue name achievement and counted towards the users clearance number)";
             core.myprompt(hint, id, function (username) {
                 core.events._gameOver_doUpload(username, ending, norank);
             });
@@ -209,7 +209,7 @@ events.prototype._gameOver_doUpload = function (username, ending, norank) {
 
 events.prototype._gameOver_confirmDownload = function (ending) {
     core.ui.closePanel();
-    core.ui.drawConfirmBox("你想下载录像吗？", function () {
+    core.ui.drawConfirmBox("Do you want to download the video?", function () {
         var obj = {
             'name': core.firstData.name,
             'version': core.firstData.version,
@@ -245,7 +245,7 @@ events.prototype._gameOver_askRate = function (ending) {
         }
 
         core.status.event.selection = 0;
-        core.ui.drawConfirmBox("你想读取自动存档么？", function () {
+        core.ui.drawConfirmBox("Do you want to load the autosave?", function () {
             core.ui.closePanel();
             core.doSL("autoSave", "load");
         }, function () {
@@ -255,7 +255,7 @@ events.prototype._gameOver_askRate = function (ending) {
         return;
     }
 
-    core.ui.drawConfirmBox("恭喜通关！你想查看榜单、评论，\n以及评分和标色投票吗？", function () {
+    core.ui.drawConfirmBox("Congratulations! If you want to check the rankings and comments,\nAnd rating and color voting?", function () {
         if (core.platform.isPC) {
             window.open("/tower/?name=" + core.firstData.name, "_blank");
             core.restart();
@@ -276,14 +276,14 @@ events.prototype.restart = function () {
 
 ////// 询问是否需要重新开始 //////
 events.prototype.confirmRestart = function () {
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.status.event.selection = 1;
-    core.ui.drawConfirmBox("你确定要返回标题页面吗？", function () {
-        core.playSound('确定');
+    core.ui.drawConfirmBox("Are you sure you want to return to the title page?", function () {
+        core.playSound('Sure');
         core.ui.closePanel();
         core.restart();
     }, function () {
-        core.playSound('取消');
+        core.playSound('Cancel');
         core.ui.closePanel();
     });
 }
@@ -314,7 +314,7 @@ events.prototype.doSystemEvent = function (type, data, callback) {
         }
     }
     if (this["_sys_" + type]) return this["_sys_" + type](data, callback);
-    console.error("未知的系统事件: " + type + "！");
+    console.error("Unknown system event: " + type + "!");
     if (callback) callback();
 }
 
@@ -463,8 +463,8 @@ events.prototype.battle = function (id, x, y, force, callback) {
     // 非强制战斗
     if (!core.enemys.canBattle(id, x, y) && !force && !core.status.event.id) {
         core.stopSound();
-        core.playSound('操作失败');
-        core.drawTip("你打不过此怪物！", id);
+        core.playSound('Operation failed');
+        core.drawTip("You cant beat this monster!", id);
         return core.clearContinueAutomaticRoute(callback);
     }
     // 自动存档
@@ -547,14 +547,14 @@ events.prototype._openDoor_check = function (block, x, y, needKey) {
             // --- 如果是一个不存在的道具，则直接认为无法开启
             if (!core.material.items[keyName]) {
                 core.stopSound();
-                core.playSound('操作失败');
-                core.drawTip("无法开启此门");
+                core.playSound('Operation failed');
+                core.drawTip("Unable to open this door");
                 return clearAndReturn();
             }
             if (core.itemCount(keyName) < keyValue) {
                 core.stopSound();
-                core.playSound('操作失败');
-                core.drawTip("你的" + ((core.material.items[keyName] || {}).name || "钥匙") + "不足！", null, true);
+                core.playSound('Operation failed');
+                core.drawTip("your" + ((core.material.items[keyName] || {}).name || "key") + "insufficient!", null, true);
                 return false;
             }
         }
@@ -620,7 +620,7 @@ events.prototype.getItem = function (id, num, x, y, isGentleClick, callback) {
     var itemCls = core.material.items[id].cls;
     core.removeBlock(x, y);
     core.items.getItemEffect(id, num);
-    var text = '获得 ' + core.material.items[id].name;
+    var text = 'get ' + core.material.items[id].name;
     if (num > 1) text += "x" + num;
     if (itemCls === 'items' && num == 1) text += core.items.getItemEffectTip(id);
     core.drawTip(text, id);
@@ -629,16 +629,16 @@ events.prototype.getItem = function (id, num, x, y, isGentleClick, callback) {
     if (!core.hasFlag("__itemHint__")) core.setFlag("__itemHint__", []);
     var itemHint = core.getFlag("__itemHint__");
     if (core.flags.itemFirstText && itemHint.indexOf(id) < 0 && itemCls != 'items') {
-        var hint = core.material.items[id].text || "该道具暂无描述";
+        var hint = core.material.items[id].text || "This item has no description yet";
         try {
             hint = core.replaceText(hint);
         } catch (e) { }
         if (!core.status.event.id || core.status.event.id == 'action') {
             core.insertAction("\t[" + core.material.items[id].name + "," + id + "]" + hint + "\n"
-                + (id.endsWith('Key') ? "（钥匙类道具，遇到对应的门时自动打开）"
-                    : itemCls == 'tools' ? "（消耗类道具，请按T在道具栏使用）"
-                        : itemCls == 'constants' ? "（永久类道具，请按T在道具栏使用）"
-                            : itemCls == 'equips' ? "（装备类道具，请按Q在装备栏进行装备）" : ""));
+                + (id.endsWith('Key') ? "(Key-type props, automatically open when encountering the corresponding door)"
+                    : itemCls == 'tools' ? "(For consumable items, pressTUse in the tool bar)"
+                        : itemCls == 'constants' ? "(For permanent items, pressTUse in the tool bar)"
+                            : itemCls == 'equips' ? "(For equipment items, pressQEquip in the equipment column)" : ""));
         }
         itemHint.push(id);
     }
@@ -728,7 +728,7 @@ events.prototype._changeFloor_getInfo = function (floorId, stair, heroLoc, time)
         floorId = core.status.floorId;
     }
     if (!core.status.maps[floorId]) {
-        console.error("不存在的楼层：" + floorId);
+        console.error("Non-existent floors:" + floorId);
         return null;
     }
 
@@ -798,11 +798,11 @@ events.prototype._changeFloor_beforeChange = function (info, callback) {
 events.prototype._changeFloor_playSound = function () {
     // 播放换层音效
     if (core.hasFlag('__fromLoad__')) // 是否是读档造成的切换
-        core.playSound('读档');
+        core.playSound('Loading');
     else if (core.hasFlag('__isFlying__')) // 是否是楼传造成的切换
-        core.playSound('飞行器');
+        core.playSound('Aircraft');
     else
-        core.playSound('上下楼');
+        core.playSound('Going up and down stairs');
 }
 
 events.prototype._changeFloor_changing = function (info, callback) {
@@ -896,7 +896,7 @@ events.prototype.afterPushBox = function () {
 }
 
 events.prototype._sys_ski = function (data, callback) {
-    core.insertAction(["V2.6后，请将滑冰放在背景层！"], data.x, data.y);
+    core.insertAction(["V2.6Finally, place the skateboard on the background layer!"], data.x, data.y);
     if (callback) callback();
 }
 
@@ -923,7 +923,7 @@ events.prototype._sys_action = function (data, callback) {
 }
 
 events.prototype._sys_custom = function (data, callback) {
-    core.insertAction(["请使用\r[yellow]core.registerSystemEvent('custom', func)\r来处理自己添加的系统触发器！"],
+    core.insertAction(["Please use\r[yellow]core.registerSystemEvent('custom', func)\rTo handle the system triggers you added!"],
         data.x, data.y, callback);
 }
 
@@ -954,7 +954,7 @@ events.prototype.doEvent = function (data, x, y, prefix) {
         }
     }
     if (this["_action_" + type]) return this["_action_" + type](data, x, y, prefix);
-    core.insertAction("未知的自定义事件: " + type + "！");
+    core.insertAction("Unknown custom event: " + type + "!");
     core.doAction();
 }
 
@@ -1766,8 +1766,8 @@ events.prototype._action_useItem = function (data, x, y, prefix) {
         core.useItem(data.id, true, core.doAction);
     }
     else {
-        core.playSound('操作失败');
-        core.drawTip("当前无法使用" + ((core.material.items[data.id] || {}).name || "未知道具"));
+        core.playSound('Operation failed');
+        core.drawTip("Currently unavailable" + ((core.material.items[data.id] || {}).name || "Unknown"));
         core.doAction();
     }
 }
@@ -2005,7 +2005,7 @@ events.prototype.__action_getInput = function (hint, isText, callback) {
         var action = core.status.replay.toReplay.shift();
         try {
             if (action.indexOf(prefix) != 0) {
-                console.warn("警告！当前需要一个 " + prefix + " 项，实际为 " + action);
+                console.warn("Warning! Currently requires a " + prefix + " Item, actually " + action);
                 core.status.replay.toReplay.unshift(action);
                 return callback(isText ? '' : 0);
             }
@@ -2086,7 +2086,7 @@ events.prototype._action_choices = function (data, x, y, prefix) {
                 core.events.__action_choices_replaying(data, -1);
             } else {
                 // 正常游戏中弹窗选择
-                core.myprompt('录像回放出错！当前需要执行选择项但录像中未记录。\n如需修复请输入您要选的项（从0起），点击取消将不会修复。', 0, function (value) {
+                core.myprompt('Video playback error! The selection needs to be executed but is not recorded in the video.\nIf you want to repair, please enter the items you want to select (from0Click Cancel to not repair.', 0, function (value) {
                     if (value == null) {
                         core.control._replay_error(action);
                         return;
@@ -2135,7 +2135,7 @@ events.prototype.__action_choices_replaying = function (data, index) {
             var choice = data.choices[selection];
             if (choice.need != null && choice.need != '' && !core.calValue(choice.need)) {
                 // 无法选择此项
-                core.control._replay_error("无法选择项：" + index);
+                core.control._replay_error("Unable to select item:" + index);
                 return;
             } else {
                 core.insertAction(choice.action);
@@ -2215,14 +2215,14 @@ events.prototype._precompile_confirm = function (data) {
 events.prototype._action_for = function (data, x, y, prefix) {
     // Only support temp:A
     if (!/^temp:[A-Z]$/.test(data.name)) {
-        core.insertAction('循环遍历事件只支持临时变量！');
+        core.insertAction('Looping through events only supports temporary variables!');
         return core.doAction();
     }
     var from = core.calValue(data.from);
     var to = core.calValue(data.to);
     var step = core.calValue(data.step);
     if (typeof from != 'number' || typeof to != 'number' || typeof step != 'number') {
-        core.insertAction('循环遍历事件要求【起始点】【终止点】【每步】仅能是数字！');
+        core.insertAction('Looping through events requires that [starting point], [ending point], and [each step] can only be numbers!');
         return core.doAction();
     }
     // 首次判定
@@ -2262,7 +2262,7 @@ events.prototype._precompile_for = function (data) {
 events.prototype._action_forEach = function (data, x, y, prefix) {
     // Only support temp:A
     if (!/^temp:[A-Z]$/.test(data.name)) {
-        core.insertAction(['循环遍历事件只支持临时变量！']);
+        core.insertAction(['Looping through events only supports temporary variables!']);
         return core.doAction();
     }
     var listName = '@temp@forEach@' + data.name.substring(5);
@@ -2736,13 +2736,13 @@ events.prototype._checkStatus = function (name, fromUserAction, checkItem) {
     }
     if (fromUserAction && core.status.lockControl) return false;
     if (checkItem && !core.hasItem(name)) {
-        core.playSound('操作失败');
-        core.drawTip("你没有" + core.material.items[name].name, name);
+        core.playSound('Operation failed');
+        core.drawTip("You dont" + core.material.items[name].name, name);
         return false;
     }
     if (core.isMoving()) {
-        core.playSound('操作失败');
-        core.drawTip("请先停止勇士行动");
+        core.playSound('Operation failed');
+        core.drawTip("Please stop the Warrior Action first");
         return false;
     }
     core.lockControl();
@@ -2768,7 +2768,7 @@ events.prototype.openBook = function (fromUserAction) {
         core.status.event.ui = core.status.event.data;
     }
     if (!this._checkStatus('book', fromUserAction, true)) return;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.useItem('book', true);
 }
 
@@ -2778,11 +2778,11 @@ events.prototype.useFly = function (fromUserAction) {
     // 从“浏览地图”页面：尝试直接传送到该层
     if (core.status.event.id == 'viewMaps') {
         if (!core.hasItem('fly')) {
-            core.playSound('操作失败');
-            core.drawTip('你没有' + core.material.items['fly'].name, 'fly');
+            core.playSound('Operation failed');
+            core.drawTip('You dont' + core.material.items['fly'].name, 'fly');
         } else if (!core.canUseItem('fly') || (core.flags.flyNearStair && !core.nearStair())) {
-            core.playSound('操作失败');
-            core.drawTip('无法传送到当前层', 'fly');
+            core.playSound('Operation failed');
+            core.drawTip('Unable to teleport to current level', 'fly');
         } else {
             core.flyTo(core.status.event.data.floorId);
         }
@@ -2791,22 +2791,22 @@ events.prototype.useFly = function (fromUserAction) {
 
     if (!this._checkStatus('fly', fromUserAction, true)) return;
     if (core.flags.flyNearStair && !core.nearStair()) {
-        core.playSound('操作失败');
-        core.drawTip("只有在楼梯边才能使用" + core.material.items['fly'].name, 'fly');
+        core.playSound('Operation failed');
+        core.drawTip("Only available near stairs" + core.material.items['fly'].name, 'fly');
         core.unlockControl();
         core.status.event.data = null;
         core.status.event.id = null;
         return;
     }
     if (!core.canUseItem('fly')) {
-        core.playSound('操作失败');
-        core.drawTip(core.material.items['fly'].name + "好像失效了", 'fly');
+        core.playSound('Operation failed');
+        core.drawTip(core.material.items['fly'].name + "Seems to be invalid", 'fly');
         core.unlockControl();
         core.status.event.data = null;
         core.status.event.id = null;
         return;
     }
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.useItem('fly', true);
     return;
 }
@@ -2819,7 +2819,7 @@ events.prototype.flyTo = function (toId, callback) {
 events.prototype.openEquipbox = function (fromUserAction) {
     if (core.isReplaying()) return;
     if (!this._checkStatus('equipbox', fromUserAction)) return;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.ui._drawEquipbox();
 }
 
@@ -2827,7 +2827,7 @@ events.prototype.openEquipbox = function (fromUserAction) {
 events.prototype.openToolbox = function (fromUserAction) {
     if (core.isReplaying()) return;
     if (!this._checkStatus('toolbox', fromUserAction)) return;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.ui._drawToolbox();
 }
 
@@ -2836,8 +2836,8 @@ events.prototype.openQuickShop = function (fromUserAction) {
     if (core.isReplaying()) return;
 
     if (Object.keys(core.status.shops).length == 0) {
-        core.playSound('操作失败');
-        core.drawTip("本游戏没有快捷商店！");
+        core.playSound('Operation failed');
+        core.drawTip("This game has no quick shop!");
         return;
     }
 
@@ -2846,13 +2846,13 @@ events.prototype.openQuickShop = function (fromUserAction) {
         var shopId = Object.keys(core.status.shops)[0];
         if (core.status.event.id != null) return;
         if (!core.canOpenShop(shopId)) {
-            core.playSound('操作失败');
-            core.drawTip("当前无法打开快捷商店！");
+            core.playSound('Operation failed');
+            core.drawTip("The quick shop cannot be opened at the moment!");
             return;
         }
         var message = core.canUseQuickShop(shopId);
         if (message != null) {
-            core.playSound('操作失败');
+            core.playSound('Operation failed');
             core.drawTip(message);
             return;
         }
@@ -2874,8 +2874,8 @@ events.prototype.openKeyBoard = function (fromUserAction) {
 events.prototype.save = function (fromUserAction) {
     if (core.isReplaying()) return;
     if (core.hasFlag('__forbidSave__')) {
-        core.playSound('操作失败');
-        core.drawTip('当前禁止存档');
+        core.playSound('Operation failed');
+        core.drawTip('Saving is currently disabled');
         return;
     }
     if (core.status.event.id == 'save' && core.events.recoverEvents(core.status.event.interval))
@@ -2883,7 +2883,7 @@ events.prototype.save = function (fromUserAction) {
     if (!this._checkStatus('save', fromUserAction)) return;
     var saveIndex = core.saves.saveIndex;
     var page = parseInt((saveIndex - 1) / 5), offset = saveIndex - 5 * page;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.ui._drawSLPanel(10 * page + offset);
 }
 
@@ -2899,14 +2899,14 @@ events.prototype.load = function (fromUserAction) {
         core.clearMap('all');
         core.status.event = { 'id': 'load', 'data': null };
         core.status.lockControl = true;
-        core.playSound('打开界面');
+        core.playSound('Open the interface');
         core.ui._drawSLPanel(10 * page + offset);
         return;
     }
     if (core.status.event.id == 'load' && core.events.recoverEvents(core.status.event.interval))
         return;
     if (!this._checkStatus('load', fromUserAction)) return;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.ui._drawSLPanel(10 * page + offset);
 }
 
@@ -2915,7 +2915,7 @@ events.prototype.openSettings = function (fromUserAction) {
     if (core.isReplaying()) return;
     if (!this._checkStatus('settings', fromUserAction))
         return;
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.ui._drawSettings();
 }
 
@@ -3725,7 +3725,7 @@ events.prototype.setHeroIcon = function (name, noDraw) {
     name = core.getMappedName(name);
     var img = core.material.images.images[name];
     if (!img) {
-        console.error("找不到图片: " + img);
+        console.error("Image not found: " + img);
         return;
     }
     if (core.material.images.hero == img) return;
@@ -3782,7 +3782,7 @@ events.prototype.tryUseItem = function (itemId) {
         core.ui.closePanel();
         core.useItem(itemId);
     } else {
-        core.playSound('操作失败');
-        core.drawTip("当前无法使用" + core.material.items[itemId].name, itemId);
+        core.playSound('Operation failed');
+        core.drawTip("Currently unavailable" + core.material.items[itemId].name, itemId);
     }
 }

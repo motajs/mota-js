@@ -7,7 +7,7 @@
     <meta name='author' content='ckcz123'>
     <meta name='viewport'
         content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=yes'>
-    <title>HTML5魔塔</title>
+    <title>HTML5Magic Tower</title>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="screen-orientation" content="portrait">
     <meta name="full-screen" content="yes">
@@ -48,23 +48,23 @@
     </script>
     <!-- injection -->
     <div id='gameGroup'>
-        <p id='mainTips'>请稍候...</p>
+        <p id='mainTips'>Please wait...</p>
         <img id='musicBtn'>
         <div id='startPanel'>
             <div id='startTop'>
                 <div id='startTopProgressBar'>
                     <div id='startTopProgress'></div>
                 </div>
-                <p id='startTopLoadTips'>资源即将开始加载</p>
-                <p id='startTopHint'>HTML5魔塔游戏平台，享受更多魔塔游戏：<br />https://h5mota.com/</p>
+                <p id='startTopLoadTips'>Resources are about to start loading</p>
+                <p id='startTopHint'>HTML5Magic Tower game platform, enjoy more Magic Tower games:<br />https://h5mota.com/</p>
             </div>
             <img id='startBackground'>
             <p id='startLogo'></p>
             <div id='startButtonGroup'>
                 <div id='startButtons'>
-                    <span class='startButton' id='playGame'>开始游戏</span>
-                    <span class='startButton' id='loadGame'>载入游戏</span>
-                    <span class='startButton' id='replayGame'>录像回放</span>
+                    <span class='startButton' id='playGame'>Start the game</span>
+                    <span class='startButton' id='loadGame'>Loading the game</span>
+                    <span class='startButton' id='replayGame'>Video playback</span>
                 </div>
                 <div id='levelChooseButtons'></div>
             </div>
@@ -144,7 +144,7 @@
                 <span class='statusLabel' id='curse' style="color: #C2F4E7;"></span>
             </div>
 
-            <!-- 状态栏canvas化 -->
+            <!-- Status Barcanvaschange -->
             <canvas id="statusCanvas" style="position: absolute; left: 0; top: 0;"></canvas>
         </div>
         <div id="toolBar" class="clearfix">
@@ -178,16 +178,16 @@
             <canvas class='gameCanvas' id='animate'></canvas>
             <canvas class='gameCanvas' id='curtain'></canvas>
             <canvas class='gameCanvas' id='ui'></canvas>
-            <canvas class='gameCanvas' id='data'>此浏览器不支持HTML5</canvas>
+            <canvas class='gameCanvas' id='data'>This browser does not supportHTML5</canvas>
             <div id="next"></div>
         </div>
     </div>
     <div id='inputDiv'>
         <div id='inputDialog'>
-            <p id="inputMessage">请输入文字...</p>
+            <p id="inputMessage">Please enter text...</p>
             <input id='inputBox' type="text" autocomplete="off" />
-            <button id='inputYes'>确定</button>
-            <button id='inputNo'>取消</button>
+            <button id='inputYes'>Sure</button>
+            <button id='inputNo'>Cancel</button>
         </div>
     </div>
     <div id="ui-editor"></div>

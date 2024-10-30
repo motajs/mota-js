@@ -240,8 +240,8 @@ items.prototype.canEquip = function (equipId, hint) {
     var equip = core.material.items[equipId] || {};
     if (!equip.equip) {
         if (hint) {
-            core.playSound('操作失败');
-            core.drawTip("不合法的装备！");
+            core.playSound('Operation failed');
+            core.drawTip("Illegal equipment!");
         }
         return false;
     }
@@ -249,8 +249,8 @@ items.prototype.canEquip = function (equipId, hint) {
     // 是否拥有该装备
     if (!core.hasItem(equipId) && !core.hasEquip(equipId)) {
         if (hint) {
-            core.playSound('操作失败');
-            core.drawTip("你当前没有" + equip.name + "，无法换装");
+            core.playSound('Operation failed');
+            core.drawTip("You currently dont have" + equip.name + ", cannot be changed");
         }
         return false;
     }
@@ -261,8 +261,8 @@ items.prototype.canEquip = function (equipId, hint) {
         try {
             if (!eval(canUseItemEffect)) {
                 if (hint) {
-                    core.playSound('操作失败');
-                    core.drawTip("当前不可换上" + equip.name);
+                    core.playSound('Operation failed');
+                    core.drawTip("Currently not available" + equip.name);
                 }
                 return false;
             }
@@ -285,8 +285,8 @@ items.prototype.loadEquip = function (equipId, callback) {
     var loadEquip = core.material.items[equipId] || {};
     var type = this.getEquipTypeById(equipId);
     if (type < 0) {
-        core.playSound('操作失败');
-        core.drawTip("当前没有" + loadEquip.equip.type + "的空位！");
+        core.playSound('Operation failed');
+        core.drawTip("Currently not available" + loadEquip.equip.type + "The vacant seat!");
         if (callback) callback();
         return;
     }
@@ -348,8 +348,8 @@ items.prototype._realLoadEquip = function (type, loadId, unloadId, callback) {
     core.status.hero.equipment[type] = loadId || null;
 
     // --- 提示
-    if (loadId) core.drawTip("已装备上" + loadEquip.name, loadId);
-    else if (unloadId) core.drawTip("已卸下" + unloadEquip.name, unloadId);
+    if (loadId) core.drawTip("Equipped" + loadEquip.name, loadId);
+    else if (unloadId) core.drawTip("Removed" + unloadEquip.name, unloadId);
 
     if (callback) callback();
 }
@@ -357,7 +357,7 @@ items.prototype._realLoadEquip = function (type, loadId, unloadId, callback) {
 items.prototype._realLoadEquip_playSound = function () {
     if (core.hasFlag("__quickLoadEquip__")) return;
     core.stopSound();
-    core.playSound('穿脱装备');
+    core.playSound('Putting on and taking off equipment');
 }
 
 ////// 保存装备 //////
@@ -366,15 +366,15 @@ items.prototype.quickSaveEquip = function (index) {
     saveEquips[index] = core.clone(core.status.hero.equipment);
     core.setFlag("saveEquips", saveEquips);
     core.status.route.push("saveEquip:" + index);
-    core.drawTip("已保存" + index + "号套装");
+    core.drawTip("Saved" + index + "No. Set");
 }
 
 ////// 读取装备 //////
 items.prototype.quickLoadEquip = function (index) {
     var current = core.getFlag("saveEquips", [])[index];
     if (!current) {
-        core.playSound('操作失败');
-        core.drawTip(index + "号套装不存在");
+        core.playSound('Operation failed');
+        core.drawTip(index + "Set number does not exist");
         return;
     }
     // 检查所有的装备
@@ -408,7 +408,7 @@ items.prototype.quickLoadEquip = function (index) {
     core.removeFlag("__quickLoadEquip__");
     this._realLoadEquip_playSound();
 
-    core.drawTip("成功换上" + index + "号套装");
+    core.drawTip("Successfully replaced" + index + "No. Set");
 }
 
 ////// 设置装备属性 //////

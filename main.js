@@ -340,7 +340,7 @@ main.prototype.init = function (mode, callback) {
 ////// 动态加载所有核心JS文件 //////
 main.prototype.loadJs = function (dir, loadList, callback) {
     // 加载js
-    main.setMainTipsText('正在加载核心js文件...');
+    main.setMainTipsText('Loading corejsdocument...');
 
     if (this.useCompress) {
         main.loadMod(dir, dir, function () {
@@ -350,7 +350,7 @@ main.prototype.loadJs = function (dir, loadList, callback) {
         var instanceNum = 0;
         for (var i = 0; i < loadList.length; i++) {
             main.loadMod(dir, loadList[i], function (modName) {
-                main.setMainTipsText(modName + '.js 加载完毕');
+                main.setMainTipsText(modName + '.js Loading completed');
                 instanceNum++;
                 if (instanceNum === loadList.length) {
                     callback();
@@ -380,7 +380,7 @@ main.prototype.loadMod = function (dir, modName, callback, onerror) {
 ////// 动态加载所有楼层（剧本） //////
 main.prototype.loadFloors = function (callback) {
     // 加载js
-    main.setMainTipsText('正在加载楼层文件...');
+    main.setMainTipsText('Loading floor file...');
     if (this.useCompress) {
         // 读取压缩文件
         var script = document.createElement('script');
@@ -413,7 +413,7 @@ main.prototype.loadFloors = function (callback) {
                 for (var i = 0; i < main.floorIds.length; i++) {
                     main.loadFloor(main.floorIds[i], function (modName) {
                         main.setMainTipsText(
-                            '楼层 ' + modName + '.js 加载完毕'
+                            'floor ' + modName + '.js Loading completed'
                         );
                         if (
                             Object.keys(main.floors).length ===
@@ -926,11 +926,11 @@ main.prototype.listen = function () {
         e.stopPropagation();
         if (core.getLocalStorage('altKey')) {
             core.removeLocalStorage('altKey');
-            core.drawTip('Alt模式已关闭。');
+            core.drawTip('AltMode is closed.');
             main.statusBar.image.btn8.style.filter = '';
         } else {
             core.setLocalStorage('altKey', true);
-            core.drawTip('Alt模式已开启；此模式下1~7按钮视为Alt+1~7。');
+            core.drawTip('AltMode is on; in this mode1~7Button asAlt+1~7.');
             main.statusBar.image.btn8.style.filter = 'sepia(1) contrast(1.5)';
         }
     };

@@ -51,34 +51,34 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 		],
 		"fonts": [],
 		"nameMap": {
-			"确定": "confirm.mp3",
-			"取消": "cancel.mp3",
-			"操作失败": "error.mp3",
-			"光标移动": "cursor.mp3",
-			"打开界面": "open_ui.mp3",
-			"读档": "load.mp3",
-			"存档": "save.mp3",
-			"获得道具": "item.mp3",
-			"回血": "recovery.mp3",
-			"炸弹": "bomb.mp3",
-			"飞行器": "centerFly.mp3",
-			"开关门": "door.mp3",
-			"上下楼": "floor.mp3",
-			"跳跃": "jump.mp3",
-			"破墙镐": "pickaxe.mp3",
-			"破冰镐": "icePickaxe.mp3",
-			"宝石": "gem.mp3",
-			"阻激夹域": "zone.mp3",
-			"穿脱装备": "equip.mp3",
-			"背景音乐": "bgm.mp3",
-			"攻击": "attack.mp3",
-			"背景图": "bg.jpg",
-			"商店": "shop.mp3",
-			"领域": "zone"
+			"Sure": "confirm.mp3",
+			"Cancel": "cancel.mp3",
+			"Operation failed": "error.mp3",
+			"Cursor Movement": "cursor.mp3",
+			"Open the interface": "open_ui.mp3",
+			"Loading": "load.mp3",
+			"Archive": "save.mp3",
+			"Get props": "item.mp3",
+			"Regeneration": "recovery.mp3",
+			"bomb": "bomb.mp3",
+			"Aircraft": "centerFly.mp3",
+			"Open and close the door": "door.mp3",
+			"Going up and down stairs": "floor.mp3",
+			"jump": "jump.mp3",
+			"Wall Breaker": "pickaxe.mp3",
+			"Ice axe": "icePickaxe.mp3",
+			"gem": "gem.mp3",
+			"Blocking clamp domain": "zone.mp3",
+			"Putting on and taking off equipment": "equip.mp3",
+			"Background Music": "bgm.mp3",
+			"attack": "attack.mp3",
+			"Background Image": "bg.jpg",
+			"shop": "shop.mp3",
+			"field": "zone"
 		},
 		"levelChoose": [
 			{
-				"title": "简单",
+				"title": "Simple",
 				"name": "Easy",
 				"hard": 1,
 				"color": [
@@ -90,12 +90,12 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 				"action": [
 					{
 						"type": "comment",
-						"text": "在这里写该难度需执行的事件"
+						"text": "Write the events that need to be executed for this difficulty here"
 					}
 				]
 			},
 			{
-				"title": "普通",
+				"title": "ordinary",
 				"name": "Normal",
 				"hard": 2,
 				"color": [
@@ -107,7 +107,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 				"action": []
 			},
 			{
-				"title": "困难",
+				"title": "difficulty",
 				"name": "Hard",
 				"hard": 3,
 				"color": [
@@ -120,8 +120,8 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			}
 		],
 		"equipName": [
-			"武器",
-			"盾牌"
+			"arms",
+			"Shield"
 		],
 		"startBgm": null,
 		"styles": {
@@ -163,14 +163,14 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 		]
 	},
 	"firstData": {
-		"title": "魔塔样板",
+		"title": "Magic Tower Model",
 		"name": "template",
 		"version": "Ver 2.10.0",
 		"floorId": "sample0",
 		"hero": {
 			"image": "hero.png",
 			"animate": false,
-			"name": "阳光",
+			"name": "Sunlight",
 			"lv": 1,
 			"hpmax": 9999,
 			"hp": 1000,
@@ -199,11 +199,11 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 		"startCanvas": [
 			{
 				"type": "comment",
-				"text": "在这里可以用事件来自定义绘制标题界面的背景图等"
+				"text": "Here you can use events to customize the background image of the title interface, etc."
 			},
 			{
 				"type": "comment",
-				"text": "也可以直接切换到其他楼层（比如某个开始剧情楼层）进行操作。"
+				"text": "You can also switch directly to other floors (such as a floor where the plot starts) to perform operations."
 			},
 			{
 				"type": "previewUI",
@@ -253,7 +253,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			},
 			{
 				"type": "comment",
-				"text": "在右下方自绘一个对话框进行显示选择项"
+				"text": "Draw a dialog box in the lower right corner to display the options"
 			},
 			{
 				"type": "previewUI",
@@ -298,21 +298,21 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 							1
 						],
 						"font": "bold 25px Verdana",
-						"text": "开始游戏"
+						"text": "Start the game"
 					},
 					{
 						"type": "fillBoldText",
 						"x": 305,
 						"y": 330,
 						"font": "bold 25px Verdana",
-						"text": "读取存档"
+						"text": "Reading a Save"
 					},
 					{
 						"type": "fillBoldText",
 						"x": 305,
 						"y": 370,
 						"font": "bold 25px Verdana",
-						"text": "回放录像"
+						"text": "Playback video"
 					}
 				]
 			},
@@ -346,7 +346,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 												"action": [
 													{
 														"type": "comment",
-														"text": "在“开始游戏”确定"
+														"text": "exist“Start the game”Sure"
 													},
 													{
 														"type": "break",
@@ -359,7 +359,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 												"action": [
 													{
 														"type": "comment",
-														"text": "在“读取存档”确定"
+														"text": "exist“Reading a Save”Sure"
 													},
 													{
 														"type": "callLoad"
@@ -371,7 +371,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 												"action": [
 													{
 														"type": "comment",
-														"text": "在“回放录像”确定"
+														"text": "exist“Playback video”Sure"
 													},
 													{
 														"type": "if",
@@ -396,7 +396,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 								"action": [
 									{
 										"type": "comment",
-										"text": "光标上键"
+										"text": "Cursor up key"
 									},
 									{
 										"type": "setValue",
@@ -412,7 +412,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 								"action": [
 									{
 										"type": "comment",
-										"text": "光标下键"
+										"text": "Cursor down key"
 									},
 									{
 										"type": "setValue",
@@ -435,7 +435,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 								"action": [
 									{
 										"type": "comment",
-										"text": "点击“开始游戏”"
+										"text": "Click“Start the game”"
 									},
 									{
 										"type": "break",
@@ -457,7 +457,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 								"action": [
 									{
 										"type": "comment",
-										"text": "点击“读取存档”"
+										"text": "Click“Reading a Save”"
 									},
 									{
 										"type": "callLoad"
@@ -478,7 +478,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 								"action": [
 									{
 										"type": "comment",
-										"text": "点击“播放录像”"
+										"text": "Click“Play video”"
 									},
 									{
 										"type": "if",
@@ -518,13 +518,13 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 				"true": [
 					{
 						"type": "comment",
-						"text": "没有难度选择：直接开始游戏"
+						"text": "No difficulty selection: start the game directly"
 					}
 				],
 				"false": [
 					{
 						"type": "comment",
-						"text": "难度选择：作为样例，这里只提供了一个显示选择项。"
+						"text": "Difficulty Selection: As an example, only one display selection is provided here."
 					},
 					{
 						"type": "function",
@@ -532,7 +532,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 					},
 					{
 						"type": "comment",
-						"text": "你也可以仿照上面的样例进行自己创建等待用户操作来处理不同的难度分歧。\n如需自己处理，请设置 core.status.hard \n（例如，自定义js脚本：core.status.hard = 'Easy' ）"
+						"text": "You can also create your own waiting for user actions based on the above example to handle different difficulty differences.\nIf you want to handle it yourself, please set core.status.hard \n(For example, customjsscript:core.status.hard = 'Easy' ）"
 					}
 				]
 			},
@@ -541,36 +541,36 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			},
 			{
 				"type": "comment",
-				"text": "接下来会执行startText中的事件"
+				"text": "Next will executestartTextEvents in"
 			},
 			{
 				"type": "comment",
-				"text": "状态栏默认处于隐藏状态；可以使用“显示状态栏”事件进行显示。"
+				"text": "The status bar is hidden by default; you can use“Show Status Bar”Events are displayed."
 			}
 		],
 		"startText": [
 			{
 				"type": "comment",
-				"text": "初始剧情"
+				"text": "Initial plot"
 			},
-			"Hi，欢迎来到 HTML5 魔塔样板！\n\n本样板由艾之葵制作，可以让你在不会写任何代码\n的情况下也能做出属于自己的H5魔塔！",
-			"这里游戏开始时的剧情。\n\n你可以在这里写上自己的内容。\n赶快来试一试吧！"
+			"HiWelcome to HTML5 Demon tower model!\n\nThis template is made by Ai Zhikui, which allows you to\nYou can also make your ownH5Magic Tower!",
+			"Here is the plot at the beginning of the game.\n\nYou can write your own content here.\nCome and try it out now!"
 		],
 		"shops": [
 			{
 				"id": "shop1",
-				"text": "\t[贪婪之神,moneyShop]勇敢的武士啊, 给我${20+2*flag:shop1}金币就可以：",
-				"textInList": "1F金币商店",
+				"text": "\t[God of Greed,moneyShop]Brave warrior!, Give me${20+2*flag:shop1}Gold coins can:",
+				"textInList": "1FCoin Shop",
 				"mustEnable": false,
 				"disablePreview": false,
 				"choices": [
 					{
-						"text": "生命+800",
+						"text": "life+800",
 						"need": "status:money>=20+2*flag:shop1",
 						"action": [
 							{
 								"type": "comment",
-								"text": "新版商店中需要手动扣减金币和增加访问次数"
+								"text": "The new version of the store requires manual deduction of gold coins and increase of visit times"
 							},
 							{
 								"type": "setValue",
@@ -593,12 +593,12 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 						]
 					},
 					{
-						"text": "攻击+4",
+						"text": "attack+4",
 						"need": "status:money>=20+2*flag:shop1",
 						"action": [
 							{
 								"type": "comment",
-								"text": "新版商店中需要手动扣减金币和增加访问次数"
+								"text": "The new version of the store requires manual deduction of gold coins and increase of visit times"
 							},
 							{
 								"type": "setValue",
@@ -624,13 +624,13 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			},
 			{
 				"id": "shop2",
-				"text": "\t[贪婪之神,expShop]勇敢的武士啊, 给我一定经验就可以：",
-				"textInList": "1F经验商店",
+				"text": "\t[God of Greed,expShop]Brave warrior!, Just give me some experience:",
+				"textInList": "1FExperience Store",
 				"mustEnable": false,
 				"disablePreview": true,
 				"choices": [
 					{
-						"text": "等级+1（100经验）",
+						"text": "grade+1（100experience)",
 						"need": "status:exp>=100",
 						"action": [
 							{
@@ -658,7 +658,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			{
 				"id": "itemShop",
 				"item": true,
-				"textInList": "道具商店",
+				"textInList": "Prop Shop",
 				"mustEnable": false,
 				"choices": [
 					{
@@ -671,9 +671,9 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 			},
 			{
 				"id": "keyShop",
-				"textInList": "回收钥匙商店",
+				"textInList": "Key Recovery Shop",
 				"mustEnable": false,
-				"commonEvent": "回收钥匙商店"
+				"commonEvent": "Key Recovery Shop"
 			}
 		],
 		"levelUp": [
@@ -683,7 +683,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 				"action": [
 					{
 						"type": "comment",
-						"text": "此处是初始等级，只需填写称号"
+						"text": "This is the initial level, just fill in the title"
 					}
 				]
 			},
@@ -711,7 +711,7 @@ var data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d =
 				"action": [
 					{
 						"type": "tip",
-						"text": "恭喜升级"
+						"text": "Congratulations on upgrading"
 					}
 				]
 			}

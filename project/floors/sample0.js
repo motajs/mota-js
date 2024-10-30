@@ -1,7 +1,7 @@
 main.floors.sample0=
 {
     "floorId": "sample0",
-    "title": "样板 0 层",
+    "title": "model 0 layer",
     "name": "0",
     "canFlyTo": true,
     "canFlyFrom": true,
@@ -31,31 +31,31 @@ main.floors.sample0=
             "background": "winskin.png",
             "time": 0
         },
-        "\t[样板提示]首次到达某层可以触发 firstArrive 事件，该事件可类似于RMXP中的“自动执行脚本”。\n\n本事件支持一切的事件类型，常常用来触发对话，例如：",
-        "\t[hero]\b[up,hero]我是谁？我从哪来？我又要到哪去？",
-        "\t[仙子,fairy]你问我...？我也不知道啊...",
-        "本层主要对道具、门、怪物等进行介绍，有关事件的各种信息在下一层会有更为详细的说明。"
+        "\t[Sample Tips]The first time you reach a certain level, you can trigger firstArrive event, which can be similar toRMXPIn“Automatically execute scripts”.\n\nThis event supports all event types and is often used to trigger conversations, for example:",
+        "\t[hero]\b[up,hero]Who am I? Where do I come from? Where am I going?",
+        "\t[Fairy,fairy]You ask me...I dont know either....",
+        "This level mainly introduces props, doors, monsters, etc. Various information about events will be described in more detail in the next level."
     ],
     "events": {
         "2,10": [
-            "\t[少女,npc0]\b[this]这些是路障、楼梯、传送门。",
-            "\t[少女,npc1]\b[this]血网的伤害数值、中毒后每步伤害数值、衰弱时攻防下降的数值，都在全塔属性（快捷键B）的全局数值（values）内定义。\n\n路障同样会尽量被自动寻路绕过。",
-            "\t[少女,npc2]\b[this]楼梯和传送门需要在地图选点（快捷键X）的“楼层转换”中定义目标楼层和位置，可参见样板里已有的的写法。",
+            "\t[Girl,npc0]\b[this]These are barricades, stairs, portals.",
+            "\t[Girl,npc1]\b[this]The damage value of the blood web, the damage value of each step after poisoning, and the value of the attack and defense reduction when weakened are all in the full tower attributes (shortcut keyB) of the global value (values) is defined in .\n\nRoadblocks will also be automatically routed around as much as possible.",
+            "\t[Girl,npc2]\b[this]Stairs and portals need to be selected on the map (shortcut keyX)of“Floor conversion”To define the target floor and location, refer to the existing writing methods in the template.",
             {
                 "type": "hide",
                 "time": 500
             }
         ],
         "2,5": [
-            "\t[老人,wizard]\b[this]模仿、吸血、中毒、衰弱、诅咒。\n\n请注意吸血怪需要设置value为吸血数值，可参见样板中黑暗大法师的写法。",
+            "\t[elder,wizard]\b[this]Imitation, bloodsucking, poisoning, weakening, curse.\n\nPlease note that blood suckers need to be setvalueThis is the blood-sucking value. Please refer to the writing method of the Dark Mage in the template.",
             {
                 "type": "hide",
                 "time": 500
             }
         ],
         "2,3": [
-            "\t[老人,wizard]\b[this]领域、夹击。\n请注意领域怪需要设置value为伤害数值，可参见样板中初级巫师的写法。",
-            "\t[老人,wizard]\b[this]当领域、阻击、激光和夹击同时发生时，先计算领域、阻击、激光（同时计算），再计算夹击。\n自动寻路同样会尽量绕过这些区域。",
+            "\t[elder,wizard]\b[this]Field, pincer attack.\nPlease note that the area monster needs to be setvalueFor the damage value, please refer to the writing method of the junior wizard in the template.",
+            "\t[elder,wizard]\b[this]When field, sniping, laser and flanking occur at the same time, field, sniping, laser are calculated first (calculated at the same time), and then flanking is calculated.\nAutomatic pathfinding will also try to avoid these areas.",
             {
                 "type": "hide",
                 "time": 500
@@ -67,7 +67,7 @@ main.floors.sample0=
             "noPass": null,
             "displayDamage": true,
             "data": [
-                "\t[仙子,fairy]\b[this]只有楼上启用事件后，才能看到我并可以和我对话来触发事件。",
+                "\t[Fairy,fairy]\b[this]Only after enabling events upstairs can you see me and talk to me to trigger events.",
                 {
                     "type": "hide",
                     "time": 500
@@ -75,26 +75,26 @@ main.floors.sample0=
             ]
         },
         "2,8": [
-            "\t[老人,wizard]\b[this]这些都是各种各样的怪物，所有怪物的数据都在 project 文件夹的 enemys.js 中设置。\n（注意是 enemys，而非 enemies）",
-            "\t[老人,wizard]\b[this]这批怪物分别为：\n\\i[greenSlime]普通、\\i[bat]先攻、\\i[bluePriest]魔攻、\\i[rock]坚固、\\i[swordsman]2连击、\\i[vampire]多连击、\\i[redKnight]破甲、\\i[ghostSoldier]反击、\\i[slimeman]净化。",
-            "\t[老人,wizard]\b[this]打败怪物后可触发 afterBattle 事件。\n\n有关事件的各种信息在下一层会有更为详细的说明。",
+            "\t[elder,wizard]\b[this]These are all kinds of monsters, and the data of all monsters is in project Folder enemys.js in settings.\n(Note that enemys, rather than enemies）",
+            "\t[elder,wizard]\b[this]These monsters are:\n\\i[greenSlime]ordinary,\\i[bat]First attack,\\i[bluePriest]Magic Attack,\\i[rock]Sturdy,\\i[swordsman]2batter,\\i[vampire]Multiple combos,\\i[redKnight]Armor Break,\\i[ghostSoldier]Counterattack,\\i[slimeman]Purification.",
+            "\t[elder,wizard]\b[this]Triggered after defeating the monster afterBattle event.\n\nVarious information about the event will be described in more detail on the next level.",
             {
                 "type": "hide",
                 "time": 500
             }
         ],
         "9,11": [
-            "\t[老人,trader]\b[this]这些是门，需要对应的钥匙打开。\n机关门必须使用特殊的开法。",
-            "\t[老人,trader]\b[this]开门后可触发 afterOpenDoor 事件。\n\n有关事件的各种信息在下一层会有更为详细的说明。",
+            "\t[elder,trader]\b[this]These are doors that require corresponding keys to open.\nThe door of the mechanism must be opened using a special method.",
+            "\t[elder,trader]\b[this]Can be triggered after opening the door afterOpenDoor event.\n\nVarious information about the event will be described in more detail on the next level.",
             {
                 "type": "hide",
                 "time": 500
             }
         ],
         "10,9": [
-            "\t[老人,man]\b[down,null]这些是部分本样板支持的道具。\n\n道具分为 items、constants、tools、equips 四类。\nitems 为即捡即用类道具，例如宝石、血瓶等。\nconstants 为永久道具，例如怪物手册、楼层传送器、幸运金币等。\ntools 为消耗类道具，例如破墙镐、炸弹、中心对称飞行器等。\nequips 为装备，例如剑盾等。",
-            "\t[老人,man]\b[up]有关道具效果，定义在project文件夹的items.js中。\n目前大多数道具已有默认行为，如有自定义的需求请修改道具的图块属性。",
-            "\t[老人,man]\b[up]拾取道具结束后可触发 afterGetItem 事件。\n\n有关事件的各种信息在下一层会有更为详细的说明。",
+            "\t[elder,man]\b[down,null]These are some of the props supported by this template.\n\nProps are divided into items,constants,tools,equips Four categories.\nitems These are items that can be picked up and used immediately, such as gems, blood bottles, etc.\nconstants These are permanent items, such as Monster Manuals, Floor Teleporters, Lucky Coins, etc.\ntools These are consumable items, such as pickaxes, bombs, and centrally symmetrical aircraft.\nequips For equipment, such as swords and shields.",
+            "\t[elder,man]\b[up]Regarding the prop effects, defined inprojectFolderitems.jsmiddle.\nCurrently, most props have default behaviors. If you have customized needs, please modify the block properties of the props.",
+            "\t[elder,man]\b[up]Can be triggered after picking up the props afterGetItem event.\n\nVarious information about the event will be described in more detail on the next level.",
             {
                 "type": "hide",
                 "time": 500
@@ -169,67 +169,67 @@ main.floors.sample0=
     },
     "afterBattle": {
         "2,6": [
-            "\t[ghostSoldier]\b[this]不可能，你怎么可能打败我！\n（一个打败怪物触发的事件）"
+            "\t[ghostSoldier]\b[this]No way, how could you defeat me!\n(An event triggered by defeating a monster)"
         ],
         "0,9": [
-            "这是一个高度为 48 个像素而非 32 个像素的敌人。\n高敌人的素材存放在 materials 文件夹中 enemy48.png 的部分。"
+            "This is a height of 48 pixels instead of 32 Pixel enemies.\nHigh enemy materials are stored in materials In folder enemy48.png part."
         ]
     },
     "afterGetItem": {
         "9,1": [
-            "技能的支持需要依赖状态栏的“魔力”以及脚本编辑的“按键处理”，详见帮助文档“个性化”一节。"
+            "Skill support depends on the status bar“magic”and script editing“Key processing”, see the help documentation for details“Personalization”One section."
         ],
         "12,2": [
-            "跳跃靴和支援怪的跳跃音效是用脚本额外添加的，\n如果想为任意跳跃指令添加音效，请查阅帮助文档中的“脚本——复写函数”章节。"
+            "The jumping sounds of the jumping boots and support monsters are added by script.\nIf you want to add sound effects to any jump command, please refer to the help document“script——Replicate Function”chapter."
         ],
         "8,3": [
-            "炸弹是只能炸面前的怪物还是四个甚至八个方向的怪物，\n由其图块属性（快捷键C）中的“使用效果”决定。\n不能被炸的怪物请直接在该怪物的图块属性中勾选“不可炸”，\n可参见样板里黑衣魔王和黑暗大法师的写法。\nV2.8.1起，炸弹炸怪可以添加获得金经/触发战后事件，详见其使用效果中的注释。"
+            "Does the bomb only blow up the monster in front of it or the monsters in four or even eight directions?\nBy its tile properties (shortcut keyC)“Effects”Decide.\nFor monsters that cannot be blown up, please check the box in the monsters tile properties.“Do not fry”,\nPlease refer to the writing methods of the Devil in Black and the Dark Wizard in the template.\nV2.8.1Starting from now, bombing monsters can increase the amount of gold./Triggers a post-war event, see the notes on its usage effects for details."
         ],
         "10,3": [
-            "“上楼”和“下楼”的目标层由全塔属性（快捷键B）的“楼层列表”顺序所决定。"
+            "“Go upstairs”and“Go downstairs”The target layer is the whole tower attribute (shortcut keyB)of“Floor List”Determined by the order."
         ],
         "12,3": [
-            "如果想制作类似于生命魔杖等可以被批量使用的道具，请参照生命魔杖图块属性（快捷键B）中\n useItemEvent 的写法。\n其基本原理就是使用【接受用户输入】让玩家在弹窗中输入想要使用的物品数量，再判断玩家的输入是否合法，如果输入合法就扣减相应数量的物品并结算物品效果。\n要注意的是，在使用物品时会先消耗一个物品，所以记得在编辑 useItemEvent 时先用 core.addItem 恢复一个物品。"
+            "If you want to make props like the Life Wand that can be used in batches, please refer to the Life Wand block properties (shortcut keyB)middle\n useItemEvent The way of writing.\nThe basic principle is to use [Accept User Input] to let the player enter the number of items they want to use in the pop-up window, and then determine whether the players input is legal. If the input is legal, the corresponding number of items will be deducted and the item effects will be settled.\nIt should be noted that when using an item, an item will be consumed first, so remember to edit it. useItemEvent Use first core.addItem Restore an item."
         ],
         "8,4": [
-            "剑盾的道具类别设为equips才可以装备，\n如果设为items则会直接增加属性。",
-            "在全塔属性（快捷键B）的系统开关中设置是否启用装备栏按钮。\n如果启用则装备栏按钮会替代楼传按钮。\n无论是否启用，玩家都可以双击道具栏按钮呼出装备栏。"
+            "The item category of Sword and Shield is set toequipsTo equip,\nIf set toitemsThe attribute will be increased directly.",
+            "In the whole tower properties (shortcut keyB) to set whether to enable the equipment bar button.\nIf enabled the loadout button will replace the upload button.\nRegardless of whether it is enabled or not, the player can double-click the inventory button to call out the equipment inventory."
         ],
         "9,4": [
-            "装备的种类由全塔属性（快捷键B）中的“装备孔”决定。\n每件装备的“类型”就是在“装备孔”中的索引，例如默认情况下 0 代表武器。\n同时，只有第一个装备孔中的装备，其“普攻动画”属性才会生效。"
+            "The type of equipment is determined by the attributes of the entire tower (shortcut keyB)“Equipment Slot”Decide.\nEach piece of equipment“type”It is“Equipment Slot”In the index, for example, by default 0 Represents weapons.\nAt the same time, only the equipment in the first equipment slot can“Normal attack animation”The properties will take effect."
         ],
         "10,4": [
-            "每层楼的“可楼传”勾选框决定了该楼层能否被飞到。\n\n勇士在不能被飞到的楼层也无法使用楼层传送器。",
-            "飞行的楼层顺序由全塔属性（快捷键B）中的“楼层列表”所决定。\n\n是否必须在楼梯边使用楼传器由全塔属性中的系统开关所决定。"
+            "Each floor“Kelou Chuan”The checkbox determines whether the floor can be flown to.\n\nWarriors cannot use floor teleporters on floors that cannot be flown to.",
+            "The order of the floors you fly is determined by the properties of the entire tower (shortcut keyB)“Floor List”Determined.\n\nWhether the floor transmitter must be used near the stairs is determined by the system switch in the overall tower properties."
         ],
         "11,4": [
-            "破墙镐是破面前的墙壁还是四个方向的墙壁，由其图块属性（快捷键C）的“使用效果”决定。\n哪些图块（怪物和道具除外）可以被破震，由该图块的图块属性中的“可破震”决定。"
+            "Whether the wall-breaking pickaxe breaks the wall in front of it or the walls in all four directions is determined by its block properties (shortcut keyC)of“Effects”Decide.\nWhich tiles (except monsters and props) can be broken is determined by the tile properties of the tile.“Can break shock”Decide."
         ],
         "12,4": [
-            "在 2.8.1 版更新后，能够被破冰镐摧毁的冰块被移动到了 animates 下。\n如果想制作一个可以以特定触发器的方式移除特定图块的道具，可以参照破冰镐物品图块属性中\n useItemEffect 和 canUseItemEffect 的写法。"
+            "exist 2.8.1 After the update, the ice blocks that can be destroyed by the ice pick were moved to animates Down.\nIf you want to make an item that can remove a specific tile with a specific trigger, you can refer to the Icebreaker Item Block Properties.\n useItemEffect and canUseItemEffect The way of writing."
         ],
         "11,8": [
-            "由于状态栏放不下，铁门钥匙（根据全塔属性的系统开关勾选与否，可能还有绿钥匙）会被放入道具栏中。\n碰到绿门和铁门时仍然会自动使用钥匙开门。"
+            "Since there is not enough space in the status bar, the Iron Gate Key (and possibly the Green Key, depending on whether the system switch of the entire tower attributes is checked or not) will be placed in the prop bar.\nWhen you encounter a green door or an iron door, the key will still be used to open the door automatically."
         ],
         "12,8": [
-            "该道具默认是大黄门钥匙，如需改为钥匙盒直接修改其图块属性（快捷键C）的“道具类别”为items即可。"
+            "The item is the Big Yellow Door Key by default. If you want to change it to a key box, just modify its block properties (shortcut keyC)of“Prop Category”foritemsThats it."
         ],
         "8,7": [
-            "如需修改消耗品的效果，请前往全塔属性（快捷键B），找到并修改values（全局数值）内对应的具体数值即可。\n如果有高级的需求（如每个区域宝石数值变化），请修改楼层属性（快捷键V）最下方的“宝石血瓶效果”。\n如果有更高级的需求，请查阅帮助文档。"
+            "To modify the effects of consumables, go to the full tower properties (shortcut keyB), find and modifyvalues(Global value) The corresponding specific value can be used.\nIf you have advanced requirements (such as changes in gem values in each area), please modify the floor properties (shortcut keyV) The bottom“Gem Blood Bottle Effect”.\nIf you have more advanced needs, please refer to the help documentation."
         ],
         "11,7": [
-            "与大黄门钥匙类似的是，如果将黄宝石的图块属性设为 items ，那么黄宝石将在被拾取触发 itemEffect 效果。\n\n注意：触碰或使用事件（useItemEvent）对 items、tools、constants 都有效。\n这意味着，如果黄宝石的图块属性为 items ，那么在拾取黄宝石时，黄宝石不会进入背包，并且其“即捡即用”和“触碰或使用事件”都会被触发。"
+            "Similar to the Big Yellow Door Key, if you set the Yellow Gem tile property to items , then the yellow gem will trigger when it is picked up itemEffect Effect.\n\nNote: Touch or use events (useItemEvent)right items,tools,constants Both work.\nThis means that if the tile property of a yellow gem is items , then when you pick up a yellow gem, it will not go into your backpack, and its“Pick up and use”and“Touch or use event”will be triggered."
         ],
         "12,7": [
-            "由于吸血、夹击、净化等属性值的存在，玩家可能希望自动寻路时能尽量绕开血瓶和绿宝石。\n他们可以自行在游戏设置中开关这一功能。"
+            "Due to the existence of attribute values such as lifesucking, flanking, and purification, players may want to avoid blood bottles and emeralds as much as possible when automatically finding their way.\nThey can turn this feature on and off themselves in the game settings."
         ]
     },
     "afterOpenDoor": {
         "11,12": [
-            "你打开了一扇绿门，触发了一个 afterOpenDoor 事件。"
+            "You opened a green door, triggering a afterOpenDoor event."
         ],
         "10,6": [
-            "这是一扇高度为 48 个像素而非 32 个像素的门。\n高门和高NPC的素材存放在 materials 文件夹中 npc48.png 的部分。"
+            "This is a door with a height of 48 pixels instead of 32 Pixel door.\nHigh door and highNPCThe materials are stored in materials In folder npc48.png part."
         ]
     },
     "cannotMove": {},

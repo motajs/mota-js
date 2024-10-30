@@ -1,6 +1,6 @@
 
 /*
-loader.js：负责对资源的加载
+loader.js: Responsible for loading resources
 
  */
 "use strict";
@@ -44,7 +44,7 @@ loader.prototype._load_sync = function (callback) {
 }
 
 loader.prototype._load_async = function (callback) {
-    core.loader._setStartLoadTipText('正在加载资源文件...');
+    core.loader._setStartLoadTipText('Loading resource files...');
     var all = {};
 
     var _makeOnProgress = function (name) {
@@ -59,9 +59,9 @@ loader.prototype._load_async = function (callback) {
             }
             if (allTotal > 0) {
                 if (allLoaded == allTotal) {
-                    core.loader._setStartLoadTipText("正在处理资源文件... 请稍候...");
+                    core.loader._setStartLoadTipText("Processing resource files... Please wait...");
                 } else {
-                    core.loader._setStartLoadTipText('正在加载资源文件... ' +
+                    core.loader._setStartLoadTipText('Loading resource files... ' +
                         core.formatSize(allLoaded) + " / " + core.formatSize(allTotal) +
                         " (" + (allLoaded / allTotal * 100).toFixed(2) + "%)");
                 }
@@ -92,7 +92,7 @@ loader.prototype._load_async = function (callback) {
 // ----- 加载资源文件 ------ //
 
 loader.prototype._loadMaterials_sync = function (callback) {
-    this._setStartLoadTipText("正在加载资源文件...");
+    this._setStartLoadTipText("Loading resource files...");
     this.loadImages("materials", core.materials, core.material.images, function () {
         core.loader._loadMaterials_afterLoad();
         callback();
@@ -121,7 +121,7 @@ loader.prototype._loadMaterials_afterLoad = function () {
 
 loader.prototype._loadExtraImages_sync = function (callback) {
     core.material.images.images = {};
-    this._setStartLoadTipText("正在加载图片文件...");
+    this._setStartLoadTipText("Loading image file...");
     core.loadImages("images", core.images, core.material.images.images, callback);
 }
 
@@ -155,7 +155,7 @@ loader.prototype._loadAutotiles_sync = function (callback) {
     var keys = Object.keys(core.material.icons.autotile);
     var autotiles = {};
 
-    this._setStartLoadTipText("正在加载自动元件...");
+    this._setStartLoadTipText("Loading automatic components...");
     this.loadImages("autotiles", keys, autotiles, function () {
         core.loader._loadAutotiles_afterLoad(keys, autotiles);
         callback();
@@ -189,7 +189,7 @@ loader.prototype._loadAutotiles_afterLoad = function (keys, autotiles) {
 
 loader.prototype._loadTilesets_sync = function (callback) {
     core.material.images.tilesets = {};
-    this._setStartLoadTipText("正在加载额外素材...");
+    this._setStartLoadTipText("Loading additional assets...");
     this.loadImages("tilesets", core.tilesets, core.material.images.tilesets, function () {
         core.loader._loadTilesets_afterLoad();
         callback();
@@ -209,10 +209,10 @@ loader.prototype._loadTilesets_afterLoad = function () {
     for (var imgName in core.material.images.tilesets) {
         var img = core.material.images.tilesets[imgName];
         if (img.width % 32 != 0 || img.height % 32 != 0) {
-            console.warn("警告！" + imgName + "的宽或高不是32的倍数！");
+            console.warn("warn!" + imgName + "The width or height is not32Multiples of!");
         }
         if (img.width * img.height > 32 * 32 * 3000) {
-            console.warn("警告！" + imgName + "上的图块素材个数大于3000！");
+            console.warn("warn!" + imgName + "The number of tile materials on is greater than3000!");
         }
     }
 }
@@ -227,7 +227,7 @@ loader.prototype.loadImages = function (dir, names, toSave, callback) {
     var items = 0;
     for (var i = 0; i < names.length; i++) {
         this.loadImage(dir, names[i], function (id, image) {
-            core.loader._setStartLoadTipText('正在加载图片 ' + id + "...");
+            core.loader._setStartLoadTipText('Loading image ' + id + "...");
             if (toSave[id] !== undefined) {
                 if (image != null)
                     toSave[id] = image;
@@ -302,7 +302,7 @@ loader.prototype.loadImagesFromZip = function (url, names, toSave, onprogress, o
 // ------ 加载动画文件 ------ //
 
 loader.prototype._loadAnimates_sync = function () {
-    this._setStartLoadTipText("正在加载动画文件...");
+    this._setStartLoadTipText("Loading animation file...");
 
     if (main.supportBunch) {
         if (core.animates.length > 0) {
@@ -312,7 +312,7 @@ loader.prototype._loadAnimates_sync = function () {
                     if (u[i] != '') {
                         core.material.animates[core.animates[i]] = core.loader._loadAnimate(u[i]);
                     } else {
-                        console.error('无法找到动画文件' + core.animates[i] + '！');
+                        console.error('Unable to find animation file' + core.animates[i] + '!');
                     }
                 }
             }, "text/plain; charset=x-user-defined");
@@ -394,7 +394,7 @@ loader.prototype._loadAnimate = function (content) {
 // ------ 加载音乐和音效 ------ //
 
 loader.prototype._loadMusic_sync = function () {
-    this._setStartLoadTipText("正在加载音效文件...");
+    this._setStartLoadTipText("Loading sound effect files...");
     core.bgms.forEach(function (t) {
         core.loader.loadOneMusic(t);
     });

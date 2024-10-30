@@ -1,6 +1,6 @@
 
 /*
-utils.js 工具类
+utils.js Tools
 
  */
 
@@ -48,19 +48,19 @@ utils.prototype.replaceText = function (text, prefix) {
 }
 
 utils.prototype.replaceValue = function (value) {
-    if (typeof value == "string" && (value.indexOf(":") >= 0 || value.indexOf("flag：") >= 0 || value.indexOf('global：') >= 0)) {
+    if (typeof value == "string" && (value.indexOf(":") >= 0 || value.indexOf("flag:") >= 0 || value.indexOf('global:') >= 0)) {
         if (value.indexOf('status:') >= 0)
             value = value.replace(/status:([a-zA-Z0-9_]+)/g, "core.getStatus('$1')");
         if (value.indexOf('buff:') >= 0)
             value = value.replace(/buff:([a-zA-Z0-9_]+)/g, "core.getBuff('$1')");
         if (value.indexOf('item:') >= 0)
             value = value.replace(/item:([a-zA-Z0-9_]+)/g, "core.itemCount('$1')");
-        if (value.indexOf('flag:') >= 0 || value.indexOf('flag：') >= 0)
-            value = value.replace(/flag[:：]([a-zA-Z0-9_\u4E00-\u9FCC\u3040-\u30FF\u2160-\u216B\u0391-\u03C9]+)/g, "core.getFlag('$1', 0)");
+        if (value.indexOf('flag:') >= 0 || value.indexOf('flag:') >= 0)
+            value = value.replace(/flag[::]([a-zA-Z0-9_\u4E00-\u9FCC\u3040-\u30FF\u2160-\u216B\u0391-\u03C9]+)/g, "core.getFlag('$1', 0)");
         //if (value.indexOf('switch:' >= 0))
         //    value = value.replace(/switch:([a-zA-Z0-9_]+)/g, "core.getFlag('" + (prefix || ":f@x@y") + "@$1', 0)");
-        if (value.indexOf('global:') >= 0 || value.indexOf('global：') >= 0)
-            value = value.replace(/global[:：]([a-zA-Z0-9_\u4E00-\u9FCC\u3040-\u30FF\u2160-\u216B\u0391-\u03C9]+)/g, "core.getGlobal('$1', 0)");
+        if (value.indexOf('global:') >= 0 || value.indexOf('global:') >= 0)
+            value = value.replace(/global[::]([a-zA-Z0-9_\u4E00-\u9FCC\u3040-\u30FF\u2160-\u216B\u0391-\u03C9]+)/g, "core.getGlobal('$1', 0)");
         if (value.indexOf('enemy:') >= 0)
             value = value.replace(/enemy:([a-zA-Z0-9_]+)[\.:]([a-zA-Z0-9_]+)/g, "core.material.enemys['$1'].$2");
         if (value.indexOf('blockId:') >= 0)
@@ -81,7 +81,7 @@ utils.prototype.replaceValue = function (value) {
 utils.prototype.calValue = function (value, prefix) {
     if (!core.isset(value)) return null;
     if (typeof value === 'string') {
-        if (value.indexOf(':') >= 0 || value.indexOf("flag：") >= 0 || value.indexOf('global：') >= 0) {
+        if (value.indexOf(':') >= 0 || value.indexOf("flag:") >= 0 || value.indexOf('global:') >= 0) {
             if (value.indexOf('switch:') >= 0)
                 value = value.replace(/switch:([a-zA-Z0-9_]+)/g, "core.getFlag('" + (prefix || ":f@x@y") + "@$1', 0)");
             value = this.replaceValue(value);
@@ -453,7 +453,7 @@ utils.prototype.formatBigNumber = function (x, digits) {
     if (digits === true) digits = 5; // 兼容旧版onMap参数
     if (!digits || digits < 5) digits = 6; // 连同负号、小数点和后缀字母在内的总位数，至少需为5，默认为6
     x = Math.trunc(parseFloat(x)); // 尝试识别为小数，然后向0取整
-    if (x == null || !Number.isFinite(x)) return '???'; // 无法识别的数或正负无穷大，显示'???'
+    if (x == null || !Number.isFinite(x)) return '???'; // Unrecognizable numbers or positive or negative infinity are displayed'???'
     var units = [ // 单位及其后缀字母，可自定义，如改成千进制下的K、M、G、T、P
         { "val": 1e4, "suffix": "w" },
         { "val": 1e8, "suffix": "e" },
@@ -878,12 +878,12 @@ utils.prototype.rand2 = function (num) {
         if (action.indexOf("random:") == 0) {
             value = parseInt(action.substring(7));
             if (isNaN(value) || value >= num || value < 0) {
-                console.warn('错误！当前random:项超过范围。将重新随机生成！');
+                console.warn('Error! Currentrandom:Item out of range. Will re-randomize!');
                 value = Math.floor(Math.random() * num);
             }
         }
         else {
-            console.warn('错误！当前需要一个random:项。将重新随机生成！');
+            console.warn('Error! Currently need arandom:Item. Will be randomly generated again!');
             value = Math.floor(Math.random() * num);
         }
     }
@@ -922,14 +922,14 @@ utils.prototype.readFile = function (success, error, accept, readType) {
 
     // step 0: 不为http/https，直接不支持
     if (!core.platform.isOnline) {
-        alert("离线状态下不支持文件读取！");
+        alert("File reading is not supported in offline state!");
         if (error) error();
         return;
     }
 
     // Step 1: 如果不支持FileReader，直接不支持
     if (core.platform.fileReader == null) {
-        alert("当前浏览器不支持FileReader！");
+        alert("The current browser does not supportFileReader!");
         if (error) error();
         return;
     }
@@ -996,17 +996,17 @@ utils.prototype.download = function (filename, content) {
 
     // Step 0: 不为http/https，直接不支持
     if (!core.platform.isOnline) {
-        alert("离线状态下不支持下载操作！");
+        alert("Downloading is not supported in offline mode!");
         return;
     }
 
     // Step 1: 如果是iOS平台，直接不支持
     if (core.platform.isIOS) {
         if (core.copy(content)) {
-            alert("iOS平台下不支持直接下载文件！\n所有应下载内容已经复制到您的剪切板，请自行创建空白文件并粘贴。");
+            alert("iOSThe platform does not support direct download of files!\nAll the content to be downloaded has been copied to your clipboard. Please create a blank file and paste it.");
         }
         else {
-            alert("iOS平台下不支持下载操作！");
+            alert("iOSThe platform does not support download operations!");
         }
         return;
     }
@@ -1015,10 +1015,10 @@ utils.prototype.download = function (filename, content) {
     if (!core.platform.isPC) {
         if (!core.platform.isChrome || core.platform.isQQ || core.platform.isWeChat) { // 检测chrome
             if (core.copy(content)) {
-                alert("移动端只有Chrome浏览器支持直接下载文件！\n所有应下载内容已经复制到您的剪切板，请自行创建空白文件并粘贴。");
+                alert("Mobile onlyChromeThe browser supports direct download of files!\nAll the content to be downloaded has been copied to your clipboard. Please create a blank file and paste it.");
             }
             else {
-                alert("该平台或浏览器暂不支持下载操作！");
+                alert("This platform or browser does not support download operations yet!");
             }
             return;
         }
@@ -1026,7 +1026,7 @@ utils.prototype.download = function (filename, content) {
 
     // Step 3: 如果是Safari浏览器，则提示并打开新窗口
     if (core.platform.isSafari) {
-        alert("你当前使用的是Safari浏览器，不支持直接下载文件。\n即将打开一个新窗口为应下载内容，请自行全选复制然后创建空白文件并粘贴。");
+        alert("You are currently usingSafariThe browser does not support direct download of files.\nA new window will open for the content to be downloaded. Please select and copy all of them, then create a blank file and paste them.");
         var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
         var href = window.URL.createObjectURL(blob);
         var opened = window.open(href, "_blank");

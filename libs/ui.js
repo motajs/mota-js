@@ -1,8 +1,8 @@
 
 /**
- * ui.js：负责所有和UI界面相关的绘制
- * 包括：
- * 自动寻路、怪物手册、楼传器、存读档、菜单栏、NPC对话事件、等等
+ * ui.js: Responsible for all andUIInterface related drawing
+ * include:
+ * Automatic pathfinding, Monster Manual, Building Transmitter, Save and Load, Menu Bar,NPCDialogue events, etc.
  */
 
 "use strict";
@@ -1209,9 +1209,9 @@ ui.prototype._drawTextContent_next = function (tempCtx, content, config) {
 // 绘制下一个字符
 ui.prototype._drawTextContent_drawChar = function (tempCtx, content, config, ch) {
     // 标点禁则：不能在行首的标点
-    var forbidStart = "）)】》＞﹞>)]»›〕〉}］」｝〗』" + "，。？！：；·…,.?!:;、……~&@#～＆＠＃";
+    var forbidStart = "）)】》＞﹞>)]»›〕〉}］」｝〗』" + ",.?!:;·…,.?!:;,……~&@#～＆＠＃";
     // 标点禁则：不能在行尾的标点
-    var forbidEnd = "（(【《＜﹝<([«‹〔〈{［「｛〖『";
+    var forbidEnd = "（(【《＜﹝<([«‹〔〈{[「｛〖『";
 
     // \n, \\n
     if (ch == '\n' || (ch == '\\' && content.charAt(config.index) == 'n')) {
@@ -1405,7 +1405,7 @@ ui.prototype.getTextContentHeight = function (content, config) {
 }
 
 ui.prototype._getRealContent = function (content) {
-    return content.replace(/(\r|\\(r|c|d|e|g|z))(\[.*?])?/g, "").replace(/(\\i)(\[.*?])?/g, "占1");
+    return content.replace(/(\r|\\(r|c|d|e|g|z))(\[.*?])?/g, "").replace(/(\\i)(\[.*?])?/g, "occupy1");
 }
 
 ui.prototype._animateUI = function (type, ctx, callback) {
@@ -1893,10 +1893,10 @@ ui.prototype.drawConfirmBox = function (text, yesCallback, noCallback, ctx) {
         core.fillText(ctx, contents[i], core._PX_ / 2, rect.top + 50 + i * 30);
     }
 
-    core.fillText(ctx, "确定", core._PX_ / 2 - 38, rect.bottom - 35, null, this._buildFont(17, true));
-    core.fillText(ctx, "取消", core._PX_ / 2 + 38, rect.bottom - 35);
+    core.fillText(ctx, "Sure", core._PX_ / 2 - 38, rect.bottom - 35, null, this._buildFont(17, true));
+    core.fillText(ctx, "Cancel", core._PX_ / 2 + 38, rect.bottom - 35);
     if (core.status.event.selection != 'none') {
-        var len = core.calWidth(ctx, "确定");
+        var len = core.calWidth(ctx, "Sure");
         var strokeLeft = core._PX_ / 2 + (76 * core.status.event.selection - 38) - parseInt(len / 2) - 5;
 
         if (isWindowSkin) {
@@ -1939,10 +1939,10 @@ ui.prototype.drawWaiting = function (text) {
 ui.prototype._drawSwitchs = function () {
     core.status.event.id = 'switchs';
     var choices = [
-        "音效设置",
-        "显示设置",
-        "操作设置",
-        "返回主菜单"
+        "Sound Settings",
+        "Display Settings",
+        "Operation Settings",
+        "Return to main menu"
     ];
     this.drawChoices(null, choices);
 }
@@ -1950,11 +1950,11 @@ ui.prototype._drawSwitchs = function () {
 ui.prototype._drawSwitchs_sounds = function () {
     core.status.event.id = 'switchs-sounds';
     var choices = [
-        "音乐： " + (core.musicStatus.bgmStatus ? "[ON]" : "[OFF]"),
-        "音效： " + (core.musicStatus.soundStatus ? "[ON]" : "[OFF]"),
+        "music: " + (core.musicStatus.bgmStatus ? "[ON]" : "[OFF]"),
+        "Sound Effects: " + (core.musicStatus.soundStatus ? "[ON]" : "[OFF]"),
         // 显示为 0~10 十挡
-        " <     音量：" + Math.round(Math.sqrt(100 * core.musicStatus.userVolume)) + "     > ",
-        "返回上一级"
+        " <     volume:" + Math.round(Math.sqrt(100 * core.musicStatus.userVolume)) + "     > ",
+        "Back to previous level"
     ];
     this.drawChoices(null, choices);
 }
@@ -1962,15 +1962,15 @@ ui.prototype._drawSwitchs_sounds = function () {
 ui.prototype._drawSwitchs_display = function () {
     core.status.event.id = 'switchs-display';
     var choices = [
-        " <   放缩：" + Math.max(core.domStyle.scale, 1) + "x   > ",
-        "高清画面： " + (core.flags.enableHDCanvas ? "[ON]" : "[OFF]"),
-        "定点怪显： " + (core.flags.enableEnemyPoint ? "[ON]" : "[OFF]"),
-        "怪物显伤： " + (core.flags.displayEnemyDamage ? "[ON]" : "[OFF]"),
-        "临界显伤： " + (core.flags.displayCritical ? "[ON]" : "[OFF]"),
-        "领域显伤： " + (core.flags.displayExtraDamage ? "[ON]" : "[OFF]"),
-        "领域模式： " + (core.flags.extraDamageType == 2 ? "[最简]" : core.flags.extraDamageType == 1 ? "[半透明]" : "[完整]"),
-        "自动放缩： " + (core.getLocalStorage('autoScale') ? "[ON]" : "[OFF]"),
-        "返回上一级",
+        " <   Scaling:" + Math.max(core.domStyle.scale, 1) + "x   > ",
+        "High-definition graphics: " + (core.flags.enableHDCanvas ? "[ON]" : "[OFF]"),
+        "Fixed point weird display: " + (core.flags.enableEnemyPoint ? "[ON]" : "[OFF]"),
+        "Monster damage: " + (core.flags.displayEnemyDamage ? "[ON]" : "[OFF]"),
+        "Critical damage: " + (core.flags.displayCritical ? "[ON]" : "[OFF]"),
+        "Field damage: " + (core.flags.displayExtraDamage ? "[ON]" : "[OFF]"),
+        "Domain Mode: " + (core.flags.extraDamageType == 2 ? "[Simplest]" : core.flags.extraDamageType == 1 ? "[translucent]" : "[whole]"),
+        "Automatic scaling: " + (core.getLocalStorage('autoScale') ? "[ON]" : "[OFF]"),
+        "Back to previous level",
     ];
     this.drawChoices(null, choices);
 }
@@ -1979,12 +1979,12 @@ ui.prototype._drawSwitchs_action = function () {
     core.status.event.id = 'switchs-action';
     var choices = [
         // 数值越大耗时越长
-        " <   步时：" + core.values.moveSpeed + "   > ",
-        " <   转场：" + core.values.floorChangeTime + "   > ",
-        "血瓶绕路： " + (core.hasFlag('__potionNoRouting__') ? "[ON]" : "[OFF]"),
-        "单击瞬移： " + (!core.hasFlag("__noClickMove__") ? "[ON]" : "[OFF]"),
-        "左手模式： " + (core.flags.leftHandPrefer ? "[ON]" : "[OFF]"),
-        "返回上一级",
+        " <   Step time:" + core.values.moveSpeed + "   > ",
+        " <   Transition:" + core.values.floorChangeTime + "   > ",
+        "Blood bottle detour: " + (core.hasFlag('__potionNoRouting__') ? "[ON]" : "[OFF]"),
+        "Click Teleport: " + (!core.hasFlag("__noClickMove__") ? "[ON]" : "[OFF]"),
+        "Left-handed mode: " + (core.flags.leftHandPrefer ? "[ON]" : "[OFF]"),
+        "Back to previous level",
     ];
     this.drawChoices(null, choices);
 }
@@ -1993,7 +1993,7 @@ ui.prototype._drawSwitchs_action = function () {
 ui.prototype._drawSettings = function () {
     core.status.event.id = 'settings';
     this.drawChoices(null, [
-        "系统设置", "虚拟键盘", "浏览地图", "存档笔记", "同步存档", "游戏信息", "返回标题", "返回游戏"
+        "System Settings", "Virtual Keyboard", "Explore the map", "Archive Notes", "Synchronize archives", "Game Information", "Back to Title", "Return to Game"
     ]);
 }
 
@@ -2002,8 +2002,8 @@ ui.prototype._drawNotes = function () {
     core.status.event.id = 'notes';
     core.status.hero.notes = core.status.hero.notes || [];
     core.lockControl();
-    this.drawChoices("存档笔记允许你写入和查看任何笔记（快捷键M），你可以用做任何标记，比如Boss前的属性、开门和路线选择等。", [
-        "新增存档笔记", "查看存档笔记", "编辑存档笔记", "删除存档笔记", "返回上一页"
+    this.drawChoices("Archive Notes allows you to write and view any note (shortcut keyM), you can use it for any markup, such asBossCurrent attributes, door opening and route selection, etc.", [
+        "Added archived notes", "View archived notes", "Editing Archived Notes", "Delete archived notes", "Return to previous page"
     ]);
 }
 
@@ -2014,7 +2014,7 @@ ui.prototype._drawQuickShop = function () {
     var choices = keys.map(function (shopId) {
         return { "text": shopList[shopId].textInList, "color": core.isShopVisited(shopId) ? null : "#999999" };
     });
-    choices.push("返回游戏");
+    choices.push("Return to Game");
     this.drawChoices(null, choices);
 }
 
@@ -2022,7 +2022,7 @@ ui.prototype._drawQuickShop = function () {
 ui.prototype._drawSyncSave = function () {
     core.status.event.id = 'syncSave';
     this.drawChoices(null, [
-        "同步存档到服务器", "从服务器加载存档", "存档至本地文件", "从本地文件读档", "回放和下载录像", "清空本地存档", "返回主菜单"
+        "Sync archive to server", "Loading a save from the server", "Archive to local file", "Read from local file", "Playback and downloading recordings", "Clear local archive", "Return to main menu"
     ]);
 }
 
@@ -2030,7 +2030,7 @@ ui.prototype._drawSyncSave = function () {
 ui.prototype._drawSyncSelect = function () {
     core.status.event.id = 'syncSelect';
     this.drawChoices(null, [
-        "同步本地所有存档", "只同步当前单存档", "返回上级菜单"
+        "Synchronize all local saves", "Only synchronize the current single archive", "Return to previous menu"
     ]);
 }
 
@@ -2038,7 +2038,7 @@ ui.prototype._drawSyncSelect = function () {
 ui.prototype._drawLocalSaveSelect = function () {
     core.status.event.id = 'localSaveSelect';
     this.drawChoices(null, [
-        "下载所有存档", "只下载当前单存档", "返回上级菜单"
+        "Download all archives", "Download only the current archive", "Return to previous menu"
     ]);
 }
 
@@ -2046,23 +2046,23 @@ ui.prototype._drawLocalSaveSelect = function () {
 ui.prototype._drawStorageRemove = function () {
     core.status.event.id = 'storageRemove';
     this.drawChoices(null, [
-        "清空全部塔的存档", "只清空当前塔的存档", "返回上级菜单"
+        "Clear all tower saves", "Clear only the current towers saves", "Return to previous menu"
     ]);
 }
 
 ui.prototype._drawReplay = function () {
     core.lockControl();
     core.status.event.id = 'replay';
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     this.drawChoices(null, [
-        "从头回放录像", "从存档开始回放", "接续播放剩余录像", "播放存档剩余录像", "选择录像文件", "下载当前录像", "返回游戏"
+        "Replay the video from the beginning", "Playback from archive", "Continue to play the remaining videos", "Play remaining archived videos", "Select video file", "Download current video", "Return to Game"
     ]);
 }
 
 ui.prototype._drawGameInfo = function () {
     core.status.event.id = 'gameInfo';
     this.drawChoices(null, [
-        "数据统计", "查看工程", "游戏主页", "操作帮助", "关于游戏", "下载离线版本", "返回主菜单"
+        "Statistics", "View Project", "Game Home Page", "Operation Help", "About the Game", "Download offline version", "Return to main menu"
     ]);
 }
 
@@ -2080,9 +2080,9 @@ ui.prototype.drawPagination = function (page, totalPage, y) {
 
     core.setTextAlign('ui', 'center');
     if (page > 1)
-        core.fillText('ui', '上一页', core._PX_ / 2 - 80, y * 32 + 19);
+        core.fillText('ui', 'Previous page', core._PX_ / 2 - 80, y * 32 + 19);
     if (page < totalPage)
-        core.fillText('ui', '下一页', core._PX_ / 2 + 80, y * 32 + 19);
+        core.fillText('ui', 'Next Page', core._PX_ / 2 + 80, y * 32 + 19);
 }
 
 ////// 绘制键盘光标 //////
@@ -2132,7 +2132,7 @@ ui.prototype.drawBook = function (index) {
     core.drawBoxAnimate();
     this.drawPagination(page, totalPage);
     core.setTextAlign('ui', 'center');
-    core.fillText('ui', '返回游戏', core._PX_ - 46, core._PY_ - 13, '#DDDDDD', this._buildFont(15, true));
+    core.fillText('ui', 'Return to Game', core._PX_ - 46, core._PY_ - 13, '#DDDDDD', this._buildFont(15, true));
 }
 
 ui.prototype._drawBook_pageinfo = function () {
@@ -2154,8 +2154,8 @@ ui.prototype._drawBook_drawBackground = function () {
 
 ui.prototype._drawBook_drawEmpty = function () {
     core.setTextAlign('ui', 'center');
-    core.fillText('ui', "本层无怪物", core._PX_ / 2, core._PY_ / 2 + 14, '#999999', this._buildFont(50, true));
-    core.fillText('ui', '返回游戏', core._PX_ - 46, core._PY_ - 13, '#DDDDDD', this._buildFont(15, true));
+    core.fillText('ui', "There are no monsters on this floor", core._PX_ / 2, core._PY_ / 2 + 14, '#999999', this._buildFont(50, true));
+    core.fillText('ui', 'Return to Game', core._PX_ - 46, core._PY_ - 13, '#DDDDDD', this._buildFont(15, true));
 }
 
 ui.prototype._drawBook_drawOne = function (floorId, index, enemy, pageinfo, selected) {
@@ -2260,7 +2260,7 @@ ui.prototype._drawBook_drawName = function (index, enemy, top, left, width) {
                     top + 50, core.arrayToRGBA((enemy.specialColor || [])[1] || '#FF6A6A'));
                 break;
             default:
-                core.fillText('ui', '多属性...', left + width / 2,
+                core.fillText('ui', 'Multiple attributes...', left + width / 2,
                     top + 50, '#FF6A6A', this._buildFont(15, true), width);
         }
     }
@@ -2321,11 +2321,11 @@ ui.prototype._drawBook_drawRow3 = function (index, enemy, top, left, width, posi
     core.setTextAlign('ui', 'left');
     var b13 = this._buildFont(13, true), f13 = this._buildFont(13, false);
     var col1 = left, col2 = left + width * 9 / 25, col3 = left + width * 17 / 25;
-    core.fillText('ui', '临界', col1, position, '#DDDDDD', f13);
+    core.fillText('ui', 'critical', col1, position, '#DDDDDD', f13);
     core.fillText('ui', core.formatBigNumber(enemy.critical || 0), col1 + 30, position, null, b13);
-    core.fillText('ui', '减伤', col2, position, null, f13);
+    core.fillText('ui', 'Damage Reduction', col2, position, null, f13);
     core.fillText('ui', core.formatBigNumber(enemy.criticalDamage || 0), col2 + 30, position, null, b13);
-    core.fillText('ui', '加防', col3, position, null, f13);
+    core.fillText('ui', 'Add Defense', col3, position, null, f13);
     core.fillText('ui', core.formatBigNumber(enemy.defDamage || 0), col3 + 30, position, null, b13);
 }
 
@@ -2333,7 +2333,7 @@ ui.prototype._drawBook_drawDamage = function (index, enemy, offset, position) {
     core.setTextAlign('ui', 'center');
     var damage = enemy.damage, color = '#FFFF00';
     if (damage == null) {
-        damage = '无法战斗';
+        damage = 'Unable to fight';
         color = '#FF2222';
     }
     else {
@@ -2368,7 +2368,7 @@ ui.prototype._drawBookDetail = function (index) {
     core.setAlpha('data', 1);
     core.strokeRect('data', left - 1, top - 1, width + 1, height + 1,
         core.arrayToRGBA(core.status.globalAttribute.borderColor), 2);
-    core.playSound('确定');
+    core.playSound('Sure');
     this._drawBookDetail_drawContent(enemy, content, { top: top, content_left: content_left, bottom: bottom, validWidth: validWidth });
 }
 
@@ -2383,7 +2383,7 @@ ui.prototype._drawBookDetail_getInfo = function (index) {
     index = core.clamp(index, 0, enemys.length - 1);
     var enemy = enemys[index], enemyId = enemy.id;
     var texts = core.enemys.getSpecialHint(enemyId);
-    if (texts.length == 0) texts.push("该怪物无特殊属性。");
+    if (texts.length == 0) texts.push("This monster has no special attributes.");
     if (enemy.description) texts.push(enemy.description + "\r");
     texts.push("");
     this._drawBookDetail_getTexts(enemy, floorId, texts);
@@ -2408,7 +2408,7 @@ ui.prototype._drawBookDetail_origin = function (enemy, texts) {
     var originEnemy = core.enemys._getCurrentEnemys_getEnemy(enemy.id);
     var content = [];
     if (enemy.locs != null && enemy.locs.length >= 0) {
-        texts.push("\r[#FF6A6A]\\d怪物坐标：\\d\r[]" + JSON.stringify(enemy.locs));
+        texts.push("\r[#FF6A6A]\\dMonster coordinates:\\d\r[]" + JSON.stringify(enemy.locs));
     }
     ["hp", "atk", "def", "point", "money", "exp"].forEach(function (one) {
         if (enemy[one] == null || originEnemy[one] == null) return;
@@ -2417,7 +2417,7 @@ ui.prototype._drawBookDetail_origin = function (enemy, texts) {
         }
     });
     if (content.length > 0) {
-        texts.push("\r[#FF6A6A]\\d原始数值：\\d\r[]" + content.join("；"));
+        texts.push("\r[#FF6A6A]\\dOriginal value:\\d\r[]" + content.join(";"));
     }
 }
 
@@ -2427,7 +2427,7 @@ ui.prototype._drawBookDetail_mofang = function (enemy, texts) {
         var hp = enemy.hp;
         var delta = core.status.hero.atk - core.status.hero.def;
         if (delta < hp && hp <= 10000 && hp > 0) {
-            texts.push("\r[#FF6A6A]\\d模仿临界计算器：\\d\r[]（当前攻防差" + core.formatBigNumber(delta) + "）");
+            texts.push("\r[#FF6A6A]\\dSimulate critical calculator:\\d\r[](Current attack and defense difference" + core.formatBigNumber(delta) + "）");
             var u = [];
             this._drawBookDetail_mofang_getArray(hp).forEach(function (t) {
                 if (u.length < 20) u.push(t);
@@ -2478,7 +2478,7 @@ ui.prototype._drawBookDetail_vampire = function (enemy, floorId, texts) {
             }
             core.status.hero.hp = start;
             if (core.canBattle(enemy.id)) {
-                texts.push("\r[#FF6A6A]\\d打死该怪物最低需要生命值：\\d\r[]" + core.formatBigNumber(start));
+                texts.push("\r[#FF6A6A]\\dMinimum health required to kill this monster:\\d\r[]" + core.formatBigNumber(start));
             }
             core.status.hero.hp = nowHp;
         }
@@ -2487,19 +2487,19 @@ ui.prototype._drawBookDetail_vampire = function (enemy, floorId, texts) {
 
 ui.prototype._drawBookDetail_hatred = function (enemy, texts) {
     if (core.enemys.hasSpecial(enemy.special, 17)) {
-        texts.push("\r[#FF6A6A]\\d当前仇恨伤害值：\\d\r[]" + core.getFlag('hatred', 0));
+        texts.push("\r[#FF6A6A]\\dCurrent hatred damage value:\\d\r[]" + core.getFlag('hatred', 0));
     }
 }
 
 ui.prototype._drawBookDetail_turnAndCriticals = function (enemy, floorId, texts) {
     var damageInfo = core.getDamageInfo(enemy.id, null, enemy.x, enemy.y, floorId);
-    texts.push("\r[#FF6A6A]\\d战斗回合数：\\d\r[]" + ((damageInfo || {}).turn || 0));
+    texts.push("\r[#FF6A6A]\\dNumber of battle rounds:\\d\r[]" + ((damageInfo || {}).turn || 0));
     // 临界表
     var criticals = core.enemys.nextCriticals(enemy.id, 8, enemy.x, enemy.y, floorId).map(function (v) {
         return core.formatBigNumber(v[0]) + ":" + core.formatBigNumber(v[1]);
     });
     while (criticals[0] == '0:0') criticals.shift();
-    texts.push("\r[#FF6A6A]\\d临界表：\\d\r[]" + JSON.stringify(criticals));
+    texts.push("\r[#FF6A6A]\\dCritical table:\\d\r[]" + JSON.stringify(criticals));
 }
 
 ui.prototype._drawBookDetail_drawContent = function (enemy, content, pos) {
@@ -2524,11 +2524,11 @@ ui.prototype.drawFly = function (page) {
     core.fillRect('ui', 0, 0, core._PX_, core._PY_, '#000000');
     core.setAlpha('ui', 1);
     core.setTextAlign('ui', 'center');
-    core.fillText('ui', '楼层跳跃', core._PX_ / 2, 48, '#FFFFFF', this._buildFont(28, true));
-    core.fillText('ui', '返回游戏', core._PX_ / 2, core._PY_ - 13, null, this._buildFont(15, true))
+    core.fillText('ui', 'Floor Jump', core._PX_ / 2, 48, '#FFFFFF', this._buildFont(28, true));
+    core.fillText('ui', 'Return to Game', core._PX_ / 2, core._PY_ - 13, null, this._buildFont(15, true))
     core.setTextAlign('ui', 'right');
-    core.fillText('ui', '浏览地图时也', core._PX_ - 10, core._PY_ - 23, '#aaaaaa', this._buildFont(10, false));
-    core.fillText('ui', '可楼层跳跃！', core._PX_ - 10, core._PY_ - 11, null, this._buildFont(10, false));
+    core.fillText('ui', 'When browsing the map', core._PX_ - 10, core._PY_ - 23, '#aaaaaa', this._buildFont(10, false));
+    core.fillText('ui', 'Can jump floors!', core._PX_ - 10, core._PY_ - 11, null, this._buildFont(10, false));
     core.setTextAlign('ui', 'center');
 
     var middle = core._PY_ / 2 + 39;
@@ -2570,8 +2570,8 @@ ui.prototype._drawCenterFly = function () {
         offsetY = core.clamp(toY - core._HALF_HEIGHT_, 0, core.bigmap.height - core._HEIGHT_);
     core.fillRect('ui', (toX - offsetX) * 32, (toY - offsetY) * 32, 32, 32, fillstyle);
     core.status.event.data = { "x": toX, "y": toY, "posX": toX - offsetX, "posY": toY - offsetY };
-    core.playSound('打开界面');
-    core.drawTip("请确认当前" + core.material.items['centerFly'].name + "的位置", 'centerFly');
+    core.playSound('Open the interface');
+    core.drawTip("Please confirm the current" + core.material.items['centerFly'].name + "Location", 'centerFly');
     return;
 }
 
@@ -2593,14 +2593,14 @@ ui.prototype._drawViewMaps = function (index, x, y) {
     if (!data.all && (data.mw > core._WIDTH_ || data.mh > core._HEIGHT_))
         text += " [" + (data.x - core._HALF_WIDTH_) + "," + (data.y - core._HALF_HEIGHT_) + "]";
     if (core.markedFloorIds[data.floorId])
-        text += " （已标记）";
+        text += " (marked)";
     var textX = 16, textY = 18, width = textX + core.calWidth('data', text) + 16, height = 42;
     core.fillRect('data', 5, 5, width, height, 'rgba(0,0,0,0.4)');
     core.fillText('data', text, textX + 5, textY + 15, 'rgba(255,255,255,0.6)');
 }
 
 ui.prototype._drawViewMaps_drawHint = function () {
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.fillRect('ui', 0, 0, core._PX_, core._PY_, 'rgba(0,0,0,0.7)');
     core.setTextAlign('ui', 'center');
     var stroke = function (left, top, width, height, fillStyle, lineWidth) {
@@ -2619,24 +2619,24 @@ ui.prototype._drawViewMaps_drawHint = function () {
     stroke(0, core._PY_ - cornerpy, cornerpx, cornerpy); // left bottom;
 
     core.setTextBaseline('ui', 'middle');
-    core.fillText('ui', "上移地图 [W]", core._PX_ / 2, perpy / 2, core.status.globalAttribute.selectColor, '20px Arial');
-    core.fillText('ui', "下移地图 [S]", core._PX_ / 2, core._PY_ - perpy / 2);
+    core.fillText('ui', "Move the map up [W]", core._PX_ / 2, perpy / 2, core.status.globalAttribute.selectColor, '20px Arial');
+    core.fillText('ui', "Move map down [S]", core._PX_ / 2, core._PY_ - perpy / 2);
     core.fillText('ui', 'V', cornerpx / 2, cornerpy / 2);
     core.fillText('ui', 'Z', core._PX_ - cornerpx / 2, cornerpy / 2);
     core.fillText('ui', 'B', cornerpx / 2, core._PY_ - cornerpy / 2);
 
     var top = core._PY_ / 2 - 66, left = perpx / 2, right = core._PX_ - left;
-    var lt = ["左", "移", "地", "图", "[A]"], rt = ["右", "移", "地", "图", "[D]"];
+    var lt = ["Left", "shift", "land", "picture", "[A]"], rt = ["right", "shift", "land", "picture", "[D]"];
     for (var i = 0; i < 5; ++i) {
         core.fillText("ui", lt[i], left, top + 32 * i);
         core.fillText("ui", rt[i], right, top + 32 * i);
     }
-    core.fillText('ui', "前张地图 [▲ / PGUP]", core._PX_ / 2, perpy * 1.5);
-    core.fillText('ui', "后张地图 [▼ / PGDN]", core._PX_ / 2, core._PY_ - perpy * 1.5);
+    core.fillText('ui', "Previous map [▲ / PGUP]", core._PX_ / 2, perpy * 1.5);
+    core.fillText('ui', "Hou Zhang Map [▼ / PGDN]", core._PX_ / 2, core._PY_ - perpy * 1.5);
 
-    core.fillText('ui', "退出 [ESC / ENTER]", core._PX_ / 2, core._PY_ / 2);
-    core.fillText('ui', "[X] 可查看" + core.material.items['book'].name +
-        "   [G] 可使用" + core.material.items['fly'].name, core._PX_, core._PY_ + 32, null, '12px Arial');
+    core.fillText('ui', "quit [ESC / ENTER]", core._PX_ / 2, core._PY_ / 2);
+    core.fillText('ui', "[X] Viewable" + core.material.items['book'].name +
+        "   [G] Available" + core.material.items['fly'].name, core._PX_, core._PY_ + 32, null, '12px Arial');
 
     core.setTextBaseline('ui', 'alphabetic');
 }
@@ -2675,9 +2675,9 @@ ui.prototype._drawToolbox = function (index) {
     core.canvas.ui.strokeWidth = 2;
     core.setTextAlign('ui', 'right');
     var line1 = core._PY_ - 306;
-    this._drawToolbox_drawLine(line1, "消耗道具");
+    this._drawToolbox_drawLine(line1, "Consumable items");
     var line2 = core._PY_ - 146;
-    this._drawToolbox_drawLine(line2, "永久道具");
+    this._drawToolbox_drawLine(line2, "Permanent Props");
 
     this._drawToolbox_drawDescription(info, line1);
 
@@ -2687,8 +2687,8 @@ ui.prototype._drawToolbox = function (index) {
     this.drawPagination(info.constantsPage, info.constantsTotalPage);
 
     core.setTextAlign('ui', 'center');
-    core.fillText('ui', '[装备栏]', core._PX_ - 46, 25, '#DDDDDD', this._buildFont(15, true));
-    core.fillText('ui', '返回游戏', core._PX_ - 46, core._PY_ - 13);
+    core.fillText('ui', '[Equipment Bar]', core._PX_ - 46, 25, '#DDDDDD', this._buildFont(15, true));
+    core.fillText('ui', 'Return to Game', core._PX_ - 46, core._PY_ - 13);
 }
 
 ////// 获得所有应该在道具栏显示的某个类型道具 //////
@@ -2764,10 +2764,10 @@ ui.prototype._drawToolbox_drawDescription = function (info, max_height) {
     core.setTextAlign('ui', 'left');
     if (!info.selectId) return;
     var item = core.material.items[info.selectId];
-    var name = item.name || "未知道具";
+    var name = item.name || "Unknown";
     try { name = core.replaceText(name); } catch (e) { }
     core.fillText('ui', name, 10, 32, core.status.globalAttribute.selectColor, this._buildFont(20, true))
-    var text = item.text || "该道具暂无描述。";
+    var text = item.text || "There is no description for this item.";
     try { text = core.replaceText(text); } catch (e) { }
 
     var height = null;
@@ -2780,7 +2780,7 @@ ui.prototype._drawToolbox_drawDescription = function (info, max_height) {
         }
     }
     if (height < max_height - 33) {
-        core.fillText('ui', '<继续点击该道具即可进行使用>', 10, max_height - 15, '#CCCCCC', this._buildFont(14, false));
+        core.fillText('ui', '<Continue to click on the item to use it>', 10, max_height - 15, '#CCCCCC', this._buildFont(14, false));
     }
 }
 
@@ -2811,9 +2811,9 @@ ui.prototype._drawEquipbox = function (index) {
     core.canvas.ui.strokeWidth = 2;
     core.setTextAlign('ui', 'right');
     var line1 = core._PY_ - 306;
-    this._drawToolbox_drawLine(line1, "当前装备");
+    this._drawToolbox_drawLine(line1, "Current Equipment");
     var line2 = core._PY_ - 146;
-    this._drawToolbox_drawLine(line2 + 9, "拥有装备");
+    this._drawToolbox_drawLine(line2 + 9, "Possess equipment");
 
     this._drawEquipbox_description(info, line1);
 
@@ -2822,8 +2822,8 @@ ui.prototype._drawEquipbox = function (index) {
     this.drawPagination(info.page, info.totalPage);
 
     core.setTextAlign('ui', 'center');
-    core.fillText('ui', '[道具栏]', core._PX_ - 46, 25, '#DDDDDD', this._buildFont(15, true));
-    core.fillText('ui', '返回游戏', core._PX_ - 46, core._PY_ - 13);
+    core.fillText('ui', '[Props Bar]', core._PX_ - 46, 25, '#DDDDDD', this._buildFont(15, true));
+    core.fillText('ui', 'Return to Game', core._PX_ - 46, core._PY_ - 13);
 }
 
 ui.prototype._drawEquipbox_getInfo = function (index) {
@@ -2870,13 +2870,13 @@ ui.prototype._drawEquipbox_description = function (info, max_height) {
     if (!equip.equip) equip.equip = { "type": 0 };
     var equipType = equip.equip.type, equipString;
     if (typeof equipType === 'string') {
-        equipString = equipType || "未知部位";
+        equipString = equipType || "Unknown part";
         equipType = core.items.getEquipTypeByName(equipType);
     }
-    else equipString = info.allEquips[equipType] || "未知部位";
+    else equipString = info.allEquips[equipType] || "Unknown part";
     core.fillText('ui', equip.name + "（" + equipString + "）", 10, 32, core.status.globalAttribute.selectColor, this._buildFont(20, true))
     // --- 描述
-    var text = equip.text || "该装备暂无描述。";
+    var text = equip.text || "There is no description for this equipment.";
     try { text = core.replaceText(text); } catch (e) { }
 
     var height = null;
@@ -2899,7 +2899,7 @@ ui.prototype._drawEquipbox_getStatusChanged = function (info, equip, equipType, 
     }
     if (equipType < 0) {
         // 没有空位
-        core.fillText('ui', '<当前没有该装备的空位，请先卸下装备>', 10, y, '#CCCCCC', this._buildFont(14, false));
+        core.fillText('ui', '<There is currently no space for this equipment, please remove the equipment first>', 10, y, '#CCCCCC', this._buildFont(14, false));
         return null;
     }
     // 光标在装备上：查询装上后的属性变化
@@ -2955,7 +2955,7 @@ ui.prototype._drawEquipbox_drawEquiped = function (info, line) {
             var icon = core.material.icons.items[equipId];
             core.drawImage('ui', core.material.images.items, 0, 32 * icon, 32, 32, offset_image, y, 32, 32);
         }
-        core.fillText('ui', info.allEquips[i] || "未知", offset_text, y + 27, '#FFFFFF', this._buildFont(16, true))
+        core.fillText('ui', info.allEquips[i] || "unknown", offset_text, y + 27, '#FFFFFF', this._buildFont(16, true))
         core.strokeRoundRect('ui', offset_image - 4, y - 4, 40, 40, 6, info.index == i ? core.status.globalAttribute.selectColor : "#FFFFFF");
     }
 }
@@ -3000,17 +3000,17 @@ ui.prototype._drawSLPanel_draw = function (page, max_page) {
     core.ui.drawPagination(page + 1, max_page);
     core.setTextAlign('ui', 'center');
     var bottom = core._PY_ - 13;
-    core.fillText('ui', '返回游戏', core._PX_ - 48, bottom, '#DDDDDD', this._buildFont(15, true));
+    core.fillText('ui', 'Return to Game', core._PX_ - 48, bottom, '#DDDDDD', this._buildFont(15, true));
 
     if (core.status.event.selection)
         core.setFillStyle('ui', '#FF6A6A');
     if (core.status.event.id == 'save')
-        core.fillText('ui', '删除模式', 48, bottom);
+        core.fillText('ui', 'Deletion Mode', 48, bottom);
     else {
         if (core.status.event.data.mode == 'all') {
-            core.fillText('ui', '[E]显示收藏', 52, bottom);
+            core.fillText('ui', '[E]Show Favorites', 52, bottom);
         } else {
-            core.fillText('ui', '[E]显示全部', 52, bottom);
+            core.fillText('ui', '[E]Show All', 52, bottom);
         }
     }
     // --- 绘制记录
@@ -3086,7 +3086,7 @@ ui.prototype._drawSLPanel_drawRecord = function (title, data, x, y, size, cho, h
     }
     else {
         core.fillRect('ui', x - w / 2, y + 15, w, h, '#333333');
-        core.fillText('ui', '空', x, parseInt(y + 22 + h / 2), '#FFFFFF', this._buildFont(30, true));
+        core.fillText('ui', 'null', x, parseInt(y + 22 + h / 2), '#FFFFFF', this._buildFont(30, true));
     }
 }
 
@@ -3094,7 +3094,7 @@ ui.prototype._drawSLPanel_drawRecords = function (n) {
     var page = core.status.event.data.page;
     var offset = core.status.event.data.offset;
     var u = Math.floor(core._PX_ / 6), size = 0.3;
-    var name = core.status.event.id == 'save' ? "存档" : core.status.event.id == 'load' ? "读档" : "回放";
+    var name = core.status.event.id == 'save' ? "Archive" : core.status.event.id == 'load' ? "Loading" : "Playback";
 
     for (var i = 0; i < (n || 6); i++) {
         var data = core.status.event.ui[i];
@@ -3111,7 +3111,7 @@ ui.prototype._drawSLPanel_drawRecords = function (n) {
         var yTop1 = topSpan + parseInt(charSize / 2) + 8; // 文字的中心
         var yTop2 = yTop1 + charSize * 2 + size * core._PY_ + topSpan;
         if (i < 3) {
-            this._drawSLPanel_drawRecord(i == 0 ? "自动存档" : title, data, (2 * i + 1) * u, yTop1, size, i == offset, highLight);
+            this._drawSLPanel_drawRecord(i == 0 ? "Automatic archiving" : title, data, (2 * i + 1) * u, yTop1, size, i == offset, highLight);
         }
         else {
             this._drawSLPanel_drawRecord(title, data, (2 * i - 5) * u, yTop2, size, i == offset, highLight);
@@ -3123,7 +3123,7 @@ ui.prototype._drawKeyBoard = function () {
     core.lockControl();
     core.status.event.id = 'keyBoard';
     core.clearUI();
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
 
     var offset = core._WIDTH_ % 2 == 0 ? 16 : 0;
 
@@ -3134,7 +3134,7 @@ ui.prototype._drawKeyBoard = function () {
     var isWindowSkin = this.drawBackground(left, top, right, bottom);
     core.setTextAlign('ui', 'center');
     core.setFillStyle('ui', core.arrayToRGBA(core.status.textAttribute.title));
-    core.fillText('ui', '虚拟键盘', core._PX_ / 2 + offset, top + 35, null, this._buildFont(22, true));
+    core.fillText('ui', 'Virtual Keyboard', core._PX_ / 2 + offset, top + 35, null, this._buildFont(22, true));
     core.setFont('ui', this._buildFont(17, false));
     core.setFillStyle('ui', core.arrayToRGBA(core.status.textAttribute.text));
     var now = core._PY_ / 2 - 89 + (core._HEIGHT_ % 2 == 0 ? 16 : 0);
@@ -3156,7 +3156,7 @@ ui.prototype._drawKeyBoard = function () {
         now += 32;
     });
 
-    core.fillText("ui", "返回游戏", core._PX_ / 2 + 128 + offset, now - 3, '#FFFFFF', this._buildFont(15, true));
+    core.fillText("ui", "Return to Game", core._PX_ / 2 + 128 + offset, now - 3, '#FFFFFF', this._buildFont(15, true));
 
     if (isWindowSkin)
         this._drawWindowSelector(core.status.textAttribute.background, core._PX_ / 2 + 92 + offset, now - 22, 72, 27);
@@ -3171,7 +3171,7 @@ ui.prototype.drawStatusBar = function () {
 
 ////// 绘制“数据统计”界面 //////
 ui.prototype._drawStatistics = function (floorIds) {
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     var obj = this._drawStatistics_buildObj();
     if (typeof floorIds == 'string') floorIds = [floorIds];
     (floorIds || core.floorIds).forEach(function (floorId) {
@@ -3180,22 +3180,22 @@ ui.prototype._drawStatistics = function (floorIds) {
     var statistics = core.status.hero.statistics;
     core.setFlag("__replayText__", true);
     core.drawText([
-        this._drawStatistics_generateText(obj, "全塔", obj.total),
-        this._drawStatistics_generateText(obj, "当前", obj.current),
-        this._drawStatistics_generateText(obj, "标记（浏览地图时B键或左下角）", obj.marked),
-        "当前总步数：" + core.status.hero.steps + "，当前游戏时长：" + core.formatTime(statistics.currTime)
-        + "，总游戏时长" + core.formatTime(statistics.totalTime)
-        + "。\n瞬间移动次数：" + statistics.moveDirectly + "，共计少走" + statistics.ignoreSteps + "步。"
-        + "\n\n总计通过血瓶恢复生命值为" + core.formatBigNumber(statistics.hp) + "点。\n\n"
-        + "总计打死了" + statistics.battle + "个怪物，得到了" + core.formatBigNumber(statistics.money) + "金币，" + core.formatBigNumber(statistics.exp) + "点经验。\n\n"
-        + "受到的总伤害为" + core.formatBigNumber(statistics.battleDamage + statistics.poisonDamage + statistics.extraDamage)
-        + "，其中战斗伤害" + core.formatBigNumber(statistics.battleDamage) + "点"
-        + (core.flags.statusBarItems.indexOf('enableDebuff') >= 0 ? ("，中毒伤害" + core.formatBigNumber(statistics.poisonDamage) + "点") : "")
-        + "，领域/夹击/阻击/血网伤害" + core.formatBigNumber(statistics.extraDamage) + "点。",
-        "\t[说明]1. 地图数据统计的效果仅模拟当前立刻获得该道具的效果。\n2. 不会计算“不可被浏览地图”的隐藏层的数据。\n" +
-        "3. 不会计算任何通过事件得到的道具（显示事件、改变图块、或直接增加道具等）。\n" +
-        "4. 在自定义道具（例如其他宝石）后，需在脚本编辑的drawStatistics中注册，不然不会进行统计。\n" +
-        "5. 道具不会统计通过插入事件或useItemEvent实现的效果。\n6. 所有统计信息仅供参考，如有错误，概不负责。"
+        this._drawStatistics_generateText(obj, "Full Tower", obj.total),
+        this._drawStatistics_generateText(obj, "current", obj.current),
+        this._drawStatistics_generateText(obj, "Marker (when browsing the mapBkey or lower left corner)", obj.marked),
+        "Current total steps:" + core.status.hero.steps + ", current game duration:" + core.formatTime(statistics.currTime)
+        + ", total game time" + core.formatTime(statistics.totalTime)
+        + ".\nNumber of teleportations:" + statistics.moveDirectly + ", a total of less walking" + statistics.ignoreSteps + "step."
+        + "\n\nThe total health restored by blood bottles is" + core.formatBigNumber(statistics.hp) + "point.\n\n"
+        + "Total killed" + statistics.battle + "A monster, got" + core.formatBigNumber(statistics.money) + "gold," + core.formatBigNumber(statistics.exp) + "Some experience.\n\n"
+        + "The total damage received is" + core.formatBigNumber(statistics.battleDamage + statistics.poisonDamage + statistics.extraDamage)
+        + ", including combat damage" + core.formatBigNumber(statistics.battleDamage) + "point"
+        + (core.flags.statusBarItems.indexOf('enableDebuff') >= 0 ? (", poison damage" + core.formatBigNumber(statistics.poisonDamage) + "point") : "")
+        + ",field/Pincer attack/check/Bloodweb Damage" + core.formatBigNumber(statistics.extraDamage) + "point.",
+        "\t[illustrate]1. The effect of map data statistics only simulates the effect of obtaining the item immediately.\n2. Cant calculate“Map not viewable”The hidden layer data.\n" +
+        "3. Any props obtained through events (showing events, changing tiles, or directly adding props, etc.) will not be counted.\n" +
+        "4. After customizing props (such as other gems), you need to edit the scriptdrawStatisticsOtherwise, statistics will not be collected.\n" +
+        "5. Props will not count through insert events oruseItemEventThe effect achieved.\n6. All statistical information is for reference only and we are not responsible for any errors."
     ])
     core.removeFlag("__replayText__");
 }
@@ -3310,35 +3310,35 @@ ui.prototype._drawStatistics_items = function (floorId, floor, id, obj) {
 }
 
 ui.prototype._drawStatistics_generateText = function (obj, type, data) {
-    var text = type + "地图中：\n";
-    text += "共有怪物" + data.monster.count + "个";
-    if (core.flags.statusBarItems.indexOf('enableMoney') >= 0) text += "，总金币数" + data.monster.money;
-    if (core.flags.statusBarItems.indexOf('enableExp') >= 0) text += "，总经验数" + data.monster.exp;
-    if (core.flags.enableAddPoint) text += "，总加点数" + data.monster.point;
-    text += "。\n";
+    var text = type + "In the map:\n";
+    text += "Total Monsters" + data.monster.count + "indivual";
+    if (core.flags.statusBarItems.indexOf('enableMoney') >= 0) text += ", total gold coins" + data.monster.money;
+    if (core.flags.statusBarItems.indexOf('enableExp') >= 0) text += ", total experience" + data.monster.exp;
+    if (core.flags.enableAddPoint) text += ", total added points" + data.monster.point;
+    text += ".\n";
 
     var prev = "";
     obj.ids.forEach(function (key) {
         var value = data.count[key];
         if (value == 0) return;
         if (obj.cls[key] != prev) {
-            if (prev != "") text += "。";
+            if (prev != "") text += ".";
             text += "\n";
         }
-        else text += "，";
+        else text += ",";
         prev = obj.cls[key];
         var name = ((core.material.items[key] || (core.getBlockById(key) || {}).event) || {}).name || key;
-        text += name + value + "个";
+        text += name + value + "indivual";
         if (obj.ext[key])
             text += "(" + obj.ext[key] + ")";
     })
-    if (prev != "") text += "。";
+    if (prev != "") text += ".";
 
     text += "\n";
-    text += "共加生命值" + core.formatBigNumber(data.add.hp) + "点，攻击"
-        + core.formatBigNumber(data.add.atk) + "点，防御"
-        + core.formatBigNumber(data.add.def) + "点，护盾"
-        + core.formatBigNumber(data.add.mdef) + "点。";
+    text += "Total health added" + core.formatBigNumber(data.add.hp) + "Point, attack"
+        + core.formatBigNumber(data.add.atk) + "Point, Defense"
+        + core.formatBigNumber(data.add.def) + "Point, shield"
+        + core.formatBigNumber(data.add.mdef) + "point.";
     return text;
 }
 
@@ -3349,7 +3349,7 @@ ui.prototype._drawAbout = function () {
 
 ////// 绘制帮助页面 //////
 ui.prototype._drawHelp = function () {
-    core.playSound('打开界面');
+    core.playSound('Open the interface');
     core.clearUI();
     if (core.material.images.keyboard) {
         core.status.event.id = 'help';
@@ -3360,28 +3360,28 @@ ui.prototype._drawHelp = function () {
     }
     else {
         core.drawText([
-            "\t[键盘快捷键列表]" +
-            "[CTRL] 跳过对话   [Z] 转向\n" +
+            "\t[List of keyboard shortcuts]" +
+            "[CTRL] Skip Dialogue   [Z] Steering\n" +
             "[X] " + core.material.items['book'].name + "   [G] " + core.material.items['fly'].name + "\n" +
-            "[A] 读取自动存档   [W] 撤销读取自动存档\n" +
-            "[S/D] 存读档页面   [SPACE] 轻按\n" +
-            "[V] 快捷商店   [ESC] 系统菜单\n" +
-            "[T] 道具页面   [Q] 装备页面\n" +
-            "[B] 数据统计   [H] 帮助页面\n" +
-            "[R] 回放录像   [E] 显示光标\n" +
-            "[N] 返回标题页面   [P] 游戏主页\n" +
-            "[O] 查看工程   [F7] 打开debug穿墙模式\n" +
-            "[PgUp/PgDn] 浏览地图\n" +
-            "[1~4] 快捷使用破炸飞和其他道具\n" +
-            "[Alt+0~9] 快捷换装",
-            "\t[鼠标操作]" +
-            "点状态栏中图标： 进行对应的操作\n" +
-            "点任意块： 寻路并移动\n" +
-            "点任意块并拖动： 指定寻路路线\n" +
-            "双击空地： 瞬间移动\n" +
-            "单击勇士： 转向\n" +
-            "双击勇士： 轻按（仅在轻按开关打开时有效）\n" +
-            "长按任意位置：跳过剧情对话或打开虚拟键盘"
+            "[A] Read autosave   [W] Undo autosave\n" +
+            "[S/D] Save and load file page   [SPACE] Tap\n" +
+            "[V] Quick Store   [ESC] System Menu\n" +
+            "[T] Props Page   [Q] Equipment Page\n" +
+            "[B] Statistics   [H] Help Pages\n" +
+            "[R] Playback video   [E] Show Cursor\n" +
+            "[N] Return to title page   [P] Game Home Page\n" +
+            "[O] View Project   [F7] OpendebugThrough-the-wall mode\n" +
+            "[PgUp/PgDn] Explore the map\n" +
+            "[1~4] Quickly use explosives and other props\n" +
+            "[Alt+0~9] Quick Dress Up",
+            "\t[Mouse Operation]" +
+            "Click the icon in the status bar: Perform the corresponding operations\n" +
+            "Click any block: Pathfinding and Movement\n" +
+            "Click any block and drag: Specifying a route\n" +
+            "Double-click on an empty space: Teleport\n" +
+            "Click Warriors: Steering\n" +
+            "Double click warriors: Tap (only works if the Tap switch is on)\n" +
+            "Long press anywhere: skip the plot dialogue or open the virtual keyboard"
         ]);
     }
 }

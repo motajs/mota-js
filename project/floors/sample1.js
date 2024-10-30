@@ -1,7 +1,7 @@
 main.floors.sample1=
 {
     "floorId": "sample1",
-    "title": "样板 1 层",
+    "title": "model 1 layer",
     "name": "1",
     "canFlyTo": true,
     "canFlyFrom": true,
@@ -53,7 +53,7 @@ main.floors.sample1=
                 "type": "sleep",
                 "time": 500
             },
-            "\t[redKing]\b[this,1,5]欢迎来到魔塔，你是第一百位挑战者。\n若你能打败我所有的手下，我就与你一对一的决斗。\n现在你必须接受我的安排。",
+            "\t[redKing]\b[this,1,5]Welcome to the Magic Tower, you are the 100th challenger.\nIf you can defeat all my men, I will fight you one on one.\nNow you have to accept my arrangement.",
             {
                 "type": "setBlock",
                 "number": "blueKing",
@@ -77,7 +77,7 @@ main.floors.sample1=
                 ],
                 "time": 500
             },
-            "\t[hero]\b[hero]什么？",
+            "\t[hero]\b[hero]What?",
             {
                 "type": "animate",
                 "name": "hand",
@@ -162,13 +162,13 @@ main.floors.sample1=
             }
         ],
         "2,11": [
-            "\t[杰克,thief]\b[this]喂！醒醒！快醒醒！",
+            "\t[Jack,thief]\b[this]Hey! Wake up! Wake up!",
             {
                 "type": "setCurtain",
                 "time": 1500
             },
-            "\t[hero]\b[hero]额，我这是在什么地方？",
-            "\t[杰克,thief]\b[this]你被魔王抓了起来扔进了监狱，和我关在了一起，但是幸运的是我在昨天刚刚挖好一条越狱的暗道！",
+            "\t[hero]\b[hero]Um, where am I?",
+            "\t[Jack,thief]\b[this]You were captured by the devil and thrown into prison, locked up with me, but luckily I just dug a secret escape tunnel yesterday!",
             {
                 "type": "openDoor",
                 "loc": [
@@ -178,13 +178,13 @@ main.floors.sample1=
             },
             {
                 "type": "comment",
-                "text": "{type: openDoor} 不止可以开“门”，也可以用来开墙等等"
+                "text": "{type: openDoor} Not only can you open“Door”, can also be used to open walls, etc."
             },
             {
                 "type": "sleep",
                 "time": 300
             },
-            "\t[杰克,thief]\b[this]我先走了，祝你好运！",
+            "\t[Jack,thief]\b[this]Im leaving now, good luck!",
             {
                 "type": "move",
                 "time": 750,
@@ -193,15 +193,15 @@ main.floors.sample1=
                     "down:1"
                 ]
             },
-            "上面是个move事件，可以对NPC等进行移动。\n详见样板中小偷事件的写法。",
-            "\t[hero]\b[hero]怎么跑的这么快..."
+            "The one above ismoveEvents can beNPCetc. to move.\nFor details, please see the writing method of the theft incident in the sample.",
+            "\t[hero]\b[hero]How do you run so fast?..."
         ],
         "4,2": [
-            "\t[老人,man]\b[this]本塔的商店有两类，全局商店和非全局商店。\n\n所谓非全局商店，就类似于右下角那个卖钥匙的老人一样，一定要碰到才能触发事件。\n\n而全局商店，则能在快捷商店中直接使用。",
-            "\t[老人,man]\b[this]要注册一个全局商店，你需要在全塔属性中，找到“全局商店”，并在内添加你的商店信息。",
-            "\t[老人,man]\b[this]商店信息添加后，可以在需要的事件处调用{\"type\": \"openShop\"}来打开你添加的全局商店。",
-            "\t[老人,man]\b[this]在上面的例子里，左边是一个仿51层的金币商店，右边是一个仿24层的经验商店。\n\n商店被访问后即可在快捷商店中进行使用。",
-            "\t[老人,man]\b[this]如果你需要在某层禁用快捷商店，可以在其楼层属性中设置“快捷商店”。\n如果需要永久禁用商店（直到重新通过触碰NPC打开），请使用{\"type\":\"disableShop\"}",
+            "\t[elder,man]\b[this]There are two types of stores in this tower, global stores and non-global stores.\n\nThe so-called non-global store is similar to the old man selling keys in the lower right corner. You must touch it to trigger the event.\n\nThe global store can be used directly in the quick store.",
+            "\t[elder,man]\b[this]To register a global store, you need to find“Global Store”, and add your store information.",
+            "\t[elder,man]\b[this]After the store information is added, it can be called at the required event{\"type\": \"openShop\"}to open the global store you added.",
+            "\t[elder,man]\b[this]In the example above, the left side is a simulated51The gold coin shop on the first floor, on the right is a replica24Layer of experience store.\n\nOnce a store is visited, it can be used in the Quick Store.",
+            "\t[elder,man]\b[this]If you need to disable the quick shop on a certain floor, you can set it in its floor properties.“Quick Store”.\nIf you need to permanently disable the store (until you re-open it via touchNPCOpen), use{\"type\":\"disableShop\"}",
             {
                 "type": "hide",
                 "time": 500
@@ -222,8 +222,8 @@ main.floors.sample1=
             }
         ],
         "7,7": [
-            "\t[老人,man]\b[this]这是一个典型的杀怪开门、强制战斗事件。",
-            "\t[老人,man]\b[this]下面的那四个箭头表示单向通行，画在任何一个图层都有效。",
+            "\t[elder,man]\b[this]This is a typical killing monster, opening the door, and forced combat event.",
+            "\t[elder,man]\b[this]The four arrows below represent one-way traffic and are valid when drawn on any layer.",
             {
                 "type": "hide",
                 "time": 500
@@ -243,10 +243,10 @@ main.floors.sample1=
             }
         ],
         "10,4": [
-            "\t[blackKing]\b[this]你终于还是来了。",
-            "\t[hero]\b[hero]放开我们的公主！",
-            "\t[blackKing]\b[this]如果我不愿意呢？",
-            "\t[hero]\b[hero]无需多说，拔剑吧！",
+            "\t[blackKing]\b[this]You are finally here.",
+            "\t[hero]\b[hero]Let our princess go!",
+            "\t[blackKing]\b[this]What if I don’t want to?",
+            "\t[hero]\b[hero]No need to say more, draw your swords!",
             {
                 "type": "battle",
                 "loc": [
@@ -261,22 +261,22 @@ main.floors.sample1=
                     7
                 ]
             },
-            "\t[blackKing]没想到你已经变得这么强大了... 算你厉害。\n公主就交给你了，请好好对她。",
+            "\t[blackKing]I didnt expect you to become so strong.... You are awesome.\nThe princess is now in your hands, please treat her well.",
             {
                 "type": "hide"
             }
         ],
         "10,0": [
-            "\t[hero]\b[hero]公主，我来救你了~",
-            "\t[公主,princess]\b[this]快救我出去！我受够这里了！",
-            "\t[hero]\b[hero]公主别怕，我们走吧~",
+            "\t[hero]\b[hero]Princess, Im here to save you~",
+            "\t[Princess,princess]\b[this]Get me out! Ive had enough of this place!",
+            "\t[hero]\b[hero]Dont be afraid, princess, lets go.~",
             {
                 "type": "win",
-                "reason": "救出公主"
+                "reason": "Rescue the Princess"
             }
         ],
         "6,11": [
-            "\t[仙子,fairy]\b[this]通过调用 {\"type\": \"closeDoor\"} 可以在空地关上一扇门或墙。\n比如我下面这个机关门。",
+            "\t[Fairy,fairy]\b[this]By calling {\"type\": \"closeDoor\"} You can close a door or wall in an open space.\nFor example, the mechanism door below me.",
             {
                 "type": "closeDoor",
                 "id": "steelDoor",
@@ -285,7 +285,7 @@ main.floors.sample1=
                     12
                 ]
             },
-            "\t[仙子,fairy]\b[this]通过调用 {\"type\": \"openDoor\"} 可以无需钥匙打开一扇门或暗墙。",
+            "\t[Fairy,fairy]\b[this]By calling {\"type\": \"openDoor\"} Can open a door or hidden wall without a key.",
             {
                 "type": "openDoor",
                 "loc": [
@@ -293,7 +293,7 @@ main.floors.sample1=
                     12
                 ]
             },
-            "\t[仙子,fairy]\b[this]同时，也可以对其它层进行操作，比如楼下的机关门，现在已经为你打开了。",
+            "\t[Fairy,fairy]\b[this]At the same time, you can also operate on other levels, such as the mechanism door downstairs, which is now open for you.",
             {
                 "type": "openDoor",
                 "loc": [
@@ -302,8 +302,8 @@ main.floors.sample1=
                 ],
                 "floorId": "sample0"
             },
-            "\t[仙子,fairy]\b[this]如果当前楼层的 show 或 hide 指定了 time 参数，则以动画效果显示，指定的参数作为淡入淡出时间（毫秒）来计算。",
-            "\t[仙子,fairy]\b[this]现在到楼下来找我吧~",
+            "\t[Fairy,fairy]\b[this]If the current floor show or hide Specified time If you specify a parameter, it will be displayed with animation effect, and the specified parameter will be calculated as the fade-in and fade-out time (in milliseconds).",
+            "\t[Fairy,fairy]\b[this]Come downstairs and meet me now.~",
             {
                 "type": "show",
                 "loc": [
@@ -326,10 +326,10 @@ main.floors.sample1=
                 "operator": "+=",
                 "value": "1"
             },
-            "\t[老人,man]\b[this]在文字中使用$+{}可以计算并显示一个表达式的结果。\n",
-            "\t[老人,man]\b[this]例如：\n你的当前攻击力是${status:atk}，防御力是${status:def}。\n攻防和的十倍是${10*(status:atk+status:def)}，攻防之积是${status:atk*status:def}。\n你有${item:yellowKey}把黄钥匙，${item:blueKey}把蓝钥匙，${item:redKey}把红钥匙。\n你有${item:pickaxe}个破，${item:bomb}个炸，${item:centerFly}个飞。\n这是你第${flag:man_times}次和我对话。",
-            "\t[老人,man]\b[this]同时，你也可以通过{\"type\": \"setValue\"}来设置一个勇士的属性、道具，或某个Flag。",
-            "\t[老人,man]\b[this]例如：\n现在我将让你的攻防提升50%，再将攻防和的十倍加到生命值上。",
+            "\t[elder,man]\b[this]Use in text$+{}An expression can be calculated and displayed.\n",
+            "\t[elder,man]\b[this]For example:\nYour current attack power is${status:atk}, defense is${status:def}.\nTen times the sum of attack and defense is${10*(status:atk+status:def)}, the product of attack and defense is${status:atk*status:def}.\nYou have${item:yellowKey}The yellow key,${item:blueKey}The blue key,${item:redKey}The red key.\nYou have${item:pickaxe}A broken,${item:bomb}A fried${item:centerFly}Fly.\nThis is your first${flag:man_times}Talk to me again.",
+            "\t[elder,man]\b[this]At the same time, you can also{\"type\": \"setValue\"}To set a warriors attributes, props, or aFlag.",
+            "\t[elder,man]\b[this]For example:\nNow I will improve your attack and defense50%, and then add ten times the sum of attack and defense to the health value.",
             {
                 "type": "setValue",
                 "name": "status:atk",
@@ -348,7 +348,7 @@ main.floors.sample1=
                 "operator": "+=",
                 "value": "10*(status:atk+status:def)"
             },
-            "\t[老人,man]\b[this]再送你500金币，1000经验，1破2炸3飞！",
+            "\t[elder,man]\b[this]Send you again500gold,1000experience,1break2fry3fly!",
             {
                 "type": "setValue",
                 "name": "status:money",
@@ -379,8 +379,8 @@ main.floors.sample1=
                 "operator": "+=",
                 "value": "3"
             },
-            "\t[老人,man]\b[this]status:xxx 代表勇士的某个属性。\n其中xxx可取生命、攻击、防御、护盾、金币、经验等很多项。\n\nitem:xxx 代表勇士的某个道具的个数。\nxxx为道具ID，具体可参见items.js中的定义。\n\nflag:xxx 代表某个自定义Flag或变量。\nxxx为Flag/变量名，可以自行定义，由字母、数字和下划线甚至中文组成。\n未定义过而直接取用的Flag默认值为0.",
-            "\t[老人,man]\b[this]你现在可以重新和我进行对话，进一步看到属性值的改变。"
+            "\t[elder,man]\b[this]status:xxx Represents a certain attribute of a warrior.\ninxxxYou can obtain many items such as life, attack, defense, shield, gold coins, experience, etc.\n\nitem:xxx Represents the number of a certain item of a warrior.\nxxxFor propsIDFor details, please refer toitems.jsThe definition in .\n\nflag:xxx Represents a customFlagor variable.\nxxxforFlag/Variable names can be defined by yourself and can be composed of letters, numbers, underscores, and even Chinese characters.\nUndefined but used directlyFlagThe default value is0.",
+            "\t[elder,man]\b[this]You can now resume the conversation with me and see further changes to the property values."
         ],
         "10,11": [
             {
@@ -394,23 +394,23 @@ main.floors.sample1=
                             {
                                 "case": "0",
                                 "action": [
-                                    "\t[老人,trader]这是个很复杂的例子，它将教会你如何使用if 语句进行条件判断，以及 choices 提供选项来供用户进行选择。",
-                                    "\t[老人,trader]第一次访问我将显示这段文字；从第二次开始将会向你出售钥匙。\n钥匙价格将随着访问次数递增。\n当合计出售了七把钥匙后，将送你一把大黄门钥匙，并消失不再出现。",
-                                    "\t[老人,trader]这部分的逻辑比较长，请细心看样板的写法，是很容易看懂并理解的。"
+                                    "\t[elder,trader]This is a complex example that will teach you how to useif Statements to make conditional decisions, and choices Provide options for the user to choose from.",
+                                    "\t[elder,trader]The first time you visit I will display this text; from the second time onwards I will sell you the key.\nThe key price will increase with the number of visits.\nWhen you have sold a total of seven keys, you will be given a large yellow door key and it will disappear and never appear again.",
+                                    "\t[elder,trader]The logic of this part is relatively long. Please look carefully at the writing of the sample. It is very easy to read and understand."
                                 ]
                             },
                             {
                                 "case": "8",
                                 "action": [
-                                    "\t[老人,trader]你购买的钥匙已经够多了，再继续卖给你的话我会有危险的。",
-                                    "\t[老人,trader]看在你贡献给我这么多钱的份上，送你一把大黄门钥匙吧，希望你能好好用它。",
+                                    "\t[elder,trader]Youve already purchased enough keys. If I continue to sell you more, Ill be in danger.",
+                                    "\t[elder,trader]Since you have contributed so much money to me, I will give you a big yellow door key. I hope you can use it well.",
                                     {
                                         "type": "setValue",
                                         "name": "item:bigKey",
                                         "operator": "+=",
                                         "value": "1"
                                     },
-                                    "\t[老人,trader]我先走了，拜拜~",
+                                    "\t[elder,trader]Im leaving now. Bye.~",
                                     {
                                         "type": "hide",
                                         "time": 500
@@ -425,10 +425,10 @@ main.floors.sample1=
                                 "action": [
                                     {
                                         "type": "choices",
-                                        "text": "\t[老人,trader]少年，你需要钥匙吗？\n我这里有大把的！",
+                                        "text": "\t[elder,trader]Do you need a key, boy?\nI have plenty here!",
                                         "choices": [
                                             {
-                                                "text": "黄钥匙（${9+flag:woman_times}金币）",
+                                                "text": "Yellow Key (${9+flag:woman_times}gold)",
                                                 "action": [
                                                     {
                                                         "type": "if",
@@ -448,7 +448,7 @@ main.floors.sample1=
                                                             }
                                                         ],
                                                         "false": [
-                                                            "\t[老人,trader]你的金钱不足！",
+                                                            "\t[elder,trader]You dont have enough money!",
                                                             {
                                                                 "type": "continue"
                                                             }
@@ -457,7 +457,7 @@ main.floors.sample1=
                                                 ]
                                             },
                                             {
-                                                "text": "蓝钥匙（${18+2*flag:woman_times}金币）",
+                                                "text": "Blue Key (${18+2*flag:woman_times}gold)",
                                                 "action": [
                                                     {
                                                         "type": "if",
@@ -477,7 +477,7 @@ main.floors.sample1=
                                                             }
                                                         ],
                                                         "false": [
-                                                            "\t[老人,trader]你的金钱不足！",
+                                                            "\t[elder,trader]You dont have enough money!",
                                                             {
                                                                 "type": "continue"
                                                             }
@@ -486,7 +486,7 @@ main.floors.sample1=
                                                 ]
                                             },
                                             {
-                                                "text": "红钥匙（${36+4*flag:woman_times}金币）",
+                                                "text": "Red Key (${36+4*flag:woman_times}gold)",
                                                 "action": [
                                                     {
                                                         "type": "if",
@@ -506,7 +506,7 @@ main.floors.sample1=
                                                             }
                                                         ],
                                                         "false": [
-                                                            "\t[老人,trader]你的金钱不足！",
+                                                            "\t[elder,trader]You dont have enough money!",
                                                             {
                                                                 "type": "continue"
                                                             }
@@ -515,7 +515,7 @@ main.floors.sample1=
                                                 ]
                                             },
                                             {
-                                                "text": "离开",
+                                                "text": "leave",
                                                 "action": [
                                                     {
                                                         "type": "exit"
@@ -538,11 +538,11 @@ main.floors.sample1=
             }
         ],
         "12,11": [
-            "\t[老人,recluse]\b[this]使用 {\"type\":\"input\"} 可以弹窗请求玩家输入数字",
-            "\t[老人,recluse]\b[this]例如这个例子：即将弹出一个输入窗口，然后会将你的输入结果直接加到你的攻击力上。",
+            "\t[elder,recluse]\b[this]use {\"type\":\"input\"} A pop-up window can be used to request players to enter numbers",
+            "\t[elder,recluse]\b[this]For example: an input window will pop up, and your input result will be added directly to your attack power.",
             {
                 "type": "input",
-                "text": "请输入你要加攻击力的数值："
+                "text": "Please enter the value you want to increase the attack power:"
             },
             {
                 "type": "if",
@@ -556,13 +556,13 @@ main.floors.sample1=
                     },
                     {
                         "type": "tip",
-                        "text": "操作成功，攻击+${flag:input}"
+                        "text": "Operation successful, attack+${flag:input}"
                     },
-                    "操作成功，攻击+${flag:input}"
+                    "Operation successful, attack+${flag:input}"
                 ],
                 "false": []
             },
-            "\t[老人,recluse]\b[this]具体可参见样板中本事件的写法。"
+            "\t[elder,recluse]\b[this]For details, please refer to the writing method of this event in the template."
         ]
     },
     "changeFloor": {

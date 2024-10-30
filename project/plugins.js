@@ -76,7 +76,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			var shop = core.status.shops[shopId];
 			// Step 1: 检查能否打开此商店
 			if (!this.canOpenShop(shopId)) {
-				core.drawTip("该商店尚未开启");
+				core.drawTip("The store is not open yet");
 				return false;
 			}
 
@@ -90,8 +90,8 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				if (core.openItemShop) {
 					core.openItemShop(shopId);
 				} else {
-					core.playSound('操作失败');
-					core.insertAction("道具商店插件不存在！请检查是否存在该插件！");
+					core.playSound('Operation failed');
+					core.insertAction("The prop store plugin does not exist! Please check if the plugin exists!");
 				}
 				return;
 			}
@@ -130,13 +130,13 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"condition": shop.disablePreview,
 									"true": [
 										// 不可预览，提示并退出
-										{ "type": "playSound", "name": "操作失败" },
-										"当前无法访问该商店！",
+										{ "type": "playSound", "name": "Operation failed" },
+										"The store is currently unavailable!",
 										{ "type": "break" },
 									],
 									"false": [
 										// 可以预览：将商店全部内容进行替换
-										{ "type": "tip", "text": "当前处于预览模式，不可购买" },
+										{ "type": "tip", "text": "Currently in preview mode, not available for purchase" },
 										{ "type": "function", "function": "function() { core.plugin._convertShop_replaceChoices('" + shop.id + "', true) }" },
 									]
 								}
@@ -159,12 +159,12 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 					"text": choice.text,
 					"icon": choice.icon,
 					"color": ableToBuy && !previewMode ? choice.color : [153, 153, 153, 1],
-					"action": ableToBuy && !previewMode ? [{ "type": "playSound", "name": "商店" }].concat(choice.action) : [
-						{ "type": "playSound", "name": "操作失败" },
-						{ "type": "tip", "text": previewMode ? "预览模式下不可购买" : "购买条件不足" }
+					"action": ableToBuy && !previewMode ? [{ "type": "playSound", "name": "shop" }].concat(choice.action) : [
+						{ "type": "playSound", "name": "Operation failed" },
+						{ "type": "tip", "text": previewMode ? "Not available for purchase in preview mode" : "Insufficient purchasing conditions" }
 					]
 				};
-			}).concat({ "text": "离开", "action": [{ "type": "playSound", "name": "取消" }, { "type": "break" }] });
+			}).concat({ "text": "leave", "action": [{ "type": "playSound", "name": "Cancel" }, { "type": "break" }] });
 			core.insertAction({ "type": "choices", "text": shop.text, "choices": choices });
 		}
 
@@ -207,7 +207,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 
 			// 检查当前楼层的canUseQuickShop选项是否为false
 			if (core.status.thisMap.canUseQuickShop === false)
-				return '当前楼层不能使用快捷商店。';
+				return 'The Quick Shop cannot be used on the current floor.';
 			return null;
 		}
 
@@ -382,7 +382,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		core.initStatus.fg2maps = {};
 
 		if (main.mode == 'editor') {
-			/*插入编辑器的图层 不做此步新增图层无法在编辑器显示*/
+			/*Insert editor layer Without this step, the newly added layer cannot be displayed in the editor*/
 			// 编辑器图层覆盖优先级 eui > efg > fg(前景层) > event2(48*32图块的事件层) > event(事件层) > bg(背景层)
 			// 背景层2(bg2) 插入事件层(event)之前(即bg与event之间)
 			document.getElementById('mapEdit').insertBefore(bg2Canvas, document.getElementById('event'));
@@ -444,14 +444,14 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				var txt2 = document.createTextNode('fg2');
 				parent.appendChild(txt2);
 				parent.childNodes[2].replaceWith("bg");
-				parent.childNodes[6].replaceWith("事件");
+				parent.childNodes[6].replaceWith("event");
 				parent.childNodes[8].replaceWith("fg");
 			} else {
 				var input = createCanvasBtn_mobile('bg2');
 				var input2 = createCanvasBtn_mobile('fg2');
 				// 手机端因为是选项 所以可以直接改innerText
-				input.innerText = '背景层2';
-				input2.innerText = '前景层2';
+				input.innerText = 'Background layer2';
+				input2.innerText = 'Foreground layer2';
 				var parent = document.getElementById('layerMod');
 				parent.insertBefore(input, parent.children[1]);
 				parent.appendChild(input2);
@@ -518,7 +518,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		var shopInfo = null; // 商店信息
 		var choices = []; // 商店选项
 		var use = 'money';
-		var useText = '金币';
+		var useText = 'gold';
 
 		var bigFont = core.ui._buildFont(20, false),
 			middleFont = core.ui._buildFont(18, false);
@@ -540,19 +540,19 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			core.drawWindowSkin('winskin.png', 'uievent', 312, 112, 104, 304);
 			core.setFillStyle('uievent', 'white');
 			core.setStrokeStyle('uievent', 'white');
-			core.fillText("uievent", "购买", 32, 74, 'white', bigFont);
-			core.fillText("uievent", "卖出", 132, 74);
-			core.fillText("uievent", "离开", 232, 74);
-			core.fillText("uievent", "当前" + useText, 324, 66, null, middleFont);
+			core.fillText("uievent", "Buy", 32, 74, 'white', bigFont);
+			core.fillText("uievent", "Sell", 132, 74);
+			core.fillText("uievent", "leave", 232, 74);
+			core.fillText("uievent", "current" + useText, 324, 66, null, middleFont);
 			core.setTextAlign("uievent", "right");
 			core.fillText("uievent", core.formatBigNumber(core.status.hero[use]), 405, 89);
 			core.setTextAlign("uievent", "left");
 			core.ui.drawUIEventSelector(1, "winskin.png", 22 + 100 * type, 66, 60, 33);
 			if (selectItem != null) {
 				core.setTextAlign('uievent', 'center');
-				core.fillText("uievent", type == 0 ? "买入个数" : "卖出个数", 364, 320, null, bigFont);
+				core.fillText("uievent", type == 0 ? "Number of purchases" : "Number of units sold", 364, 320, null, bigFont);
 				core.fillText("uievent", "<   " + selectCount + "   >", 364, 350);
-				core.fillText("uievent", "确定", 364, 380);
+				core.fillText("uievent", "Sure", 364, 380);
 			}
 
 			// Step 2：获得列表并展示
@@ -571,8 +571,8 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				var half = 156;
 				core.setTextAlign('uievent', 'center');
 				core.fillText('uievent', page + " / " + totalPage, half, 388, null, middleFont);
-				if (page > 1) core.fillText('uievent', '上一页', half - 80, 388);
-				if (page < totalPage) core.fillText('uievent', '下一页', half + 80, 388);
+				if (page > 1) core.fillText('uievent', 'Previous page', half - 80, 388);
+				if (page < totalPage) core.fillText('uievent', 'Next Page', half + 80, 388);
 			}
 			core.setTextAlign('uievent', 'left');
 
@@ -586,11 +586,11 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				core.setTextAlign('uievent', 'left');
 				core.fillText('uievent', core.material.items[item.id].name, 50, 132 + i * 40, null, bigFont);
 				core.setTextAlign('uievent', 'right');
-				core.fillText('uievent', (type == 0 ? core.calValue(item.money) : core.calValue(item.sell)) + useText + "/个", 300, 133 + i * 40, null, middleFont);
+				core.fillText('uievent', (type == 0 ? core.calValue(item.money) : core.calValue(item.sell)) + useText + "/indivual", 300, 133 + i * 40, null, middleFont);
 				core.setTextAlign("uievent", "left");
 				if (curr == selectItem) {
 					// 绘制描述，文字自动放缩
-					var text = core.material.items[item.id].text || "该道具暂无描述";
+					var text = core.material.items[item.id].text || "This item has no description yet";
 					try { text = core.replaceText(text); } catch (e) { }
 					for (var fontSize = 20; fontSize >= 8; fontSize -= 2) {
 						var config = { left: 10, fontSize: fontSize, maxWidth: 403 };
@@ -603,22 +603,22 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 					}
 					core.ui.drawUIEventSelector(2, "winskin.png", 8, 120 + i * 40, 295, 40);
 					if (type == 0 && item.number != null) {
-						core.fillText("uievent", "存货", 324, 132, null, bigFont);
+						core.fillText("uievent", "stock", 324, 132, null, bigFont);
 						core.setTextAlign("uievent", "right");
 						core.fillText("uievent", item.number, 406, 132, null, null, 40);
 					} else if (type == 1) {
-						core.fillText("uievent", "数量", 324, 132, null, bigFont);
+						core.fillText("uievent", "quantity", 324, 132, null, bigFont);
 						core.setTextAlign("uievent", "right");
 						core.fillText("uievent", core.itemCount(item.id), 406, 132, null, null, 40);
 					}
 					core.setTextAlign("uievent", "left");
-					core.fillText("uievent", "预计" + useText, 324, 250);
+					core.fillText("uievent", "Expected" + useText, 324, 250);
 					core.setTextAlign("uievent", "right");
 					totalMoney = selectCount * (type == 0 ? core.calValue(item.money) : core.calValue(item.sell));
 					core.fillText("uievent", core.formatBigNumber(totalMoney), 405, 280);
 
 					core.setTextAlign("uievent", "left");
-					core.fillText("uievent", type == 0 ? "已购次数" : "已卖次数", 324, 170);
+					core.fillText("uievent", type == 0 ? "Number of purchases" : "Number of sales", 324, 170);
 					core.setTextAlign("uievent", "right");
 					core.fillText("uievent", (type == 0 ? item.money_count : item.sell_count) || 0, 405, 200);
 				}
@@ -643,14 +643,14 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				core.status.hero[use] -= totalMoney;
 				core.getItem(item.id, selectCount);
 				core.stopSound();
-				core.playSound('确定');
+				core.playSound('Sure');
 				if (item.number != null) item.number -= selectCount;
 				item.money_count = (item.money_count || 0) + selectCount;
 			} else {
 				core.status.hero[use] += totalMoney;
 				core.removeItem(item.id, selectCount);
-				core.playSound('确定');
-				core.drawTip("成功卖出" + selectCount + "个" + core.material.items[item.id].name, item.id);
+				core.playSound('Sure');
+				core.drawTip("Successfully sold" + selectCount + "indivual" + core.material.items[item.id].name, item.id);
 				if (item.number != null) item.number += selectCount;
 				item.sell_count = (item.sell_count || 0) + selectCount;
 			}
@@ -790,7 +790,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			choices = shopInfo.choices;
 			use = core.status.shops[shopId].use;
 			if (use != 'exp') use = 'money';
-			useText = use == 'money' ? '金币' : '经验';
+			useText = use == 'money' ? 'gold' : 'experience';
 
 			core.insertAction([{
 				"type": "while",
@@ -818,7 +818,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			  "_leaf": true,
 			  "_type": "textarea",
 			  "_string": true,
-			  "_data": "境界"
+			  "_data": "realm"
 		 },
 		 */
 		// 然后保存刷新，可以看到怪物的属性定义中出现了【境界】。再开启本插件即可。
@@ -829,9 +829,9 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 
 		// 这里定义每个境界的显示颜色；可以写'red', '#RRGGBB' 或者[r,g,b,a]四元数组
 		var levelToColors = {
-			"萌新一阶": "red",
-			"萌新二阶": "#FF0000",
-			"萌新三阶": [255, 0, 0, 1],
+			"Newbie Level 1": "red",
+			"Newbie Level 2": "#FF0000",
+			"Newbie Level 3": [255, 0, 0, 1],
 		};
 
 		// 复写 _drawBook_drawName
@@ -870,7 +870,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 							top + 38, core.arrayToRGBA((enemy.specialColor || [])[1] || '#FF6A6A'));
 						break;
 					default:
-						core.fillText('ui', '多属性...', left + width / 2,
+						core.fillText('ui', 'Multiple attributes...', left + width / 2,
 							top + 38, '#FF6A6A', this._buildFont(14, true), width);
 				}
 				core.fillText('ui', enemy.level, left + width / 2,
@@ -887,11 +887,11 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			var col1 = left,
 				col2 = left + width * 9 / 25,
 				col3 = left + width * 17 / 25;
-			core.fillText('ui', '生命', col1, position, '#DDDDDD', f13);
+			core.fillText('ui', 'life', col1, position, '#DDDDDD', f13);
 			core.fillText('ui', core.formatBigNumber(enemy.hp || 0), col1 + 30, position, /*'red' */ null, b13);
-			core.fillText('ui', '攻击', col2, position, null, f13);
+			core.fillText('ui', 'attack', col2, position, null, f13);
 			core.fillText('ui', core.formatBigNumber(enemy.atk || 0), col2 + 30, position, /* '#FF0000' */ null, b13);
-			core.fillText('ui', '防御', col3, position, null, f13);
+			core.fillText('ui', 'defense', col3, position, null, f13);
 			core.fillText('ui', core.formatBigNumber(enemy.def || 0), col3 + 30, position, /* [255, 0, 0, 1] */ null, b13);
 		}
 	},
@@ -912,7 +912,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		var hero1 = {
 			"floorId": "MT0", // 该角色初始楼层ID；如果共用楼层可以注释此项
 			"image": "brave.png", // 角色的行走图名称；此项必填不然会报错
-			"name": "1号角色",
+			"name": "1Role",
 			"lv": 1,
 			"hp": 10000, // 如果HP共用可注释此项
 			"atk": 1000,
@@ -941,7 +941,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			// 检测是否存在装备
 			if (hero1.equipment) {
 				if (!hero1.items || !hero1.items.equips) {
-					alert('多角色插件的equipment和道具中的equips必须拥有相同状态！');
+					alert('Multi-role pluginequipmentand propsequipsMust have the same status!');
 				}
 				// 存99号套装为全空
 				var saveEquips = core.getFlag("saveEquips", []);
@@ -949,7 +949,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				core.setFlag("saveEquips", saveEquips);
 			} else {
 				if (hero1.items && hero1.items.equips) {
-					alert('多角色插件的equipment和道具中的equips必须拥有相同状态！');
+					alert('Multi-role pluginequipmentand propsequipsMust have the same status!');
 				}
 			}
 		}
@@ -1099,40 +1099,40 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		var __enable = true;
 		if (!__enable) return;
 		/*
-		 使用说明：启用本插件后，录像回放时您可以用数字键1或6分别切换到原速或24倍速，
-		 暂停播放时按数字键7（电脑按N）可以单步播放。（手机端可以点击难度单词切换出数字键）
-		 数字键2-5可以进行录像自助精修，具体描述见下（实际弹窗请求您输入时不要带有任何空格）：
+		 Instructions: After enabling this plugin, you can use the numeric keys to play back the video.1or6Switch to original speed or24Double speed,
+		 Press a number key to pause playback7(Computer pressN) can be played in single step. (On mobile phone, you can click on the difficulty word to switch to the number keys)
+		 Number keys2-5You can perform self-revision of the video, as described below (the actual pop-up window asks you to enter without any spaces):
 		 
-		 up down left right 勇士向某个方向「行走一步或撞击」
-		 item:ID 使用某件道具，如 item:bomb 表示使用炸弹
-		 unEquip:n 卸掉身上第(n+1)件装备（n从0开始），如 unEquip:1 默认表示卸掉盾牌
-		 equip:ID 穿上某件装备，如 equip:sword1 表示装上铁剑
-		 saveEquip:n 将身上的当前套装保存到第n套快捷套装（n从0开始）
-		 loadEquip:n 快捷换上之前保存好的第n套套装
-		 fly:ID 使用楼传飞到某一层，如 fly:MT10 表示飞到主塔10层
-		 choices:none 确认框/选择项「超时」（作者未设置超时时间则此项视为缺失）
-		 choices:n 确认框/选择项选择第(n+1)项（选择项n从0开始，确认框n为0表示「确定」，1表示「取消」）
-		 选择项n为负数时表示选择倒数第 -n 项，如 -1 表示最后一项（V2.8.2起标准全局商店的「离开」项）
-		 此项缺失的话，确认框将选择作者指定的默认项（初始光标位置），选择项将弹窗请求补选（后台录像验证中选最后一项，可以复写函数来修改）
-		 shop:ID 打开某个全局商店，如 shop:itemShop 表示打开道具商店。因此连载塔千万不要中途修改商店ID！
-		 turn 单击勇士（Z键）转身，core.turnHero() 会产生此项，因此通过事件等方式强制让勇士转向应该用 core.setHeroLoc()
-		 turn:dir 勇士转向某个方向，dir 可以为 up down left right（此项一般是读取自动存档产生的，属于样板的不良特性，请勿滥用）
-		 getNext 轻按获得身边道具，优先获得面前的（面前没有则按上下左右顺序依次获得），身边如果没有道具则此项会被跳过
-		 input:none “等待用户操作事件”中超时（作者未设置超时时间则此项会导致报错）
-		 input:xxx 可能表示“等待用户操作事件”的一个操作（如按键操作将直接记录 input:keycode ），
-		 也可能表示一个“接受用户输入数字”的输入，后者的情况下 xxx 为输入的整数。此项缺失的话前者将直接报错，后者将用0代替（后者现在支持负数了）
-		 input2:xxx 可能表示“读取全局存储（core.getGlobal）”读取到的值，也可能表示一个“接受用户输入文本”的输入，
-		 两种情况下 xxx 都为 base64 编码。此项缺失的话前者将重新现场读取，后者将用空字符串代替
-		 no 走到可穿透的楼梯上不触发楼层切换事件，通过本插件可以让勇士停在旁边没有障碍物的楼梯上哦～
-		 move:x:y 尝试瞬移到 [x,y] 点（不改变朝向），该点甚至可以和勇士相邻或者位于视野外
-		 key:n 松开键值为n的键，如 key:49 表示松开大键盘数字键1，默认会触发使用破墙镐
-		 click:n:px:py 点击自绘状态栏，n为0表示横屏1表示竖屏，[px,py] 为点击的像素坐标
-		 random:n 生成了随机数n，即 core.rand2(num) 的返回结果，n必须在 [0,num-1] 范围，num必须为正整数。此项缺失将导致现场重新随机生成数值，可能导致回放结果不一致！
-		 作者自定义的新项（一般为js对象，可以先JSON.stringify()再core.encodeBase64()得到纯英文数字的内容）需要用(半角圆括弧)括起来。
+		 up down left right The warrior takes a step or hits in a certain direction
+		 item:ID Use a prop, such as item:bomb Indicates the use of bombs
+		 unEquip:n Remove the first(n+1)Equipment (nfrom0Start), such as unEquip:1 By default, the shield is removed.
+		 equip:ID Put on a piece of equipment, such as equip:sword1 Indicates that the iron sword is equipped
+		 saveEquip:n Save the current suit tonQuick Set (nfrom0start)
+		 loadEquip:n Quickly replace the previously savednSet
+		 fly:ID Use the floor transfer to fly to a certain floor, such as fly:MT10 Indicates flying to the main tower10layer
+		 choices:none Confirmation Box/Select Timeout (if the author does not set a timeout, this option will be considered missing)
+		 choices:n Confirmation Box/Select the option(n+1)Item (Select Itemnfrom0Start, confirm boxnfor0means OK,1Indicates cancel
+		 SelectionnA negative number indicates the last -n Items, such as -1 Indicates the last item (V2.8.2The Leave item of the standard global store)
+		 If this item is missing, the confirmation box will select the default item specified by the author (initial cursor position), and a pop-up window will be displayed to request a replacement item (the last item is selected in the background video verification, and the function can be overwritten to modify it)
+		 shop:ID Open a global store, such as shop:itemShop Indicates opening the item store. Therefore, do not modify the store midway through the serialization tower.ID!
+		 turn Click the Warrior (Zkey) turn around,core.turnHero() This item will be generated, so you should use events to force the warrior to turn. core.setHeroLoc()
+		 turn:dir The warrior turned in a certain direction,dir Can be up down left right(This item is usually generated by reading the automatic archive, which is an undesirable feature of the template. Please do not abuse it.)
+		 getNext Tap to get the props around you, and give priority to the one in front of you (if there is no prop in front of you, you can get it in the order of up, down, left and right). If there is no prop around you, this item will be skipped.
+		 input:none “Waiting for user operation events”Timeout (if the author does not set a timeout, this item will cause an error)
+		 input:xxx May mean“Waiting for user operation events”An operation (such as key operation will be recorded directly input:keycode ),
+		 It may also mean a“Accepts a number from the user”In the latter case, xxx is an integer input. If this item is missing, the former will directly report an error, and the latter will use0instead (the latter now supports negative numbers)
+		 input2:xxx May mean“Read global storage (core.getGlobal）”The value read may also represent a“Accepting user input text”Input,
+		 In both cases xxx All for base64 If this is missing, the former will be re-read on the spot, and the latter will be replaced by an empty string
+		 no Walking on a penetrable staircase will not trigger a floor switching event. This plug-in allows the warrior to stop on a staircase with no obstacles next to it.
+		 move:x:y Try teleporting to [x,y] point (without changing direction), which can even be adjacent to the warrior or out of sight
+		 key:n Release key valuenThe key, such as key:49 Indicates releasing the numeric keypad key1, which triggers the use of a wall-breaking pickaxe by default
+		 click:n:px:py Click the self-drawn status bar.nfor0Indicates horizontal screen1Indicates vertical screen.[px,py] The pixel coordinates of the click
+		 random:n Generated random numbersn,Right now core.rand2(num) The returned result isnMust be in [0,num-1] scope,numMust be a positive integer. Missing this will cause the value to be randomly generated on-site, which may lead to inconsistent playback results!
+		 New items defined by the author (usuallyjsObject, you can firstJSON.stringify()Againcore.encodeBase64()To get pure English digital content) you need to use(Half-width parentheses)Enclose.
 		 
-		 当您使用数字键5将一些项追加到即将播放内容的开头时，请注意要逆序逐项追加，或者每追加一项就按下数字键7或字母键N单步播放一步。
-		 但是【input input2 random choices】是被动读取的，单步播放如果触发了相应的事件就会连续读取，这时候只能提前逐项追加好。
-		 电脑端熟练以后推荐直接在控制台操作 core.status.route 和 core.status.replay.toReplay（后者录像回放时才有），配合 core.push() 和 core.unshift() 更加灵活自由哦！
+		 When you use the number keys5When appending items to the beginning of the content to be played, remember to append them one by one in reverse order, or press the number keys each time you append an item.7or letter keysNSingle step plays one step at a time.
+		 but【input input2 random choices】 is passively read. If the corresponding event is triggered during single-step playback, it will be read continuously. At this time, you can only append them one by one in advance.
+		 After you are proficient in the computer side, it is recommended to operate directly on the console core.status.route and core.status.replay.toReplay(The latter is only available when the video is played back), core.push() and core.unshift() More flexible and free!
 		 */
 		core.actions.registerAction('onkeyUp', '_sys_onkeyUp_replay', function (e) {
 			if (this._checkReplaying()) {
@@ -1165,18 +1165,18 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				else if (e.keyCode > 49 && e.keyCode < 54) { // 2-5，录像精修
 					switch (e.keyCode - 48) {
 						case 2: // pop
-							alert("您已移除已录制内容的最后一项：" + core.status.route.pop());
+							alert("You have removed the last item of your recording:" + core.status.route.pop());
 							break;
 						case 3: // push
-							core.utils.myprompt("请输入您要追加到已录制内容末尾的项：", "", function (value) {
+							core.utils.myprompt("Please enter the items you want to append to the end of the recording:", "", function (value) {
 								if (value != null) core.status.route.push(value);
 							});
 							break;
 						case 4: // shift
-							alert("您已移除即将播放内容的第一项：" + core.status.replay.toReplay.shift());
+							alert("You have removed the first upcoming item:" + core.status.replay.toReplay.shift());
 							break;
 						case 5: // unshift
-							core.utils.myprompt("请输入您要追加到即将播放内容开头的项：", "", function (value) {
+							core.utils.myprompt("Please enter the item you want to append to the beginning of what is about to play:", "", function (value) {
 								if (value != null) core.status.replay.toReplay.unshift(value);
 							});
 					}
@@ -1240,7 +1240,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"keycode": "48,49,50,51,52,53,54,55,56,57",
 									"action": [
 										// 按下数字键，追加到已输入内容的末尾，但禁止越界。变量：keycode-48就是末位数字
-										{ "type": "playSound", "name": "光标移动" },
+										{ "type": "playSound", "name": "Cursor Movement" },
 										{
 											"type": "if",
 											"condition": "(flag:input<0)",
@@ -1259,7 +1259,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"keycode": "189",
 									"action": [
 										// 按下减号键，变更已输入内容的符号
-										{ "type": "playSound", "name": "跳跃" },
+										{ "type": "playSound", "name": "jump" },
 										{ "type": "setValue", "name": "flag:input", "value": "-flag:input" },
 									]
 								},
@@ -1268,7 +1268,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"keycode": "8",
 									"action": [
 										// 按下退格键，从已输入内容的末尾删除一位
-										{ "type": "playSound", "name": "取消" },
+										{ "type": "playSound", "name": "Cancel" },
 										{ "type": "setValue", "name": "flag:input", "operator": "//=", "value": "10" },
 									]
 								},
@@ -1277,7 +1277,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"keycode": "27",
 									"action": [
 										// 按下ESC键，清空已输入内容
-										{ "type": "playSound", "name": "读档" },
+										{ "type": "playSound", "name": "Loading" },
 										{ "type": "setValue", "name": "flag:input", "value": "0" },
 									]
 								},
@@ -1295,7 +1295,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"py": [288, 320],
 									"action": [
 										// 点击减号，变号。右边界写63防止和下面重叠
-										{ "type": "playSound", "name": "跳跃" },
+										{ "type": "playSound", "name": "jump" },
 										{ "type": "setValue", "name": "flag:input", "value": "-flag:input" },
 									]
 								},
@@ -1305,7 +1305,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"py": [288, 320],
 									"action": [
 										// 点击数字，追加到已输入内容的末尾，但禁止越界。变量：x-2就是末位数字
-										{ "type": "playSound", "name": "光标移动" },
+										{ "type": "playSound", "name": "Cursor Movement" },
 										{
 											"type": "if",
 											"condition": "(flag:input<0)",
@@ -1325,7 +1325,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"py": [352, 384],
 									"action": [
 										// 点击左箭头，退格
-										{ "type": "playSound", "name": "取消" },
+										{ "type": "playSound", "name": "Cancel" },
 										{ "type": "setValue", "name": "flag:input", "operator": "//=", "value": "10" },
 									]
 								},
@@ -1335,7 +1335,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 									"py": [352, 384],
 									"action": [
 										// 点击CE，清空
-										{ "type": "playSound", "name": "读档" },
+										{ "type": "playSound", "name": "Loading" },
 										{ "type": "setValue", "name": "flag:input", "value": "0" },
 									]
 								},
@@ -1365,44 +1365,44 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		// 
 		// ---------------------------------------- 第一部分 js代码 （必装） --------------------------------------- //
 
-		/* ---------------- 用法说明 ---------------- *
-		 * 1. 创建sprite: var sprite = new Sprite(x, y, w, h, z, reference, name);
-		 *   其中x y w h为画布的横纵坐标及长宽，reference为参考系，只能填game（相对于游戏画面）和window（相对于窗口）
-		 *   且当为相对游戏画面时，长宽与坐标将会乘以放缩比例（相当于用createCanvas创建）
-		 *   z为纵深，表示不同元素之间的覆盖关系，大的覆盖小的
-		 *   name为自定义名称，可以不填
-		 * 2. 删除: sprite.destroy();
-		 * 3. 设置css特效: sprite.setCss(css);
-		 *   其中css直接填 box-shadow: 0px 0px 10px black;的形式即可，与style标签与css文件内写法相同
-		 *   对于已设置的特效，如果之后不需要再次设置，可以不填
-		 * 4. 添加事件监听器: sprite.addEventListener(); 用法与html元素的addEventListener完全一致
-		 * 5. 移除事件监听器: sprite.removeEventListener(); 用法与html元素的removeEventListener完全一致
-		 * 6. 属性列表
-		 *   (1) sprite.x | sprite.y | sprite.width | sprite.height | sprite.zIndex | sprite.reference 顾名思义
-		 *   (2) sprite.canvas 该sprite的画布
-		 *   (3) sprite.context 该画布的CanvasRenderingContext2d对象，即样板中常见的ctx
-		 *   (4) sprite.count 不要改这个玩意
-		 * 7. 使用样板api进行绘制
-		 *   示例：
+		/* ---------------- Usage notes ---------------- *
+		 * 1. createsprite: var sprite = new Sprite(x, y, w, h, z, reference, name);
+		 *   inx y w his the horizontal and vertical coordinates and length and width of the canvas,referenceFor reference system, onlygame(relative to the game screen) andwindow(relative to the window)
+		 *   When relative to the game screen, the length, width and coordinates will be multiplied by the scaling ratio (equivalent to usingcreateCanvascreate)
+		 *   zDepth, indicating the covering relationship between different elements, with the larger ones covering the smaller ones
+		 *   nameFor custom names, you can leave it blank
+		 * 2. delete: sprite.destroy();
+		 * 3. set upcssSpecial Effects: sprite.setCss(css);
+		 *   incssFill directly box-shadow: 0px 0px 10px black;The form can bestyleTags andcssSame as the file writing method
+		 *   For the special effects that have been set, if you do not need to set them again, you can leave it blank.
+		 * 4. Adding event listeners: sprite.addEventListener(); Usage andhtmlElementaladdEventListenerCompletely consistent
+		 * 5. Remove event listeners: sprite.removeEventListener(); Usage andhtmlElementalremoveEventListenerCompletely consistent
+		 * 6. Property List
+		 *   (1) sprite.x | sprite.y | sprite.width | sprite.height | sprite.zIndex | sprite.reference As the name suggests
+		 *   (2) sprite.canvas ShouldspriteCanvas
+		 *   (3) sprite.context The canvasCanvasRenderingContext2dObjects, which are common in templatesctx
+		 *   (4) sprite.count Dont change this thing.
+		 * 7. Using TemplatesapiDraw
+		 *   Example:
 		 *   var ctx = sprite.context;
 		 *   core.fillText(ctx, 'xxx', 100, 100);
 		 *   core.fillRect(ctx, 0, 0, 50, 50);
-		 *   当然也可以使用原生js
+		 *   Of course, you can also use nativejs
 		 *   ctx.moveTo(0, 0);
 		 *   ctx.bezierCurveTo(50, 50, 100, 0, 100, 50);
 		 *   ctx.stroke();
-		 * ---------------- 用法说明 ---------------- */
+		 * ---------------- Usage notes ---------------- */
 
 		var count = 0;
 
-		/** 创建一个sprite画布
+		/** Create onespritecanvas
 		 * @param {number} x
 		 * @param {number} y
 		 * @param {number} w
 		 * @param {number} h
 		 * @param {number} z
-		 * @param {'game' | 'window'} reference 参考系，游戏画面或者窗口
-		 * @param {string} name 可选，sprite的名称，方便通过core.dymCanvas获取
+		 * @param {'game' | 'window'} reference Reference frame, game screen or window
+		 * @param {string} name Optional,spriteThe name is convenient forcore.dymCanvasGet
 		 */
 		function Sprite (x, y, w, h, z, reference, name) {
 			this.x = x;
@@ -1416,7 +1416,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			this.count = 0;
 			this.name = name || '_sprite_' + count;
 			this.style = null;
-			/** 初始化 */
+			/** initialization */
 			this.init = function () {
 				if (reference === 'window') {
 					var canvas = document.createElement('canvas');
@@ -1443,7 +1443,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			}
 			this.init();
 
-			/** 设置css特效
+			/** set upcssSpecial Effects
 			 * @param {string} css
 			 */
 			this.setCss = function (css) {
@@ -1466,8 +1466,8 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			}
 
 			/** 
-			 * 移动sprite
-			 * @param {boolean} isDelta 是否是相对位置，如果是，那么sprite会相对于原先的位置进行移动
+			 * movesprite
+			 * @param {boolean} isDelta Is it a relative position? If so, thenspriteWill move relative to its original position
 			 */
 			this.move = function (x, y, isDelta) {
 				if (x !== undefined && x !== null) this.x = x;
@@ -1481,8 +1481,8 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			}
 
 			/** 
-			 * 重新设置sprite的大小
-			 * @param {boolean} styleOnly 是否只修改css效果，如果是，那么将会不高清，如果不是，那么会清空画布
+			 * ResetspriteSize
+			 * @param {boolean} styleOnly Modify onlycssEffect, if it is, then it will not be high-definition, if not, then the canvas will be cleared
 			 */
 			this.resize = function (w, h, styleOnly) {
 				if (w !== undefined && w !== null) this.w = w;
@@ -1500,7 +1500,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			}
 
 			/**
-			 * 旋转画布
+			 * Rotate the canvas
 			 */
 			this.rotate = function (angle, cx, cy) {
 				if (this.reference === 'window') {
@@ -1519,7 +1519,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 			}
 
 			/**
-			 * 清除sprite
+			 * Clearsprite
 			 */
 			this.clear = function (x, y, w, h) {
 				if (this.reference === 'window') {
@@ -1530,7 +1530,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				return this;
 			}
 
-			/** 删除 */
+			/** delete */
 			this.destroy = function () {
 				if (this.reference === 'window') {
 					if (this.canvas) document.body.removeChild(this.canvas);
@@ -1539,12 +1539,12 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 				}
 			}
 
-			/** 添加事件监听器 */
+			/** Adding event listeners */
 			this.addEventListener = function () {
 				this.canvas.addEventListener.apply(this.canvas, arguments);
 			}
 
-			/** 移除事件监听器 */
+			/** Remove event listeners */
 			this.removeEventListener = function () {
 				this.canvas.removeEventListener.apply(this.canvas, arguments);
 			}
@@ -1553,30 +1553,30 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		window.Sprite = Sprite;
 	},
 	"hotReload": function () {
-		/* ---------- 功能说明 ---------- *
+		/* ---------- Functional Description ---------- *
 
-		1. 当 libs/ main.js index.html 中的任意一个文件被更改后，会自动刷新塔的页面
-		2. 修改楼层文件后自动在塔的页面上显示出来，不需要刷新
-		3. 修改脚本编辑或插件编写后也能自动更新更改的插件或脚本，但不保证不会出问题（一般都不会有问题的
-		4. 修改图块属性、怪物属性等后会自动更新
-		5. 当全塔属性被修改时，会自动刷新塔的页面
-		6. 样板的 styles.css 被修改后也可以直接显示，不需要刷新
-		7. 其余内容修改后不会自动更新也不会刷新
+		1. when libs/ main.js index.html When any file in the tower is changed, the page of the tower will be automatically refreshed.
+		2. After modifying the floor file, it will be automatically displayed on the tower page without refreshing
+		3. After modifying the script editing or plug-in writing, the changed plug-in or script can be automatically updated, but there is no guarantee that there will be no problems (generally there will be no problems
+		4. Automatically update after modifying tile attributes, monster attributes, etc.
+		5. When the properties of the entire tower are modified, the tower page will be automatically refreshed
+		6. Sample styles.css After being modified, it can be displayed directly without refreshing
+		7. The rest of the content will not be automatically updated or refreshed after modification
 
-		/* ---------- 使用方式 ---------- *
+		/* ---------- How to use ---------- *
 
-		1. 前往 https://nodejs.org/en/ 下载node.js的LTS版本（点左边那个绿色按钮）并安装
-		2. 将该插件复制到插件编写中
-		3. 在造塔群的群文件-魔塔样板·改中找到server.js，下载并放到塔的根目录（与启动服务同一级）
-		4. 在该目录下按下shift+鼠标右键（win11只按右键即可），选择在终端打开或在powershell打开
-		5. 运行node server.js即可
+		1. Go https://nodejs.org/en/ 下载node.js的LTS版本（点左边那个绿色按钮）并安装
+		2. Copy the plugin to the plugin editor
+		3. Group files in the tower building group-Magic Tower Model·Found in the changeserver.js, download and put it in the root directory of the tower (same level as the startup service)
+		4. In this directory, pressshift+Right mouse button (win11Just right click), choose to open in terminal orpowershellOpen
+		5. runnode server.jsYou can
 
 		*/
 
 		if (main.mode !== 'play' || main.replayChecking) return;
 
 		/**
-		 * 发送请求
+		 * Send Request
 		 * @param {string} url
 		 * @param {string} type
 		 * @param {string} data
@@ -1603,7 +1603,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		}
 
 		/**
-		 * 热重载css
+		 * Hot Reloadcss
 		 * @param {string} data
 		 */
 		function reloadCss(data) {
@@ -1623,7 +1623,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		}
 
 		/**
-		 * 热重载楼层
+		 * Thermal overload floors
 		 * @param {string} data
 		 */
 		async function reloadFloor(data) {
@@ -1649,7 +1649,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		}
 
 		/**
-		 * 热重载脚本编辑及插件编写
+		 * Hot reload script editing and plugin writing
 		 * @param {string} data
 		 */
 		async function reloadScript(data) {
@@ -1725,7 +1725,7 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		}
 
 		/**
-		 * 属性热重载，包括全塔属性等
+		 * Attribute hot reload, including all tower attributes, etc.
 		 * @param {string} data
 		 */
 		async function reloadData(data) {
@@ -1789,9 +1789,9 @@ var plugins_bb40132b_638b_4a9f_b028_d3fe47acc8d1 =
 		(async function () {
 			const data = await post('/reload', 'POST', 'test');
 			if (data === '@error') {
-				console.log(`未检测到node服务，热重载插件将无法使用`);
+				console.log(`Not DetectednodeService, hot reload plugin will not be available`);
 			} else {
-				console.log(`热重载插件加载成功`);
+				console.log(`Hot reload plugin loaded successfully`);
 				// reload
 				setInterval(async () => {
 					const res = await post('/reload', 'POST');
